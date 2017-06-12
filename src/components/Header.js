@@ -1,8 +1,14 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 class Header extends Component {
+  static propTypes = {
+    username : PropTypes.string,
+    rank : PropTypes.string
+  }
+
   render() {
-    const playerInfo = this.props.playerName ? <span>for player {this.props.playerName} ({this.props.playerRank})</span> : undefined;
+    const playerInfo = this.props.username ? <span>for player {this.props.username} ({this.props.rank})</span> : undefined;
 
     return (
       <header className="header">

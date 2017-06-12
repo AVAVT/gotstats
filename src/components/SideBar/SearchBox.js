@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 
 class SearchBox extends Component {
   constructor(props){
@@ -10,7 +10,6 @@ class SearchBox extends Component {
     }
 
     this.updateSearchUser = this.updateSearchUser.bind(this);
-    this.submitHandler = this.submitHandler.bind(this);
   }
 
   updateSearchUser(event){
@@ -19,28 +18,19 @@ class SearchBox extends Component {
     });
   }
 
-  submitHandler(event){
-    // event.preventDefault(); wtf jest
-    this.props.goToUser(this.state.username);
-  }
-
   render() {
     return (
-      <form name="searchForm" onSubmit={this.submitHandler}>
+      <div>
         <div className="input-group">
           <input value={this.state.username} onChange={this.updateSearchUser} name="id" type="text" required placeholder="Username or ID" className="form-control" />
           <span className="input-group-btn">
-            <button className="btn btn-primary" type="submit">g0t Stats?</button>
+            <Link to={`/${this.state.username}`} className="btn btn-primary">g0t Stats?</Link>
           </span>
         </div>
         <small className="tip help-block"><em>*Tip: mouse over/tap on a chart to see more info.</em></small>
-      </form>
+      </div>
     );
   }
-}
-
-SearchBox.propTypes = {
-  goToUser : PropTypes.func.isRequired
 }
 
 export default SearchBox;

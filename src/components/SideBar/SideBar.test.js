@@ -18,8 +18,7 @@ describe("SideBar", () => {
 
   beforeEach(() => {
     props = {
-      scrollToElem : jest.fn(),
-      goToUser : jest.fn()
+      scrollToElem : jest.fn()
     };
     shadowWrapper = undefined;
   });

@@ -1,57 +1,70 @@
 import React, { Component } from 'react';
 import {
   BrowserRouter as Router,
-  Route,
-  Redirect,
-  withRouter
+  Route
 } from 'react-router-dom';
-
-import PropTypes from 'prop-types';
+import $ from 'jquery';
 
 import './App.css';
+
+import configs from './configs.json';
 
 import Header from './components/Header';
 import SideBar from './components/SideBar/SideBar';
 import Welcome from './views/Welcome';
-import Welcome2 from './views/Welcome2';
-
-const routes = [
-  {
-    path: '/',
-    exact: true,
-    component: Welcome
-  },
-  {
-    path: '/:id',
-    component: Welcome2
-  }
-]
+import UserStatistics from './views/UserStatistics';
 
 class App extends Component {
-
   constructor(props){
     super(props);
 
-    this.goToUser = this.goToUser.bind(this);
+    this.state = {
+      userData : null
+    }
+
+    this.updateUserInfo = this.updateUserInfo.bind(this);
   }
 
   scrollToElem(id){
-
+    $('html,body').animate({scrollTop: $("#"+id).offset().top},'fast');
   }
 
-  goToUser(username){
-    // TODO
-    withRouter(({ history }) => history.push(`/${username}`));
+  updateUserInfo(userData){
+    this.setState({
+      userData : userData
+    });
   }
 
   render() {
+    const routes = [
+      {
+        path     : '/',
+        exact    : true,
+        component: Welcome
+      },
+      {
+        path          : '/:id',
+        render        : (props) => {
+
+          return (
+            <UserStatistics {...Object.assign({
+              apiRoot       : configs.OGS_API_ROOT,
+              userData      : this.state.userData,
+              updateUserInfo: this.updateUserInfo
+            }, props)}  />
+          );
+        },
+
+      }
+    ]
+
     return (
       <Router>
         <div className="App">
-          <Header />
+          <Header {...this.state.userData} />
           <div className="container stats_content">
       			<div className="row">
-              <SideBar scrollToElem={this.scrollToElem} goToUser={this.goToUser} />
+              <SideBar scrollToElem={this.scrollToElem} />
               <div className="col-md-9 col-md-pull-3 col-sm-8 col-sm-pull-4">
                 {routes.map((route, index) => (
                   <Route key={index} {...route} />

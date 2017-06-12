@@ -22,7 +22,7 @@ describe("App", () => {
   });
 
 
-  it('Renders without crashing', () => {
+  it('renders without crashing', () => {
     const wrapper = getShallow();
   });
 });

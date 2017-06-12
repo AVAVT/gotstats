@@ -2,6 +2,10 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 class QuickLinks extends Component {
+  static propTypes = {
+    scrollToElem : PropTypes.func.isRequired
+  }
+
   constructor(props){
     super(props);
 
@@ -29,10 +33,6 @@ class QuickLinks extends Component {
       </ul>
     );
   }
-}
-
-QuickLinks.propTypes = {
-  scrollToElem : PropTypes.func.isRequired
 }
 
 export default QuickLinks;

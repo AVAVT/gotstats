@@ -17,9 +17,7 @@ describe("SearchBox", () => {
   }
 
   beforeEach(() => {
-    props = {
-      goToUser : jest.fn()
-    };
+    props = {};
     shadowWrapper = undefined;
   });
 
@@ -27,24 +25,20 @@ describe("SearchBox", () => {
     const wrapper = getShallow();
   });
 
-  it('always has a form', () => {
-    const wrapper = getShallow();
-    expect(wrapper.find('form').length).toBeGreaterThan(0);
-  });
   it('always has a form submit button', () => {
     const wrapper = getShallow();
-    expect(wrapper.find('form [type="submit"]').length).toBeGreaterThan(0);
+    expect(wrapper.find('Link').length).toBeGreaterThan(0);
   });
 
-  it('call function on submit', () => {
-    const wrapper = getShallow();
-
-    wrapper.setState({
-      username : 'mock user'
-    });
-    const searchVal = wrapper.find('[type="text"]').get(0).props.value;
-    wrapper.find('form').simulate('submit');
-
-    expect(props.goToUser).toHaveBeenCalledWith(searchVal);
-  });
+  // it('call function on submit', () => {
+  //   const wrapper = getShallow();
+  //
+  //   wrapper.setState({
+  //     username : 'mock user'
+  //   });
+  //   const searchVal = wrapper.find('[type="text"]').get(0).props.value;
+  //   wrapper.find('form').simulate('submit', { preventDefault : jest.fn() });
+  //
+  //   expect(props.goToUser).toHaveBeenCalledWith(searchVal);
+  // });
 });
