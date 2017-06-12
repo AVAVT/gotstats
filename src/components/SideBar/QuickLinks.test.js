@@ -18,7 +18,7 @@ describe("QuickLinks", () => {
 
   beforeEach(() => {
     props = {
-      scrollHandler : jest.fn()
+      scrollToElem : jest.fn()
     };
     shadowWrapper = undefined;
   });

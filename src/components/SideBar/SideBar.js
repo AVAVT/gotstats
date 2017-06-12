@@ -9,11 +9,11 @@ class SideBar extends Component {
     return (
       <div className="col-md-3 col-md-push-9 col-sm-4 col-sm-push-8 sidebar">
         <nav className="side_nav" data-spy="affix" data-offset-top="95">
-          <SearchBox fetchUserData={this.props.fetchUserData}/>
+          <SearchBox goToUser={this.props.goToUser}/>
 
           <div className="navi hidden-sm hidden-xs" ng-hide="!$root.ready">
             <hr />
-            <QuickLinks scrollHandler={this.props.scrollHandler} />
+            <QuickLinks scrollToElem={this.props.scrollToElem} />
           </div>
         </nav>
   		</div>
@@ -22,8 +22,8 @@ class SideBar extends Component {
 }
 
 SideBar.propTypes = {
-  scrollHandler : PropTypes.func.isRequired,
-  fetchUserData : PropTypes.func.isRequired
+  scrollToElem : PropTypes.func.isRequired,
+  goToUser : PropTypes.func.isRequired
 }
 
 export default SideBar;

@@ -13,14 +13,15 @@ class SearchBox extends Component {
     this.submitHandler = this.submitHandler.bind(this);
   }
 
-  updateSearchUser(value){
+  updateSearchUser(event){
     this.setState({
-      username : value
+      username : event.target.value
     });
   }
 
-  submitHandler(){
-    this.props.fetchUserData(this.state.username);
+  submitHandler(event){
+    // event.preventDefault(); wtf jest
+    this.props.goToUser(this.state.username);
   }
 
   render() {
@@ -39,7 +40,7 @@ class SearchBox extends Component {
 }
 
 SearchBox.propTypes = {
-  fetchUserData : PropTypes.func.isRequired
+  goToUser : PropTypes.func.isRequired
 }
 
 export default SearchBox;

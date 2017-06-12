@@ -18,7 +18,7 @@ describe("SearchBox", () => {
 
   beforeEach(() => {
     props = {
-      fetchUserData : jest.fn()
+      goToUser : jest.fn()
     };
     shadowWrapper = undefined;
   });
@@ -45,6 +45,6 @@ describe("SearchBox", () => {
     const searchVal = wrapper.find('[type="text"]').get(0).props.value;
     wrapper.find('form').simulate('submit');
 
-    expect(props.fetchUserData).toHaveBeenCalledWith(searchVal);
+    expect(props.goToUser).toHaveBeenCalledWith(searchVal);
   });
 });
