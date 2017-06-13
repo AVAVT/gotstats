@@ -94,7 +94,7 @@ class UserStatistics extends Component {
   fetchGamePage(allGames, userId, localData, connectionInfo, url){
 
     // If the search user has changed
-    if(userId != this.state.player.id) return;
+    if(userId !== this.state.player.id) return;
 
     Communicator.fetchGamePage(userId, url)
     .then(function(res){
