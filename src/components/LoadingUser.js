@@ -15,7 +15,8 @@ class LoadingUser extends Component {
       totalPages
     } = this.props;
 
-    const loadMessage = currentPage ? <p>Fetching games result from OGS: page {currentPage} of {totalPages}.</p> : null;
+    const totalMessage = totalPages ? <span>of {totalPages}</span> : null;
+    const loadMessage = currentPage ? <p>Fetching games result from OGS: page {currentPage} {totalMessage}.</p> : null;
 
     return (
       <div className="loading_text">

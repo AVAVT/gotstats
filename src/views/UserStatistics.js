@@ -25,7 +25,6 @@ class UserStatistics extends Component {
     this.state = {
       player            : null,
       usingLocalStorage : false,
-      loadingCompleted  : false,
       loadingPageNo     : 0
     }
   }
@@ -36,6 +35,12 @@ class UserStatistics extends Component {
 
   componentWillReceiveProps(nextProps) {
     if(this.props.match.params.id !== nextProps.match.params.id){
+      this.setState({
+        allGames      : null,
+        loadingPageNo : 0,
+        errorMessage  : ""
+      });
+
       this.fetchUserData(nextProps.match.params.id);
     }
   }
@@ -57,8 +62,9 @@ class UserStatistics extends Component {
       this.fetchUserGames(res.id);
     })
     .catch(err => {
-      // TODO don't use alert
-      alert(err);
+      this.setState({
+        errorMessage: err
+      });
     });
   }
 
@@ -71,7 +77,7 @@ class UserStatistics extends Component {
       localData = null;
     }
 
-    if(localData != null && Array.isArray(localData)){
+    if(localData && Array.isArray(localData)){
       this.setState({
         usingLocalStorage : true
       });
@@ -80,16 +86,16 @@ class UserStatistics extends Component {
     const connectionInfo = {
       isError     : false,
       retryNumber : 0,
-      errorMessage: ""
     }
-    this.setState({
-      allGames : null
-    })
 
     this.fetchGamePage([], userId, localData, connectionInfo);
   }
 
   fetchGamePage(allGames, userId, localData, connectionInfo, url){
+
+    // If the search user has changed
+    if(userId != this.state.player.id) return;
+
     Communicator.fetchGamePage(userId, url)
     .then(function(res){
       this.setState({
@@ -126,7 +132,7 @@ class UserStatistics extends Component {
       }
       else{
         // Finishes querying
-        if(localData) this.saveUserData(userId, allGames);
+        if(this.state.usingLocalStorage) this.saveUserData(userId, allGames);
         this.setState({
           allGames : allGames
         });
@@ -134,21 +140,22 @@ class UserStatistics extends Component {
 
     }.bind(this))
     .catch(function(err){
-      console.log(err);
       connectionInfo.isError = true;
       connectionInfo.retryNumber += 1;
-
+      var errorMessage = null;
       if(connectionInfo.retryNumber < 5){
-          connectionInfo.errorMessage = "Error connecting to OGS server. <strong>Error code: " + err.status + "</strong>. Retrying in "+(connectionInfo.retryNumber*connectionInfo.retryNumber)+" seconds...";
+          errorMessage = "Error connecting to OGS server. <strong>Error code: " + err.status + "</strong>. Retrying in "+(connectionInfo.retryNumber*connectionInfo.retryNumber)+" seconds...";
           setTimeout(function(){
             this.fetchGamePage(allGames, userId, localData, connectionInfo, url)
           }.bind(this), connectionInfo.retryNumber*connectionInfo.retryNumber*1000);
       }
       else{
-        connectionInfo.errorMessage = "Error connecting to OGS server. <strong>Error code: " + err.status + "</strong>. Please try again later or contact me if you really have the need to stalk that person.";
+        errorMessage = "Error connecting to OGS server. <strong>Error code: " + err.status + "</strong>. Please try again later or contact me if you really have the need to stalk that person.";
       }
 
-      alert(connectionInfo.errorMessage);
+      this.setState({
+        errorMessage : errorMessage
+      });
     }.bind(this))
   }
 
@@ -165,12 +172,12 @@ class UserStatistics extends Component {
 	}
 
   render() {
-    const display = this.state.allGames ? null : <LoadingUser />;
+    const display = this.state.allGames ? null : <LoadingUser currentPage={this.state.loadingPageNo} totalPages={this.state.totalPages} errorMessage={this.state.errorMessage}/>;
 
     return (
-      <div className="Welcome">
+      <div>
       {display}
-      	{JSON.stringify(this.state.allGames)}
+      {JSON.stringify(this.state.allGames)}
       </div>
     );
   }
