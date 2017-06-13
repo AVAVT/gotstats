@@ -86,10 +86,6 @@ h3{
 }
 
 .loading_text{
-	position: absolute;
-	top: 0;
-	left: 0;
-	right: 0;
 	padding: 10px 15px;
 	z-index: 10;
 	text-align: center;

@@ -5,8 +5,6 @@ import {
 } from 'react-router-dom';
 import $ from 'jquery';
 
-import './App.css';
-
 import configs from './configs.json';
 
 import Header from './components/Header';

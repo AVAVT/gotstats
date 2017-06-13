@@ -23,7 +23,10 @@ class UserStatistics extends Component {
     super(props);
 
     this.state = {
-      player : null
+      player            : null,
+      usingLocalStorage : false,
+      loadingCompleted  : false,
+      loadingPageNo     : 0
     }
   }
 
@@ -38,7 +41,8 @@ class UserStatistics extends Component {
   }
 
   fetchUserData(user){
-    Communicator.fetchUserData(user)
+    Communicator.fetchUserId(user)
+    .then(Communicator.fetchUserDataById)
     .then(res => {
       this.setState({
         player : res
@@ -50,13 +54,108 @@ class UserStatistics extends Component {
         id       : res.id,
         isRanked : (res.provisional_games_left < 1)
       });
-      // getAllGames(onGameFetchingComplete);
-
+      this.fetchUserGames(res.id);
     })
     .catch(err => {
+      // TODO don't use alert
       alert(err);
     });
   }
+
+  fetchUserGames(userId){
+    var localData = null;
+    try{
+      localData = JSON.parse(localStorage.getItem('ogsUserData_'+userId));
+    }
+    catch(e){
+      localData = null;
+    }
+
+    if(localData != null && Array.isArray(localData)){
+      this.setState({
+        usingLocalStorage : true
+      });
+    }
+
+    const connectionInfo = {
+      isError     : false,
+      retryNumber : 0,
+      errorMessage: ""
+    }
+    this.setState({
+      allGames : null
+    })
+
+    this.fetchGamePage([], userId, localData, connectionInfo);
+  }
+
+  fetchGamePage(allGames, userId, localData, connectionInfo, url){
+    Communicator.fetchGamePage(userId, url)
+    .then(function(res){
+      this.setState({
+        loadingPageNo : this.state.loadingPageNo+1,
+        totalPages    : Math.ceil(res.count/50)
+      });
+
+      connectionInfo.isError = false;
+      connectionInfo.retryNumber = 0;
+
+      var completedWithLocalStorage = false;
+
+      if(this.state.usingLocalStorage){
+        res.results.some((item) =>{
+          if(item.id === localData[0].id){
+            allGames = allGames.concat(localData);
+            completedWithLocalStorage = true;
+            return true;
+          }
+          else{
+            allGames.push(item);
+          }
+
+          return false;
+        });
+      }
+      else{
+        allGames = allGames.concat(res.results);
+      }
+
+      if(!completedWithLocalStorage && res.next != null){
+        const next = res.next.replace("http://", "https://")
+        this.fetchGamePage(allGames, userId, localData, connectionInfo, next);
+      }
+      else{
+        // Finishes querying
+        if(localData) this.saveUserData(userId, allGames);
+        this.setState({
+          allGames : allGames
+        });
+      }
+
+    }.bind(this))
+    .catch(function(err){
+      console.log(err);
+      connectionInfo.isError = true;
+      connectionInfo.retryNumber += 1;
+
+      if(connectionInfo.retryNumber < 5){
+          connectionInfo.errorMessage = "Error connecting to OGS server. <strong>Error code: " + err.status + "</strong>. Retrying in "+(connectionInfo.retryNumber*connectionInfo.retryNumber)+" seconds...";
+          setTimeout(function(){
+            this.fetchGamePage(allGames, userId, localData, connectionInfo, url)
+          }.bind(this), connectionInfo.retryNumber*connectionInfo.retryNumber*1000);
+      }
+      else{
+        connectionInfo.errorMessage = "Error connecting to OGS server. <strong>Error code: " + err.status + "</strong>. Please try again later or contact me if you really have the need to stalk that person.";
+      }
+
+      alert(connectionInfo.errorMessage);
+    }.bind(this))
+  }
+
+  saveUserData(userId, games){
+		localStorage.clear();
+		localStorage.setItem(`ogsUserData_${userId}`, JSON.stringify(games));
+	}
 
   convertRankToDisplay(rank){
 		if(rank < 30)
@@ -65,13 +164,13 @@ class UserStatistics extends Component {
 			return (rank - 29) + "d";
 	}
 
-
   render() {
-    const display = this.state.player ? null : <LoadingUser />;
+    const display = this.state.allGames ? null : <LoadingUser />;
 
     return (
       <div className="Welcome">
-      	{display}
+      {display}
+      	{JSON.stringify(this.state.allGames)}
       </div>
     );
   }
