@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import $ from 'jquery';
+
+import Communicator from '../services/Communicator';
+import LoadingUser from '../components/LoadingUser';
 
 class UserStatistics extends Component {
   static propTypes = {
@@ -17,50 +19,43 @@ class UserStatistics extends Component {
     apiRoot       : PropTypes.string.isRequired
   }
 
+  constructor(props){
+    super(props);
+
+    this.state = {
+      player : null
+    }
+  }
+
   componentDidMount() {
     this.fetchUserData(this.props.match.params.id);
   }
 
+  componentWillReceiveProps(nextProps) {
+    if(this.props.match.params.id !== nextProps.match.params.id){
+      this.fetchUserData(nextProps.match.params.id);
+    }
+  }
+
   fetchUserData(user){
-    var requestPlayerById = function(id){
-  		$.get(`${this.props.apiRoot}${id}`)
-      .done(function(res){
-        this.setState({
-          player : res
-        });
+    Communicator.fetchUserData(user)
+    .then(res => {
+      this.setState({
+        player : res
+      });
 
-				this.props.updateUserInfo({
-          username : res.username,
-          rank     : this.convertRankToDisplay(res.ranking),
-          id       : res.id,
-          isRanked : (res.provisional_games_left < 1)
-        });
+      this.props.updateUserInfo({
+        username : res.username,
+        rank     : this.convertRankToDisplay(res.ranking),
+        id       : res.id,
+        isRanked : (res.provisional_games_left < 1)
+      });
+      // getAllGames(onGameFetchingComplete);
 
-				// getAllGames(onGameFetchingComplete);
-			}.bind(this))
-      .fail(function(err){
-				alert(`Error connecting to OGS server. <strong>Error code: ${err.status}</strong>. Please try again later or contact me if you really have the need to stalk that person.`);
-			});
-  	}.bind(this);
-
-    if(isNaN(user)){ // Entered username
-			$.get(`${this.props.apiRoot}?username=${user}`)
-      .done(function(res){
-				if(res.results.length > 0){
-					this.props.updateUserInfo(res.results[0]);
-					requestPlayerById(res.results[0].id);
-				}
-				else{
-					alert("Error: user not found. Are you sure you entered the correct username? If it still doesn't work, try using user id instead.");
-				}
-			}.bind(this))
-      .fail(function(err){
-				alert(`Error connecting to OGS server. <strong>Error code: ${err.status}</strong>. Please try again later or contact me if you really have the need to stalk that person.`);
-			});
-		}
-		else{  // Entered user id
-			requestPlayerById(user);
-		}
+    })
+    .catch(err => {
+      alert(err);
+    });
   }
 
   convertRankToDisplay(rank){
@@ -72,9 +67,11 @@ class UserStatistics extends Component {
 
 
   render() {
+    const display = this.state.player ? null : <LoadingUser />;
+
     return (
       <div className="Welcome">
-      	Data for user {this.props.match.params.id}
+      	{display}
       </div>
     );
   }

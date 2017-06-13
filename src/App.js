@@ -45,7 +45,6 @@ class App extends Component {
       {
         path          : '/:id',
         render        : (props) => {
-
           return (
             <UserStatistics {...Object.assign({
               apiRoot       : configs.OGS_API_ROOT,
@@ -54,7 +53,6 @@ class App extends Component {
             }, props)}  />
           );
         },
-
       }
     ]
 

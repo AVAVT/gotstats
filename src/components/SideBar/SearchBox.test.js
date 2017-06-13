@@ -27,7 +27,7 @@ describe("SearchBox", () => {
 
   it('always has a form submit button', () => {
     const wrapper = getShallow();
-    expect(wrapper.find('Link').length).toBeGreaterThan(0);
+    expect(wrapper.find('[type="submit"]').length).toBeGreaterThan(0);
   });
 
   // it('call function on submit', () => {
