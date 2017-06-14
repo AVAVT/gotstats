@@ -1,13 +1,16 @@
 import React, { Component } from 'react';
-import { Redirect } from 'react-router-dom';
+import PropTypes from 'prop-types'
 
 class SearchBox extends Component {
+  static propTypes = {
+    history : PropTypes.object.isRequired
+  }
+
   constructor(props){
     super(props);
 
     this.state = {
-      username : "",
-      redirect : false
+      username : ""
     }
 
     this.updateSearchUser = this.updateSearchUser.bind(this);
@@ -16,16 +19,16 @@ class SearchBox extends Component {
 
   updateSearchUser(event){
     this.setState({
-      username : event.target.value,
-      redirect : false
+      username : event.target.value
     });
   }
 
   submit(event){
     event.preventDefault();
+    this.props.history.push(`/${this.state.username}`);
 
     this.setState({
-      redirect : true
+      username : ''
     });
 
     if(document.activeElement){
@@ -43,11 +46,6 @@ class SearchBox extends Component {
           </span>
         </div>
         <small className="tip help-block"><em>*Tip: mouse over/tap on a chart to see more info.</em></small>
-        {
-          this.state.redirect && (
-          <Redirect to={`/${this.state.username}`} push />
-          )
-        }
       </form>
     );
   }

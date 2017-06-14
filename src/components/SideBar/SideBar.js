@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { withRouter } from 'react-router-dom';
 
 import SearchBox from './SearchBox';
 import QuickLinks from './QuickLinks';
@@ -21,7 +22,7 @@ class SideBar extends Component {
     return (
       <div className="col-md-3 col-md-push-9 col-sm-4 col-sm-push-8 sidebar">
         <nav className="side_nav" data-spy="affix" data-offset-top="95">
-          <SearchBox />
+          <SearchBox history={this.props.history}/>
 
           {navi}
         </nav>
@@ -30,4 +31,4 @@ class SideBar extends Component {
   }
 }
 
-export default SideBar;
+export default withRouter(SideBar);

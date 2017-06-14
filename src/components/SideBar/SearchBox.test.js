@@ -17,7 +17,12 @@ describe("SearchBox", () => {
   }
 
   beforeEach(() => {
-    props = {};
+    props = {
+      history : {
+        push : jest.fn()
+      }
+    };
+
     shadowWrapper = undefined;
   });
 
@@ -30,15 +35,16 @@ describe("SearchBox", () => {
     expect(wrapper.find('[type="submit"]').length).toBeGreaterThan(0);
   });
 
-  // it('call function on submit', () => {
-  //   const wrapper = getShallow();
-  //
-  //   wrapper.setState({
-  //     username : 'mock user'
-  //   });
-  //   const searchVal = wrapper.find('[type="text"]').get(0).props.value;
-  //   wrapper.find('form').simulate('submit', { preventDefault : jest.fn() });
-  //
-  //   expect(props.goToUser).toHaveBeenCalledWith(searchVal);
-  // });
+  it('call function on submit', () => {
+    const wrapper = getShallow();
+
+    wrapper.setState({
+      username : 'mock user'
+    });
+
+    const searchVal = "/" + wrapper.find('[type="text"]').get(0).props.value;
+    wrapper.find('form').simulate('submit', { preventDefault : jest.fn() });
+
+    expect(wrapper.instance().props.history.push).toHaveBeenCalledWith(searchVal);
+  });
 });

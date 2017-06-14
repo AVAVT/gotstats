@@ -172,12 +172,11 @@ class UserStatistics extends Component {
 	}
 
   render() {
-    const display = this.state.allGames ? null : <LoadingUser currentPage={this.state.loadingPageNo} totalPages={this.state.totalPages} errorMessage={this.state.errorMessage}/>;
+    const display = this.state.allGames ? JSON.stringify(this.state.allGames) : <LoadingUser currentPage={this.state.loadingPageNo} totalPages={this.state.totalPages} errorMessage={this.state.errorMessage}/>;
 
     return (
       <div>
       {display}
-      {JSON.stringify(this.state.allGames)}
       </div>
     );
   }
