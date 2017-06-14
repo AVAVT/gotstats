@@ -2,7 +2,9 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import Communicator from '../services/Communicator';
+
 import LoadingUser from '../components/LoadingUser';
+import ChartList from '../components/Charts/ChartList';
 
 class UserStatistics extends Component {
   static propTypes = {
@@ -172,11 +174,13 @@ class UserStatistics extends Component {
 	}
 
   render() {
-    const display = this.state.allGames ? JSON.stringify(this.state.allGames) : <LoadingUser currentPage={this.state.loadingPageNo} totalPages={this.state.totalPages} errorMessage={this.state.errorMessage}/>;
-
     return (
       <div>
-      {display}
+      {
+        this.state.allGames ?
+        (<ChartList gamesData={{ games: this.state.allGames, playerId: this.state.player.id}} />)
+        : (<LoadingUser currentPage={this.state.loadingPageNo} totalPages={this.state.totalPages} errorMessage={this.state.errorMessage}/>)
+      }
       </div>
     );
   }
