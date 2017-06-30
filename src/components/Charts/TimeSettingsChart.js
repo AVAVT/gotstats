@@ -4,15 +4,14 @@ import { Chart } from 'react-google-charts';
 
 import Analyzer from '../../services/Analyzer';
 
-class WinLoseChart extends Component {
+class TimeSettingsChart extends Component {
   static propTypes = {
     title : PropTypes.string,
     id    : PropTypes.string,
     gamesData : PropTypes.shape({
       playerId: PropTypes.number.isRequired,
       games   : PropTypes.array.isRequired
-    }).isRequired,
-    footer : PropTypes.element
+    }).isRequired
   }
 
   constructor(props){
@@ -22,9 +21,10 @@ class WinLoseChart extends Component {
       mainChartOptions : {
         backgroundColor     : "transparent",
         chartArea           : { top: 30 },
-        colors              : ["#000000", "#f8f8ff"],
-        pieSliceTextStyle   : {color: "#d93344"},
+        colors              : ["#d93344","#41CD64", "#5486d1", "#9d4dc5"],
+        pieSliceTextStyle   : {color: "#ffffff"},
         legend              : {
+          maxLines: 2,
           position: "bottom",
           textStyle: {
             color: "#f8f8ff",
@@ -33,7 +33,7 @@ class WinLoseChart extends Component {
           }
         }
       },
-      subChartOptions : {
+      pieChartOptions : {
         backgroundColor     : "transparent",
         chartArea           : { top: 10 },
         colors              : ["#d93344","#41CD64", "#5486d1", "#9d4dc5"],
@@ -62,28 +62,29 @@ class WinLoseChart extends Component {
   }
 
   generateChartData(gamesData){
-    const statistics = Analyzer.computeWinLoseStatistics(gamesData.games, gamesData.playerId);
+    const times = Analyzer.computeTimeSettings(gamesData.games, gamesData.playerId);
 
     this.setState({
       chartData1: [
-  			['Color', 'Games'],
-  			['Black', statistics.blackGames],
-        ['White', statistics.whiteGames],
+  			['Size', 'Games'],
+        ['Blitz', times.blitzGames],
+  			['Live', times.liveGames],
+        ['Correspondence', times.correspondenceGames]
   		],
-      chartData2: [
+      chartData2: times.blitzGames > 0 ? [
   			['Result', 'Games'],
-  			['Losses', (statistics.blackLosses + statistics.whiteLosses)],
-        ['Wins', (statistics.blackGames + statistics.whiteGames) - (statistics.blackLosses + statistics.whiteLosses)],
-  		],
-      chartData3: statistics.blackGames > 0 ? [
-  			['Result', 'Games'],
-  			['Losses', statistics.blackLosses],
-        ['Wins', statistics.blackGames - statistics.blackLosses],
+  			['Losses', times.blitzLosses],
+        ['Wins', (times.blitzGames - times.blitzLosses)],
   		] : null,
-      chartData4: statistics.whiteGames > 0 ? [
+      chartData3: times.liveGames > 0 ? [
   			['Result', 'Games'],
-  			['Losses', statistics.whiteLosses],
-        ['Wins', statistics.whiteGames - statistics.whiteLosses],
+  			['Losses', times.liveLosses],
+        ['Wins', (times.liveGames - times.liveLosses)],
+  		] : null,
+      chartData4: times.correspondenceGames > 0 ? [
+  			['Result', 'Games'],
+  			['Losses', times.correspondenceLosses],
+        ['Wins', (times.correspondenceGames - times.correspondenceLosses)],
   		] : null
     });
   }
@@ -112,10 +113,10 @@ class WinLoseChart extends Component {
           {
             this.state.chartData2 ? (
               <div className="col-sm-4">
-                <h5 className="text-center">Total</h5>
+                <h5 className="text-center">Blitz</h5>
                 <Chart
                   chartType="PieChart"
-                  options={this.state.subChartOptions}
+                  options={this.state.pieChartOptions}
                   data={this.state.chartData2}
                   width={'100%'}
                   height={'250px'}
@@ -126,10 +127,10 @@ class WinLoseChart extends Component {
           {
             this.state.chartData3 ? (
               <div className="col-sm-4">
-                <h5 className="text-center">As Black</h5>
+                <h5 className="text-center">Live</h5>
                 <Chart
                   chartType="PieChart"
-                  options={this.state.subChartOptions}
+                  options={this.state.pieChartOptions}
                   data={this.state.chartData3}
                   width={'100%'}
                   height={'250px'}
@@ -140,10 +141,10 @@ class WinLoseChart extends Component {
           {
             this.state.chartData4 ? (
               <div className="col-sm-4">
-                <h5 className="text-center">As White</h5>
+                <h5 className="text-center">Correspondence</h5>
                 <Chart
                   chartType="PieChart"
-                  options={this.state.subChartOptions}
+                  options={this.state.pieChartOptions}
                   data={this.state.chartData4}
                   width={'100%'}
                   height={'250px'}
@@ -152,12 +153,9 @@ class WinLoseChart extends Component {
             ) : null
           }
         </div>
-        {
-          this.props.footer ? this.props.footer : null
-        }
       </section>
     );
   }
 }
 
-export default WinLoseChart;
+export default TimeSettingsChart;

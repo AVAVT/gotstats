@@ -102,7 +102,8 @@ class UserStatistics extends Component {
     .then(function(res){
       this.setState({
         loadingPageNo : this.state.loadingPageNo+1,
-        totalPages    : Math.ceil(res.count/50)
+        totalPages    : Math.ceil(res.count/50),
+        errorMessage  : null
       });
 
       connectionInfo.isError = false;
@@ -146,13 +147,21 @@ class UserStatistics extends Component {
       connectionInfo.retryNumber += 1;
       var errorMessage = null;
       if(connectionInfo.retryNumber < 5){
-          errorMessage = "Error connecting to OGS server. <strong>Error code: " + err.status + "</strong>. Retrying in "+(connectionInfo.retryNumber*connectionInfo.retryNumber)+" seconds...";
+          errorMessage = (
+            <p className="error">
+              Error connecting to OGS server. <strong>Error code: {err.status}</strong>. Retrying in {connectionInfo.retryNumber*connectionInfo.retryNumber} seconds...
+            </p>
+          );
           setTimeout(function(){
             this.fetchGamePage(allGames, userId, localData, connectionInfo, url)
           }.bind(this), connectionInfo.retryNumber*connectionInfo.retryNumber*1000);
       }
       else{
-        errorMessage = "Error connecting to OGS server. <strong>Error code: " + err.status + "</strong>. Please try again later or contact me if you really have the need to stalk that person.";
+        errorMessage = (
+          <p className="error">
+            Error connecting to OGS server. <strong>Error code: {err.status }</strong>. Please try again later or contact me if you really have the need to stalk that person.
+          </p>
+        );
       }
 
       this.setState({

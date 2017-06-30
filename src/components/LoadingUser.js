@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 class LoadingUser extends Component {
   static propTypes = {
-    errorMessage: PropTypes.string,
+    errorMessage: PropTypes.element,
     currentPage : PropTypes.number,
     totalPages   : PropTypes.number
   }
@@ -30,7 +30,7 @@ class LoadingUser extends Component {
           <circle className="white_stone" cx="71.5" cy="71.5" r="20" strokeWidth="0" fill="#f8f8ff" />
         </svg>
         {loadMessage}
-        <p className="error">{errorMessage}</p>
+        {errorMessage}
       </div>
     );
   }

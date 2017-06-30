@@ -4,15 +4,14 @@ import { Chart } from 'react-google-charts';
 
 import Analyzer from '../../services/Analyzer';
 
-class WinLoseChart extends Component {
+class BoardSizesChart extends Component {
   static propTypes = {
     title : PropTypes.string,
     id    : PropTypes.string,
     gamesData : PropTypes.shape({
       playerId: PropTypes.number.isRequired,
       games   : PropTypes.array.isRequired
-    }).isRequired,
-    footer : PropTypes.element
+    }).isRequired
   }
 
   constructor(props){
@@ -22,9 +21,10 @@ class WinLoseChart extends Component {
       mainChartOptions : {
         backgroundColor     : "transparent",
         chartArea           : { top: 30 },
-        colors              : ["#000000", "#f8f8ff"],
-        pieSliceTextStyle   : {color: "#d93344"},
+        colors              : ["#d93344","#41CD64", "#5486d1", "#9d4dc5"],
+        pieSliceTextStyle   : {color: "#ffffff"},
         legend              : {
+          maxLines: 2,
           position: "bottom",
           textStyle: {
             color: "#f8f8ff",
@@ -33,7 +33,7 @@ class WinLoseChart extends Component {
           }
         }
       },
-      subChartOptions : {
+      pieChartOptions : {
         backgroundColor     : "transparent",
         chartArea           : { top: 10 },
         colors              : ["#d93344","#41CD64", "#5486d1", "#9d4dc5"],
@@ -62,28 +62,35 @@ class WinLoseChart extends Component {
   }
 
   generateChartData(gamesData){
-    const statistics = Analyzer.computeWinLoseStatistics(gamesData.games, gamesData.playerId);
+    const sizes = Analyzer.computeBoardSizes(gamesData.games, gamesData.playerId);
 
     this.setState({
       chartData1: [
-  			['Color', 'Games'],
-  			['Black', statistics.blackGames],
-        ['White', statistics.whiteGames],
+  			['Size', 'Games'],
+  			['19x19', sizes.nineteenGames],
+        ['13x13', sizes.thirteenGames],
+        ['9x9', sizes.nineGames],
+        ['Other', sizes.otherGames],
   		],
-      chartData2: [
+      chartData2: sizes.nineteenGames > 0 ? [
   			['Result', 'Games'],
-  			['Losses', (statistics.blackLosses + statistics.whiteLosses)],
-        ['Wins', (statistics.blackGames + statistics.whiteGames) - (statistics.blackLosses + statistics.whiteLosses)],
-  		],
-      chartData3: statistics.blackGames > 0 ? [
-  			['Result', 'Games'],
-  			['Losses', statistics.blackLosses],
-        ['Wins', statistics.blackGames - statistics.blackLosses],
+  			['Losses', sizes.nineteenLosses],
+        ['Wins', (sizes.nineteenGames - sizes.nineteenLosses)],
   		] : null,
-      chartData4: statistics.whiteGames > 0 ? [
+      chartData3: sizes.thirteenGames > 0 ? [
   			['Result', 'Games'],
-  			['Losses', statistics.whiteLosses],
-        ['Wins', statistics.whiteGames - statistics.whiteLosses],
+  			['Losses', sizes.thirteenLosses],
+        ['Wins', (sizes.thirteenGames - sizes.thirteenLosses)],
+  		] : null,
+      chartData4: sizes.nineGames > 0 ? [
+  			['Result', 'Games'],
+  			['Losses', sizes.nineLosses],
+        ['Wins', (sizes.nineGames - sizes.nineLosses)],
+  		] : null,
+      chartData5: sizes.otherGames > 0 ? [
+  			['Result', 'Games'],
+  			['Losses', sizes.otherLosses],
+        ['Wins', (sizes.otherGames - sizes.otherLosses)],
   		] : null
     });
   }
@@ -111,11 +118,11 @@ class WinLoseChart extends Component {
         <div className="row">
           {
             this.state.chartData2 ? (
-              <div className="col-sm-4">
-                <h5 className="text-center">Total</h5>
+              <div className="col-sm-6">
+                <h5 className="text-center">19x19</h5>
                 <Chart
                   chartType="PieChart"
-                  options={this.state.subChartOptions}
+                  options={this.state.pieChartOptions}
                   data={this.state.chartData2}
                   width={'100%'}
                   height={'250px'}
@@ -125,11 +132,11 @@ class WinLoseChart extends Component {
           }
           {
             this.state.chartData3 ? (
-              <div className="col-sm-4">
-                <h5 className="text-center">As Black</h5>
+              <div className="col-sm-6">
+                <h5 className="text-center">13x13</h5>
                 <Chart
                   chartType="PieChart"
-                  options={this.state.subChartOptions}
+                  options={this.state.pieChartOptions}
                   data={this.state.chartData3}
                   width={'100%'}
                   height={'250px'}
@@ -139,11 +146,11 @@ class WinLoseChart extends Component {
           }
           {
             this.state.chartData4 ? (
-              <div className="col-sm-4">
-                <h5 className="text-center">As White</h5>
+              <div className="col-sm-6">
+                <h5 className="text-center">9x9</h5>
                 <Chart
                   chartType="PieChart"
-                  options={this.state.subChartOptions}
+                  options={this.state.pieChartOptions}
                   data={this.state.chartData4}
                   width={'100%'}
                   height={'250px'}
@@ -151,13 +158,24 @@ class WinLoseChart extends Component {
               </div>
             ) : null
           }
+          {
+            this.state.chartData5 ? (
+              <div className="col-sm-6">
+                <h5 className="text-center">Other Sizes</h5>
+                <Chart
+                  chartType="PieChart"
+                  options={this.state.pieChartOptions}
+                  data={this.state.chartData5}
+                  width={'100%'}
+                  height={'250px'}
+                />
+              </div>
+            ) : null
+          }
         </div>
-        {
-          this.props.footer ? this.props.footer : null
-        }
       </section>
     );
   }
 }
 
-export default WinLoseChart;
+export default BoardSizesChart;
