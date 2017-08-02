@@ -84,6 +84,10 @@ class UserStatistics extends Component {
         usingLocalStorage : true
       });
     }
+    
+    this.setState({
+      allGames : null
+    });
 
     const connectionInfo = {
       isError     : false,
@@ -135,6 +139,8 @@ class UserStatistics extends Component {
       }
       else{
         // Finishes querying
+        if(userId !== this.state.player.id) return; // Discard if not current player (user switched player search at last page)
+
         if(this.state.usingLocalStorage) this.saveUserData(userId, allGames);
         this.setState({
           allGames : allGames
@@ -186,8 +192,8 @@ class UserStatistics extends Component {
     return (
       <div>
       {
-        this.state.allGames ?
-        (<ChartList gamesData={{ games: this.state.allGames, playerId: this.state.player.id}} />)
+        this.state.allGames && this.state.player ?
+        (<ChartList gamesData={{ games: this.state.allGames, playerId: this.state.player.id}} player={this.state.player}/>)
         : (<LoadingUser currentPage={this.state.loadingPageNo} totalPages={this.state.totalPages} errorMessage={this.state.errorMessage}/>)
       }
       </div>

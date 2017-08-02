@@ -21,6 +21,11 @@ describe("ChartList", () => {
       gamesData : {
         playerId: 197819,
         games   : []
+      },
+      player : {
+        id      : 197819,
+        username: "AVAVT",
+        ranking : 26
       }
     };
 

@@ -58,19 +58,19 @@ function computeBoardSizes(games, playerId){
   games.forEach(game =>{
 		if(game.width === 19 && game.height === 19){
 			nineteenGames++;
-			if(!isPlayerWon(game, playerId)) nineteenLosses++;
+			if(!isPlayerWin(game, playerId)) nineteenLosses++;
 		}
 		else if(game.width === 13 && game.height === 13){
 			thirteenGames++;
-			if(!isPlayerWon(game, playerId)) thirteenLosses++;
+			if(!isPlayerWin(game, playerId)) thirteenLosses++;
 		}
 		else if(game.width === 9 && game.height === 9){
 			nineGames++;
-			if(!isPlayerWon(game, playerId)) nineLosses++;
+			if(!isPlayerWin(game, playerId)) nineLosses++;
 		}
 		else{
 			otherGames++;
-			if(!isPlayerWon(game, playerId)) otherLosses++;
+			if(!isPlayerWin(game, playerId)) otherLosses++;
 		}
   });
 
@@ -86,19 +86,19 @@ function computeTimeSettings(games, playerId){
 	games.forEach(game =>{
 		if(game.time_per_move < 20){
 			blitzGames++;
-			if(!isPlayerWon(game, playerId)){
+			if(!isPlayerWin(game, playerId)){
 				blitzLosses++;
 			}
 		}
 		else if(game.time_per_move > 10800){
 			correspondenceGames++;
-			if(!isPlayerWon(game, playerId)){
+			if(!isPlayerWin(game, playerId)){
 				correspondenceLosses++;
 			}
 		}
 		else{
 			liveGames++;
-			if(!isPlayerWon(game, playerId)){
+			if(!isPlayerWin(game, playerId)){
 				liveLosses++;
 			}
 		}
@@ -110,7 +110,79 @@ function computeTimeSettings(games, playerId){
 	}
 }
 
-function isPlayerWon(game, playerId){
+function computeOpponentsInfo(games, playerId){
+	var opponents = [], numberOfOpponents = 0;
+	var weakestOpp = {rank: 70};
+	var strongestOpp = {rank : 0};
+	var mostPlayed = {games : 0};
+	var strongestDefeated = {rank : 0};
+
+	games.forEach(game => {
+		let opponent = game.players.black.id === playerId ? game.players.white : game.players.black;
+
+		if(isPlayerWin(game, playerId) && opponent.ranking > strongestDefeated.rank){
+			strongestDefeated = {
+				id			: opponent.id,
+				username: opponent.username,
+				rank 		: opponent.ranking,
+				url 		: game.related.detail.split("games/")[1],
+				outcome : (game.outcome === "Resignation" ? "a bloody" : "an intense")
+			};
+		}
+
+		if(!opponents[opponent.id]){
+			opponents[opponent.id] = 1;
+		}
+		else{
+			opponents[opponent.id]++;
+		}
+
+		if(opponents[opponent.id] > mostPlayed.games){
+			mostPlayed = {
+				id			: opponent.id,
+				username: opponent.username,
+				rank 		: opponent.ranking,
+				games 	: opponents[opponent.id]
+			};
+		}
+
+		if(opponent.ranking > strongestOpp.rank){
+			strongestOpp = {
+				id			: opponent.id,
+				username: opponent.username,
+				rank 		: opponent.ranking
+			};
+		}
+
+		if(opponent.ranking < weakestOpp.rank){
+			weakestOpp = {
+				id			: opponent.id,
+				username: opponent.username,
+				rank 		: opponent.ranking
+			};
+		}
+	});
+
+	numberOfOpponents = 0;
+	for (var k in opponents) {
+		if (opponents.hasOwnProperty(k)) {
+			 numberOfOpponents++;
+		}
+	}
+
+	strongestDefeated.rank = strongestDefeated.rank;
+
+	return {
+		strongestOpp,
+		weakestOpp,
+		mostPlayed,
+		strongestDefeated,
+		numberOfOpponents,
+		averageGamePerOpponent : (games.length / numberOfOpponents).toFixed(2)
+	}
+}
+
+function isPlayerWin(game, playerId){
 	if( (game.players.black.id === playerId && game.black_lost)
 			|| (game.players.white.id === playerId && game.white_lost)){
 		return false;
@@ -118,6 +190,13 @@ function isPlayerWon(game, playerId){
 	else{
 		return true;
 	}
+}
+
+function rankNumberToKyuDan(rank){
+	if(rank < 30)
+		return (30 - rank) +  "k";
+	else
+		return (rank - 29) + "d";
 }
 
 function assignGameResultToDistributions(distributions, game){
@@ -151,5 +230,7 @@ export default {
   computeWinLoseDistributions,
 	computeBoardSizes,
 	computeTimeSettings,
-	isPlayerWon
+	computeOpponentsInfo,
+	isPlayerWin,
+	rankNumberToKyuDan
 };

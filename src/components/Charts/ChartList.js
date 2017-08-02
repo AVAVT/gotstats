@@ -5,6 +5,7 @@ import WinLoseChart from './WinLoseChart';
 import ResultDistributionChart from './ResultDistributionChart';
 import BoardSizesChart from './BoardSizesChart';
 import TimeSettingsChart from './TimeSettingsChart';
+import OpponentChart from './OpponentChart';
 
 import Analyzer from '../../services/Analyzer';
 
@@ -13,7 +14,8 @@ class ChartList extends Component {
     gamesData : PropTypes.shape({
       playerId: PropTypes.number.isRequired,
       games   : PropTypes.array.isRequired
-    }).isRequired
+    }).isRequired,
+    player : PropTypes.object.isRequired
   }
 
   createGameDate(games){
@@ -25,7 +27,7 @@ class ChartList extends Component {
 
   render() {
     const lostGames = this.props.gamesData.games.reduce((result, game) => {
-      if(!Analyzer.isPlayerWon(game, this.props.gamesData.playerId)){
+      if(!Analyzer.isPlayerWin(game, this.props.gamesData.playerId)){
         return result + 1;
       }
       else{
@@ -48,7 +50,7 @@ class ChartList extends Component {
     return (
       <div>
         {
-          this.props.gamesData.games.length > 0 ? (
+          this.props.gamesData.games.length > 0 && (
             <WinLoseChart
               title={`Total games played on OGS: ${this.props.gamesData.games.length}`}
               id={"total_games_stats"}
@@ -65,70 +67,80 @@ class ChartList extends Component {
                 ) : null
               }
             />
-          ) : null
+          )
         }
         {
-          this.props.gamesData.games.length > 0 ? (
+          this.props.gamesData.games.length > 0 && (
             <ResultDistributionChart
               title={`Game results distribution`}
               id={"game_results"}
               gamesData={this.props.gamesData}
             />
-          ) : null
+          )
         }
         {
-          rankedGames.length > 0 ? (
+          rankedGames.length > 0 && (
             <WinLoseChart
               title={`Ranked Games: ${rankedGames.length}`}
               id={"ranked_games_stats"}
               gamesData={this.createGameDate(rankedGames)}
             />
-          ) : null
+          )
         }
         {
-          unrankedGames.length > 0 ? (
+          unrankedGames.length > 0 && (
             <WinLoseChart
               title={`Unranked Games: ${unrankedGames.length}`}
               id={"unranked_games_stats"}
               gamesData={this.createGameDate(unrankedGames)}
             />
-          ) : null
+          )
         }
         {
-          evenGames.length > 0 ? (
+          evenGames.length > 0 && (
             <WinLoseChart
               title={`Even Games: ${evenGames.length}`}
               id={"even_games_stats"}
               gamesData={this.createGameDate(evenGames)}
             />
-          ) : null
+          )
         }
         {
-          tournamentGames.length > 0 ? (
+          tournamentGames.length > 0 && (
             <WinLoseChart
               title={`Participated in ${uniqueTournaments.length} tournaments`}
               id={"tournament_games_stats"}
               gamesData={this.createGameDate(tournamentGames)}
             />
-          ) : null
+          )
         }
         {
-          this.props.gamesData.games.length > 0 ? (
+          this.props.gamesData.games.length > 0 && (
             <BoardSizesChart
               title={`Performance across board sizes`}
               id={"board_sizes_stats"}
               gamesData={this.props.gamesData}
             />
-          ) : null
+          )
         }
         {
-          this.props.gamesData.games.length > 0 ? (
+          this.props.gamesData.games.length > 0 && (
             <TimeSettingsChart
               title={`Performance across time settings`}
               id={"time_settings_stats"}
               gamesData={this.props.gamesData}
             />
-          ) : null
+          )
+        }
+        {
+          this.props.gamesData.games.length > 0 && (
+            <OpponentChart
+              title={`Number of opponents faced`}
+              id={"opponents_stats"}
+              gamesData={this.props.gamesData}
+              player={this.props.player}
+            />
+          )
         }
       </div>
     );

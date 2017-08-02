@@ -1,3 +1,4 @@
 {
-  "OGS_API_ROOT" : "https://online-go.com/api/v1/players/"
+  "OGS_API_ROOT": "https://online-go.com/api/v1/players/",
+  "OGS_ROOT"    : "http://online-go.com/"
 }
