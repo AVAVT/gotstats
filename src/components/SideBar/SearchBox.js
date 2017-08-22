@@ -6,24 +6,17 @@ class SearchBox extends Component {
     history : PropTypes.object.isRequired
   }
 
-  constructor(props){
-    super(props);
-
-    this.state = {
-      username : ""
-    }
-
-    this.updateSearchUser = this.updateSearchUser.bind(this);
-    this.submit = this.submit.bind(this);
+  state = {
+    username : ""
   }
 
-  updateSearchUser(event){
+  updateSearchUser = (event) => {
     this.setState({
       username : event.target.value
     });
   }
 
-  submit(event){
+  submit = (event) => {
     event.preventDefault();
     this.props.history.push(`/${this.state.username}`);
 

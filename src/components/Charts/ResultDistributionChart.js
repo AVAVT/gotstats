@@ -13,41 +13,37 @@ class ResultDistributionChart extends Component {
     }).isRequired
   }
 
-  constructor(props){
-    super(props);
-
-    this.state = {
-      pieChartOptions : {
-        backgroundColor     : "transparent",
-        chartArea           : { top: 10 },
-        colors              : ["#d93344","#41CD64", "#5486d1", "#9d4dc5"],
-        pieSliceTextStyle   : {color: "#ffffff"},
-        legend              : {
-          position: "bottom",
-          textStyle: {
-            color: "#f8f8ff",
-            fontName: "Helvetica Neue",
-            fontSize: 14
-          }
+  state = {
+    pieChartOptions : {
+      backgroundColor     : "transparent",
+      chartArea           : { top: 10 },
+      colors              : ["#d93344","#41CD64", "#5486d1", "#9d4dc5"],
+      pieSliceTextStyle   : {color: "#ffffff"},
+      legend              : {
+        position: "bottom",
+        textStyle: {
+          color: "#f8f8ff",
+          fontName: "Helvetica Neue",
+          fontSize: 14
+        }
+      }
+    },
+    columnChartOptions : {
+      backgroundColor     : "transparent",
+      isStacked : true,
+      chartArea           : { top: 10 },
+      colors              : ["#d93344","#41CD64", "#5486d1", "#9d4dc5"],
+      legend              : {
+        maxLines: 2,
+        position: "bottom",
+        textStyle: {
+          color: "#f8f8ff",
+          fontName: "Helvetica Neue",
+          fontSize: 14
         }
       },
-      columnChartOptions : {
-        backgroundColor     : "transparent",
-        isStacked : true,
-        chartArea           : { top: 10 },
-        colors              : ["#d93344","#41CD64", "#5486d1", "#9d4dc5"],
-        legend              : {
-          maxLines: 2,
-          position: "bottom",
-          textStyle: {
-            color: "#f8f8ff",
-            fontName: "Helvetica Neue",
-            fontSize: 14
-          }
-        },
-        hAxis : {textStyle : {color: "#f8f8ff", fontName: "Helvetica Neue", fontSize: 11} },
-				vAxis : {textStyle : {color: "#f8f8ff", fontName: "Helvetica Neue", fontSize: 11} }
-      }
+      hAxis : {textStyle : {color: "#f8f8ff", fontName: "Helvetica Neue", fontSize: 11} },
+      vAxis : {textStyle : {color: "#f8f8ff", fontName: "Helvetica Neue", fontSize: 11} }
     }
   }
 

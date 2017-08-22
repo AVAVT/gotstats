@@ -6,13 +6,7 @@ class QuickLinks extends Component {
     scrollToElem : PropTypes.func.isRequired
   }
 
-  constructor(props){
-    super(props);
-
-    this.scrollHandler = this.scrollHandler.bind(this);
-  }
-
-  scrollHandler(event){
+  scrollHandler = (event) => {
     event.preventDefault();
     this.props.scrollToElem(event.target.closest('a').getAttribute("href").replace("#", ""));
   }

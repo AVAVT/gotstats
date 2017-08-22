@@ -18,7 +18,7 @@ class ChartList extends Component {
     player : PropTypes.object.isRequired
   }
 
-  createGameDate(games){
+  createGameData(games){
     return {
       playerId  : this.props.gamesData.playerId,
       games     : games
@@ -83,7 +83,7 @@ class ChartList extends Component {
             <WinLoseChart
               title={`Ranked Games: ${rankedGames.length}`}
               id={"ranked_games_stats"}
-              gamesData={this.createGameDate(rankedGames)}
+              gamesData={this.createGameData(rankedGames)}
             />
           )
         }
@@ -92,7 +92,7 @@ class ChartList extends Component {
             <WinLoseChart
               title={`Unranked Games: ${unrankedGames.length}`}
               id={"unranked_games_stats"}
-              gamesData={this.createGameDate(unrankedGames)}
+              gamesData={this.createGameData(unrankedGames)}
             />
           )
         }
@@ -101,7 +101,7 @@ class ChartList extends Component {
             <WinLoseChart
               title={`Even Games: ${evenGames.length}`}
               id={"even_games_stats"}
-              gamesData={this.createGameDate(evenGames)}
+              gamesData={this.createGameData(evenGames)}
             />
           )
         }
@@ -110,7 +110,7 @@ class ChartList extends Component {
             <WinLoseChart
               title={`Participated in ${uniqueTournaments.length} tournaments`}
               id={"tournament_games_stats"}
-              gamesData={this.createGameDate(tournamentGames)}
+              gamesData={this.createGameData(tournamentGames)}
             />
           )
         }

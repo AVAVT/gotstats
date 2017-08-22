@@ -15,11 +15,7 @@ class OpponentChart extends Component {
     player : PropTypes.object.isRequired
   }
 
-  constructor(props){
-    super(props);
-
-    this.state = { }
-  }
+  state = { }
 
   componentDidMount(){
     this.generateChartData(this.props.gamesData);

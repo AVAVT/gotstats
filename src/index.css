@@ -85,6 +85,10 @@ h3{
 	border-bottom: 1px solid #cccccc;
 }
 
+.OGS_logo{
+	height: 40px;
+}
+
 .loading_text{
 	padding: 10px 15px;
 	z-index: 10;
@@ -142,14 +146,8 @@ h3{
 	overflow: visible;
 	position: relative;
 
-	background: #d93344; /* Old browsers */
-	background: -moz-linear-gradient(left, #d93344 0%, #41CD64 100%); /* FF3.6+ */
-	background: -webkit-gradient(linear, left top, right top, color-stop(0%,#d93344), color-stop(100%,#41CD64)); /* Chrome,Safari4+ */
-	background: -webkit-linear-gradient(left, #d93344 0%,#41CD64 100%); /* Chrome10+,Safari5.1+ */
-	background: -o-linear-gradient(left, #d93344 0%,#41CD64 100%); /* Opera 11.10+ */
-	background: -ms-linear-gradient(left, #d93344 0%,#41CD64 100%); /* IE10+ */
-	background: linear-gradient(to right, #d93344 0%,#41CD64 100%); /* W3C */
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#d93344', endColorstr='#41CD64',GradientType=1 ); /* IE6-9 */
+	background: #d93344;
+	background: linear-gradient(to right, #d93344 0%,#41CD64 100%);
 }
 
 .bar_chart a{

@@ -14,38 +14,34 @@ class BoardSizesChart extends Component {
     }).isRequired
   }
 
-  constructor(props){
-    super(props);
-
-    this.state = {
-      mainChartOptions : {
-        backgroundColor     : "transparent",
-        chartArea           : { top: 30 },
-        colors              : ["#d93344","#41CD64", "#5486d1", "#9d4dc5"],
-        pieSliceTextStyle   : {color: "#ffffff"},
-        legend              : {
-          maxLines: 2,
-          position: "bottom",
-          textStyle: {
-            color: "#f8f8ff",
-            fontName: "Helvetica Neue",
-            fontSize: 14
-          }
+  state = {
+    mainChartOptions : {
+      backgroundColor     : "transparent",
+      chartArea           : { top: 30 },
+      colors              : ["#d93344","#41CD64", "#5486d1", "#9d4dc5"],
+      pieSliceTextStyle   : {color: "#ffffff"},
+      legend              : {
+        maxLines: 2,
+        position: "bottom",
+        textStyle: {
+          color: "#f8f8ff",
+          fontName: "Helvetica Neue",
+          fontSize: 14
         }
-      },
-      pieChartOptions : {
-        backgroundColor     : "transparent",
-        chartArea           : { top: 10 },
-        colors              : ["#d93344","#41CD64", "#5486d1", "#9d4dc5"],
-        pieSliceTextStyle   : {color: "#ffffff"},
-        legend              : {
-          maxLines: 2,
-          position: "bottom",
-          textStyle: {
-            color: "#f8f8ff",
-            fontName: "Helvetica Neue",
-            fontSize: 14
-          }
+      }
+    },
+    pieChartOptions : {
+      backgroundColor     : "transparent",
+      chartArea           : { top: 10 },
+      colors              : ["#d93344","#41CD64", "#5486d1", "#9d4dc5"],
+      pieSliceTextStyle   : {color: "#ffffff"},
+      legend              : {
+        maxLines: 2,
+        position: "bottom",
+        textStyle: {
+          color: "#f8f8ff",
+          fontName: "Helvetica Neue",
+          fontSize: 14
         }
       }
     }
