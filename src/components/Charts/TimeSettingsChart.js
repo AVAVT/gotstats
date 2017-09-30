@@ -92,7 +92,7 @@ class TimeSettingsChart extends Component {
         <div className="row">
           {
             this.state.chartData1 ? (
-              <div className="col-sm-offset-3 col-sm-6">
+              <div className="col-sm-6 mr-auto ml-auto">
                 <Chart
                   chartType="PieChart"
                   options={this.state.mainChartOptions}
@@ -108,7 +108,7 @@ class TimeSettingsChart extends Component {
         <div className="row">
           {
             this.state.chartData2 ? (
-              <div className="col-sm-4">
+              <div className="col-md-4">
                 <h5 className="text-center">Blitz</h5>
                 <Chart
                   chartType="PieChart"
@@ -122,7 +122,7 @@ class TimeSettingsChart extends Component {
           }
           {
             this.state.chartData3 ? (
-              <div className="col-sm-4">
+              <div className="col-md-4">
                 <h5 className="text-center">Live</h5>
                 <Chart
                   chartType="PieChart"
@@ -136,7 +136,7 @@ class TimeSettingsChart extends Component {
           }
           {
             this.state.chartData4 ? (
-              <div className="col-sm-4">
+              <div className="col-md-4">
                 <h5 className="text-center">Correspondence</h5>
                 <Chart
                   chartType="PieChart"

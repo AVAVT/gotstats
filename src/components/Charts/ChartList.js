@@ -6,6 +6,7 @@ import ResultDistributionChart from './ResultDistributionChart';
 import BoardSizesChart from './BoardSizesChart';
 import TimeSettingsChart from './TimeSettingsChart';
 import OpponentChart from './OpponentChart';
+import MiscChart from './MiscChart';
 
 import Analyzer from '../../services/Analyzer';
 
@@ -137,6 +138,16 @@ class ChartList extends Component {
             <OpponentChart
               title={`Number of opponents faced`}
               id={"opponents_stats"}
+              gamesData={this.props.gamesData}
+              player={this.props.player}
+            />
+          )
+        }
+        {
+          this.props.gamesData.games.length > 0 && (
+            <MiscChart
+              title={`Miscellaneous statistics`}
+              id={"misc_stats"}
               gamesData={this.props.gamesData}
               player={this.props.player}
             />

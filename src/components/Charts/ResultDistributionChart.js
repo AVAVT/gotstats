@@ -98,7 +98,7 @@ class ResultDistributionChart extends Component {
         <div className="row">
         {
           this.state.chartData2 ? (
-            <div className="col-sm-6">
+            <div className="col-md-6">
               <h5 className="text-center">Losses</h5>
               <Chart
                 chartType="PieChart"
@@ -112,7 +112,7 @@ class ResultDistributionChart extends Component {
         }
         {
           this.state.chartData1 ? (
-            <div className="col-sm-6">
+            <div className="col-md-6">
               <h5 className="text-center">Wins</h5>
               <Chart
                 chartType="PieChart"
@@ -128,7 +128,7 @@ class ResultDistributionChart extends Component {
         <div className="row">
         {
           this.state.chartData3 ? (
-            <div className="col-sm-12">
+            <div className="col-12">
               <h3 className="text-center">Score differences distribution</h3>
               <Chart
                 chartType="ColumnChart"

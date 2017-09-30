@@ -20,8 +20,8 @@ class SideBar extends Component {
     ) : null;
 
     return (
-      <div className="col-md-3 col-md-push-9 col-sm-4 col-sm-push-8 sidebar">
-        <nav className="side_nav" data-spy="affix" data-offset-top="95">
+      <div className="col-lg-3 col-md-4 order-md-2 sidebar">
+        <nav className="side_nav sticky-top">
           <SearchBox history={this.props.history}/>
 
           {navi}

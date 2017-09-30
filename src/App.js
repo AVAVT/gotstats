@@ -61,7 +61,7 @@ class App extends Component {
           <div className="container stats_content">
       			<div className="row">
               <SideBar scrollToElem={this.scrollToElem} />
-              <div className="col-md-9 col-md-pull-3 col-sm-8 col-sm-pull-4">
+              <div className="col-lg-9 order-md-1 col-md-8 content-wrapper">
                 {routes.map((route, index) => (
                   <Route key={index} {...route} />
                 ))}

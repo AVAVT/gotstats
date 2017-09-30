@@ -81,7 +81,7 @@ class OpponentChart extends Component {
         <h2 id={this.props.id} className="text-center">{this.props.title}: {this.state.numberOfOpponents}</h2>
 
         <div className="row">
-          <div id="opponents_polars_chart" className="opponent_chart col-xs-8 col-xs-offset-2">
+          <div id="opponents_polars_chart" className="opponent_chart col-8 mr-auto ml-auto">
             <ul className="bar_legend">
               <li style={this.state.weakestLegendStyle}>
                 <div>Weakest Opponent</div><span></span>

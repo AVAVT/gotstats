@@ -98,7 +98,7 @@ class BoardSizesChart extends Component {
         <div className="row">
           {
             this.state.chartData1 ? (
-              <div className="col-sm-offset-3 col-sm-6">
+              <div className="col-md-6 mr-auto ml-auto">
                 <Chart
                   chartType="PieChart"
                   options={this.state.mainChartOptions}
@@ -114,7 +114,7 @@ class BoardSizesChart extends Component {
         <div className="row">
           {
             this.state.chartData2 ? (
-              <div className="col-sm-6">
+              <div className="col-md-6">
                 <h5 className="text-center">19x19</h5>
                 <Chart
                   chartType="PieChart"
@@ -128,7 +128,7 @@ class BoardSizesChart extends Component {
           }
           {
             this.state.chartData3 ? (
-              <div className="col-sm-6">
+              <div className="col-md-6">
                 <h5 className="text-center">13x13</h5>
                 <Chart
                   chartType="PieChart"
@@ -142,7 +142,7 @@ class BoardSizesChart extends Component {
           }
           {
             this.state.chartData4 ? (
-              <div className="col-sm-6">
+              <div className="col-md-6">
                 <h5 className="text-center">9x9</h5>
                 <Chart
                   chartType="PieChart"
@@ -156,7 +156,7 @@ class BoardSizesChart extends Component {
           }
           {
             this.state.chartData5 ? (
-              <div className="col-sm-6">
+              <div className="col-md-6">
                 <h5 className="text-center">Other Sizes</h5>
                 <Chart
                   chartType="PieChart"
