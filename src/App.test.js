@@ -1,28 +1,16 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { mount, shallow } from "enzyme";
 import App from './App';
+import { createReduxStore } from './reduxStore/store';
 
-describe("App", () => {
-  let props;
-  let shadowWrapper;
+it('renders without crashing', () => {
+  const div = document.createElement('div');
 
-  const getShallow = () => {
-    if (!shadowWrapper) {
-      shadowWrapper = shallow(
-        <App {...props} />
-      );
-    }
-    return shadowWrapper;
-  }
+  const reduxStore = createReduxStore();
 
-  beforeEach(() => {
-    props = { };
-    shadowWrapper = undefined;
-  });
-
-
-  it('renders without crashing', () => {
-    const wrapper = getShallow();
-  });
+  ReactDOM.render(
+    <App reduxStore={reduxStore} />,
+    div
+  );
+  ReactDOM.unmountComponentAtNode(div);
 });
