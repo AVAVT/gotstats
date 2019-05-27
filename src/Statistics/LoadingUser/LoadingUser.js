@@ -18,11 +18,11 @@ class LoadingUser extends Component {
       totalPages
     } = this.props;
 
-    const totalMessage = totalPages ? <span> of {totalPages}</span> : null;
-    const loadMessage = isFetchingPlayer ? <p>Fetching user info from OGS</p> : <p>Fetching games result from OGS: page {currentPage}{totalMessage}</p>;
+    const totalMessage = totalPages ? ` of ${totalPages}` : "";
+    const loadMessage = isFetchingPlayer ? `Fetching user info from OGS` : `Fetching games result from OGS: page ${currentPage}${totalMessage}`;
 
     return (
-      <div className="loading_text">
+      <div className="loading_wrapper">
         <svg className="loading_icon animating" width="150" height="150">
           <line className="hrline" x1="0" y1="71.5" x2="142" y2="71.5" stroke="#f8f8ff" strokeWidth="1" />
           <line className="vrline" x1="71.5" y1="0" x2="71.5" y2="142" stroke="#f8f8ff" strokeWidth="1" />
@@ -32,8 +32,7 @@ class LoadingUser extends Component {
           <circle className="black_stone4" cx="71.5" cy="114.5" r="19.5" strokeWidth="0" fill="#000000" />
           <circle className="white_stone" cx="71.5" cy="71.5" r="20" strokeWidth="0" fill="#f8f8ff" />
         </svg>
-        {loadMessage}
-        {errorMessage}
+        <p className="loading_text">{errorMessage || loadMessage}</p>
       </div>
     );
   }
