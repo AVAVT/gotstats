@@ -5,6 +5,7 @@ import {
 } from './playerActions';
 
 const initialState = {
+  id: -1,
   username: "",
   rank: "",
   fetching: null,

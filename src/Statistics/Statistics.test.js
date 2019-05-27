@@ -1,10 +1,17 @@
 import React from 'react';
 import { mount, shallow } from "enzyme";
-import Statistics from './Statistics';
-import Welcome from "./Welcome";
+
 import configureMockStore from "redux-mock-store";
 import { Provider } from "react-redux";
 import { MemoryRouter } from 'react-router-dom';
+
+import Statistics from './Statistics';
+import Welcome from "./Welcome";
+import LoadingUser from "./LoadingUser/LoadingUser";
+import ChartList from "./Charts/ChartList";
+import SideBar from "./SideBar/SideBar";
+
+import { testGame, testUser } from "./testUtils";
 
 describe("Statistics", () => {
   const props = {
@@ -15,30 +22,93 @@ describe("Statistics", () => {
   };
 
   const mockStore = configureMockStore();
-  let store;
+  const defaultStore = {
+    player: {},
+    games: {},
+    chartsData: []
+  };
 
-  const getMounted = () => mount(
-    <Provider store={store}><MemoryRouter><Statistics {...props} /></MemoryRouter></Provider>,
-  );
+  const getMounted = (storeOverrides, propsOverrides) => {
+    const store = mockStore({
+      ...defaultStore,
+      ...storeOverrides
+    });
 
-  const getShallow = () => shallow(
-    <Provider store={store}><Statistics {...props} /></Provider>
-  )
+    return mount(
+      <Provider store={store}><MemoryRouter><Statistics {...{ ...props, ...propsOverrides }} /></MemoryRouter></Provider>,
+    );
+  }
+
+  const getShallow = (storeOverrides, propsOverrides) => {
+    const store = mockStore({
+      ...defaultStore,
+      ...storeOverrides
+    });
+
+    return shallow(
+      <Provider store={store}><Statistics {...{ ...props, ...propsOverrides }} /></Provider>,
+    );
+  }
 
   beforeEach(() => {
-    store = mockStore({
-      player: {},
-      games: {},
-      chartsData: []
-    });
+
   });
 
   it('renders without crashing', () => {
     getShallow();
   });
 
+  it('always show SideBar', () => {
+    const wrapper = getMounted();
+    expect(wrapper.find(SideBar)).toExist();
+  })
+
   it('show welcome at start', () => {
     const wrapper = getMounted();
     expect(wrapper.find(Welcome)).toExist();
+  })
+
+  it('show loading while fetching user info', () => {
+    const wrapper = getMounted({
+      player: {
+        fetching: jest.fn()
+      }
+    });
+    expect(wrapper.find(LoadingUser)).toExist();
+  })
+
+  it('show loading on fetching user info error', () => {
+    const wrapper = getMounted({
+      player: {
+        fetchError: "Error"
+      }
+    });
+    expect(wrapper.find(LoadingUser)).toExist();
+  })
+
+  it('show loading while fetching user games', () => {
+    const wrapper = getMounted({
+      games: {
+        fetching: jest.fn()
+      }
+    });
+    expect(wrapper.find(LoadingUser)).toExist();
+  })
+
+  it('show loading on fetching user games error', () => {
+    const wrapper = getMounted({
+      games: {
+        fetchError: "Error"
+      }
+    });
+    expect(wrapper.find(LoadingUser)).toExist();
+  })
+
+  it('show chart list when chart data is available', () => {
+    const wrapper = getMounted({
+      player: testUser,
+      chartsData: [testGame]
+    });
+    expect(wrapper.find(ChartList)).toExist();
   })
 });
