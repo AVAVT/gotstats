@@ -7,7 +7,7 @@ import {
 const initialState = {
   id: -1,
   username: "",
-  rank: "",
+  rank: 0,
   fetching: null,
   fetchError: ""
 }

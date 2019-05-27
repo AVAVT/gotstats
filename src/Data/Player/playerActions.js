@@ -21,8 +21,8 @@ export const fetchPlayer = (player) => async (dispatch, getState) => {
     dispatch(fetchPlayerSuccess({
       id: userData.id,
       username: userData.username,
-      rank: userData.ranking,
-      registrationData: userData.registration_date
+      rank: parseInt(userData.ranking),
+      registrationDate: userData.registration_date
     }));
   }
   catch (error) {

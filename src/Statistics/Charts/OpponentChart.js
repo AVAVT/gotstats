@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
+import moment from 'moment';
+
 import configs from '../../OGSApi/configs.json';
 import Analyzer from '../../Data/Analyzer';
 import { rankNumberToKyuDan } from "../../Data/utils";
@@ -56,6 +58,8 @@ class OpponentChart extends Component {
         href: `${configs.OGS_ROOT}user/view/${opponentsInfo.strongestDefeated.id}/${opponentsInfo.strongestDefeated.username}`,
         img: `${configs.OGS_API_ROOT}${opponentsInfo.strongestDefeated.id}/icon?size=32`,
         username: `${opponentsInfo.strongestDefeated.username} (${rankNumberToKyuDan(opponentsInfo.strongestDefeated.rank)})`,
+        difference: opponentsInfo.strongestDefeated.difference,
+        date: opponentsInfo.strongestDefeated.date,
         gameHref: `http://online-go.com/game/${opponentsInfo.strongestDefeated.url}`
       },
       averageGamePerOpponent: opponentsInfo.averageGamePerOpponent
@@ -143,26 +147,28 @@ class OpponentChart extends Component {
                 {' '}
                 in {mostPlayedDisp.games} games.
               </li>
-              <li>
-                Scored a triumphant victory against
+
+              {
+                !!strongestDefeatedDisp.username &&
+                (<li>
+                  Scored a triumphant victory against
                 {' '}
-                <a target="_blank" rel="noopener noreferrer" href={strongestDefeatedDisp.href}>
-                  <img className="img-20" src={strongestDefeatedDisp.img} alt={strongestDefeatedDisp.username} />
+                  <a target="_blank" rel="noopener noreferrer nofollow" href={strongestDefeatedDisp.href}>
+                    <img className="img-20" src={strongestDefeatedDisp.img} alt={strongestDefeatedDisp.username} />
+                    {' '}
+                    {strongestDefeatedDisp.username}
+                  </a>
                   {' '}
-                  {strongestDefeatedDisp.username}
-                </a>
-                {' '}
-                in
-                {' '}
-                <a href={strongestDefeatedDisp.gameHref} target="_blank" rel="noopener noreferrer">
-                  a bloody game
-                </a>.
-              </li>
+                  on <a href={strongestDefeatedDisp.gameHref} target="_blank" rel="noopener noreferrer nofollow">{moment(strongestDefeatedDisp.date).format('MMM DD, YYYY')}</a>
+                  {' '}
+                  ({strongestDefeatedDisp.difference} rank difference at the time).
+              </li>)
+              }
               <li>Average game per opponent: {averageGamePerOpponent} games.</li>
             </ul>
           </div>
         </div>
-      </section>
+      </section >
     );
   }
 }

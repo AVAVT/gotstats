@@ -11,7 +11,7 @@ class Header extends Component {
   static propTypes = {
     player: PropTypes.shape({
       username: PropTypes.string,
-      rank: PropTypes.string
+      rank: PropTypes.number
     })
   }
 
