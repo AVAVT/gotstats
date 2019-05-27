@@ -48,20 +48,10 @@ class ResultDistributionChart extends Component {
     }
   }
 
-  componentDidMount() {
-    this.generateChartData(this.props.gamesData);
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.gamesData !== this.props.gamesData) {
-      this.generateChartData(nextProps.gamesData);
-    }
-  }
-
   generateChartData(gamesData) {
     const distributions = Analyzer.computeWinLoseDistributions(gamesData.games, gamesData.playerId);
 
-    this.setState({
+    return {
       chartData1: [
         ['Result', 'Games'],
         ['Resign', distributions["Plr+Res"]],
@@ -89,22 +79,28 @@ class ResultDistributionChart extends Component {
         ['30+', null, distributions["Plr+30+"]],
         ['40+', null, distributions["Plr+40+"]]
       ]
-    });
+    };
   }
 
   render() {
+    const {
+      chartData1,
+      chartData2,
+      chartData3
+    } = this.generateChartData(this.props.gamesData);
+
     return (
       <section className="stats_block">
         <h2 id={this.props.id} className="text-center">{this.props.title}</h2>
         <div className="row">
           {
-            this.state.chartData2 ? (
+            chartData2 ? (
               <div className="col-md-6">
                 <h5 className="text-center">Losses</h5>
                 <Chart
                   chartType="PieChart"
                   options={this.state.pieChartOptions}
-                  data={this.state.chartData2}
+                  data={chartData2}
                   width={'100%'}
                   height={'300px'}
                 />
@@ -112,13 +108,13 @@ class ResultDistributionChart extends Component {
             ) : null
           }
           {
-            this.state.chartData1 ? (
+            chartData1 ? (
               <div className="col-md-6">
                 <h5 className="text-center">Wins</h5>
                 <Chart
                   chartType="PieChart"
                   options={this.state.pieChartOptions}
-                  data={this.state.chartData1}
+                  data={chartData1}
                   width={'100%'}
                   height={'300px'}
                 />
@@ -128,13 +124,13 @@ class ResultDistributionChart extends Component {
         </div>
         <div className="row">
           {
-            this.state.chartData3 ? (
+            chartData3 ? (
               <div className="col-12">
                 <h3 className="text-center">Final scoring distribution</h3>
                 <Chart
                   chartType="ColumnChart"
                   options={this.state.columnChartOptions}
-                  data={this.state.chartData3}
+                  data={chartData3}
                   width={'100%'}
                   height={'300px'}
                 />

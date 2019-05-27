@@ -47,20 +47,10 @@ class BoardSizesChart extends Component {
     }
   }
 
-  componentDidMount() {
-    this.generateChartData(this.props.gamesData);
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.gamesData !== this.props.gamesData) {
-      this.generateChartData(nextProps.gamesData);
-    }
-  }
-
   generateChartData(gamesData) {
     const sizes = Analyzer.computeBoardSizes(gamesData.games, gamesData.playerId);
 
-    this.setState({
+    return {
       chartData1: [
         ['Size', 'Games'],
         ['19x19', sizes.nineteenGames],
@@ -88,21 +78,29 @@ class BoardSizesChart extends Component {
         ['Losses', sizes.otherLosses],
         ['Wins', (sizes.otherGames - sizes.otherLosses)],
       ] : null
-    });
+    };
   }
 
   render() {
+    const {
+      chartData1,
+      chartData2,
+      chartData3,
+      chartData4,
+      chartData5
+    } = this.generateChartData(this.props.gamesData);
+
     return (
       <section className="stats_block">
         <h2 id={this.props.id} className="text-center">{this.props.title}</h2>
         <div className="row">
           {
-            this.state.chartData1 ? (
+            chartData1 ? (
               <div className="col-md-6 mr-auto ml-auto">
                 <Chart
                   chartType="PieChart"
                   options={this.state.mainChartOptions}
-                  data={this.state.chartData1}
+                  data={chartData1}
                   width={'100%'}
                   height={'300px'}
                 />
@@ -113,13 +111,13 @@ class BoardSizesChart extends Component {
         <h3 className="text-center">Win/Loss ratio</h3>
         <div className="row">
           {
-            this.state.chartData2 ? (
+            chartData2 ? (
               <div className="col-md-6">
                 <h5 className="text-center">19x19</h5>
                 <Chart
                   chartType="PieChart"
                   options={this.state.pieChartOptions}
-                  data={this.state.chartData2}
+                  data={chartData2}
                   width={'100%'}
                   height={'250px'}
                 />
@@ -127,13 +125,13 @@ class BoardSizesChart extends Component {
             ) : null
           }
           {
-            this.state.chartData3 ? (
+            chartData3 ? (
               <div className="col-md-6">
                 <h5 className="text-center">13x13</h5>
                 <Chart
                   chartType="PieChart"
                   options={this.state.pieChartOptions}
-                  data={this.state.chartData3}
+                  data={chartData3}
                   width={'100%'}
                   height={'250px'}
                 />
@@ -141,13 +139,13 @@ class BoardSizesChart extends Component {
             ) : null
           }
           {
-            this.state.chartData4 ? (
+            chartData4 ? (
               <div className="col-md-6">
                 <h5 className="text-center">9x9</h5>
                 <Chart
                   chartType="PieChart"
                   options={this.state.pieChartOptions}
-                  data={this.state.chartData4}
+                  data={chartData4}
                   width={'100%'}
                   height={'250px'}
                 />
@@ -155,13 +153,13 @@ class BoardSizesChart extends Component {
             ) : null
           }
           {
-            this.state.chartData5 ? (
+            chartData5 ? (
               <div className="col-md-6">
                 <h5 className="text-center">Other Sizes</h5>
                 <Chart
                   chartType="PieChart"
                   options={this.state.pieChartOptions}
-                  data={this.state.chartData5}
+                  data={chartData5}
                   width={'100%'}
                   height={'250px'}
                 />

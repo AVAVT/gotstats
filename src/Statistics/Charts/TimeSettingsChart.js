@@ -47,20 +47,10 @@ class TimeSettingsChart extends Component {
     }
   }
 
-  componentDidMount() {
-    this.generateChartData(this.props.gamesData);
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.gamesData !== this.props.gamesData) {
-      this.generateChartData(nextProps.gamesData);
-    }
-  }
-
   generateChartData(gamesData) {
     const times = Analyzer.computeTimeSettings(gamesData.games, gamesData.playerId);
 
-    this.setState({
+    return {
       chartData1: [
         ['Size', 'Games'],
         ['Blitz', times.blitzGames],
@@ -82,21 +72,28 @@ class TimeSettingsChart extends Component {
         ['Losses', times.correspondenceLosses],
         ['Wins', (times.correspondenceGames - times.correspondenceLosses)],
       ] : null
-    });
+    };
   }
 
   render() {
+    const {
+      chartData1,
+      chartData2,
+      chartData3,
+      chartData4
+    } = this.generateChartData(this.props.gamesData);
+
     return (
       <section className="stats_block">
         <h2 id={this.props.id} className="text-center">{this.props.title}</h2>
         <div className="row">
           {
-            this.state.chartData1 ? (
+            chartData1 ? (
               <div className="col-sm-6 mr-auto ml-auto">
                 <Chart
                   chartType="PieChart"
                   options={this.state.mainChartOptions}
-                  data={this.state.chartData1}
+                  data={chartData1}
                   width={'100%'}
                   height={'300px'}
                 />
@@ -107,13 +104,13 @@ class TimeSettingsChart extends Component {
         <h3 className="text-center">Win/Loss ratio</h3>
         <div className="row">
           {
-            this.state.chartData2 ? (
+            chartData2 ? (
               <div className="col-md-4">
                 <h5 className="text-center">Blitz</h5>
                 <Chart
                   chartType="PieChart"
                   options={this.state.pieChartOptions}
-                  data={this.state.chartData2}
+                  data={chartData2}
                   width={'100%'}
                   height={'250px'}
                 />
@@ -121,13 +118,13 @@ class TimeSettingsChart extends Component {
             ) : null
           }
           {
-            this.state.chartData3 ? (
+            chartData3 ? (
               <div className="col-md-4">
                 <h5 className="text-center">Live</h5>
                 <Chart
                   chartType="PieChart"
                   options={this.state.pieChartOptions}
-                  data={this.state.chartData3}
+                  data={chartData3}
                   width={'100%'}
                   height={'250px'}
                 />
@@ -135,13 +132,13 @@ class TimeSettingsChart extends Component {
             ) : null
           }
           {
-            this.state.chartData4 ? (
+            chartData4 ? (
               <div className="col-md-4">
                 <h5 className="text-center">Correspondence</h5>
                 <Chart
                   chartType="PieChart"
                   options={this.state.pieChartOptions}
-                  data={this.state.chartData4}
+                  data={chartData4}
                   width={'100%'}
                   height={'250px'}
                 />

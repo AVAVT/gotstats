@@ -162,12 +162,12 @@ h3{
 }
 
 .bar_chart{
-	height: 5px;
+	height: 3px;
 	overflow: visible;
 	position: relative;
 
 	background: #d93344;
-	background: linear-gradient(to right, #d93344 0%,#41CD64 100%);
+	background: linear-gradient(to right, #d93344 0%, #efc225 50%,#41CD64 100%);
 }
 
 .bar_chart a{
