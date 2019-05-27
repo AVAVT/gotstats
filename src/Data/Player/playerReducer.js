@@ -17,7 +17,7 @@ const reducer = (state = initialState, { type, payload }) => {
     case FETCH_PLAYER_START: return {
       ...state,
       fetching: payload,
-      fetchFailure: ""
+      fetchError: ""
     }
 
     case FETCH_PLAYER_SUCCESS: return {
@@ -29,7 +29,7 @@ const reducer = (state = initialState, { type, payload }) => {
     case FETCH_PLAYER_FAILURE: return {
       ...state,
       fetching: null,
-      fetchFailure: payload.error
+      fetchError: payload.error
     }
 
     default: return state;
