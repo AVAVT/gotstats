@@ -119,19 +119,14 @@ function computeOpponentsInfo(games, playerId) {
 
   games.forEach(game => {
     let opponent = game.players.black.id === playerId ? game.players.white : game.players.black;
-    let opponentRank = (game.players.black.id === playerId ? game.white_player_rank : game.black_player_rank);
-    if (opponentRank <= 0) opponentRank = opponent.ranking;
-    let playerRank = (game.players.black.id === playerId ? game.black_player_rank : game.white_player_rank);
-    if (playerRank <= 0) playerRank = (game.players.black.id === playerId ? game.players.black : game.players.white).ranking;
 
-    if (isPlayerWin(game, playerId) && opponentRank > strongestDefeated.rank) {
+    if (isPlayerWin(game, playerId) && opponent.ranking > strongestDefeated.rank) {
       strongestDefeated = {
         id: opponent.id,
         username: opponent.username,
         rank: opponent.ranking,
         url: game.related.detail.split("games/")[1],
-        date: game.ended,
-        difference: opponentRank - playerRank,
+        date: game.ended
       };
     }
 

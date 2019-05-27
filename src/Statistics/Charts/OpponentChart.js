@@ -58,7 +58,6 @@ class OpponentChart extends Component {
         href: `${configs.OGS_ROOT}user/view/${opponentsInfo.strongestDefeated.id}/${opponentsInfo.strongestDefeated.username}`,
         img: `${configs.OGS_API_ROOT}${opponentsInfo.strongestDefeated.id}/icon?size=32`,
         username: `${opponentsInfo.strongestDefeated.username} (${rankNumberToKyuDan(opponentsInfo.strongestDefeated.rank)})`,
-        difference: opponentsInfo.strongestDefeated.difference,
         date: opponentsInfo.strongestDefeated.date,
         gameHref: `http://online-go.com/game/${opponentsInfo.strongestDefeated.url}`
       },
@@ -159,9 +158,7 @@ class OpponentChart extends Component {
                     {strongestDefeatedDisp.username}
                   </a>
                   {' '}
-                  on <a href={strongestDefeatedDisp.gameHref} target="_blank" rel="noopener noreferrer nofollow">{moment(strongestDefeatedDisp.date).format('MMM DD, YYYY')}</a>
-                  {' '}
-                  ({strongestDefeatedDisp.difference} rank difference at the time).
+                  on <a href={strongestDefeatedDisp.gameHref} target="_blank" rel="noopener noreferrer nofollow">{moment(strongestDefeatedDisp.date).format('MMM DD, YYYY')}</a>.
               </li>)
               }
               <li>Average game per opponent: {averageGamePerOpponent} games.</li>
