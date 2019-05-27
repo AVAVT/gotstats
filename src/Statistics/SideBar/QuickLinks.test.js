@@ -1,5 +1,4 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import { mount, shallow } from "enzyme";
 import QuickLinks from './QuickLinks';
 
@@ -10,7 +9,7 @@ describe("QuickLinks", () => {
   const getShallow = () => {
     if (!shadowWrapper) {
       shadowWrapper = shallow(
-        <QuickLinks {... props}/>
+        <QuickLinks {...props} />
       );
     }
     return shadowWrapper;
@@ -18,14 +17,14 @@ describe("QuickLinks", () => {
 
   beforeEach(() => {
     props = {
-      scrollToElem : jest.fn()
+      scrollToElem: jest.fn()
     };
     shadowWrapper = undefined;
   });
 
   it('pass clicked id to callback', () => {
     const wrapper = getShallow();
-    wrapper.find("a[href=\"#total_games_stats\"]").simulate('click');
+    wrapper.find("a[href=\"#total_games_stats\"]").simulate('click', { preventDefault: jest.fn() });
     expect(props.scrollToElem).toHaveBeenCalledWith('total_games_stats');
   });
 });

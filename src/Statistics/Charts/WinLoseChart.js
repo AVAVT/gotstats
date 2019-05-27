@@ -26,7 +26,7 @@ class WinLoseChart extends Component {
         position: "bottom",
         textStyle: {
           color: "#f8f8ff",
-          fontName: "Helvetica Neue",
+          fontName: "Roboto",
           fontSize: 14
         }
       }
@@ -41,7 +41,7 @@ class WinLoseChart extends Component {
         position: "bottom",
         textStyle: {
           color: "#f8f8ff",
-          fontName: "Helvetica Neue",
+          fontName: "Roboto",
           fontSize: 14
         }
       }

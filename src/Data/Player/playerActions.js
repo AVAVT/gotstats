@@ -1,5 +1,4 @@
 import { fetchUserId, fetchUserDataById } from "../../OGSApi/OGSApi";
-import { rankNumberToKyuDan } from "../utils";
 import { fetchGames } from "../Games/gameActions";
 
 export const FETCH_PLAYER_START = "FETCH_PLAYER_START";
@@ -22,7 +21,7 @@ export const fetchPlayer = (player) => async (dispatch, getState) => {
     dispatch(fetchPlayerSuccess({
       id: userData.id,
       username: userData.username,
-      rank: rankNumberToKyuDan(userData.ranking),
+      rank: userData.ranking,
       registrationData: userData.registration_date
     }));
   }

@@ -16,46 +16,34 @@ class OpponentChart extends Component {
     player: PropTypes.object.isRequired
   }
 
-  state = {}
-
-  componentDidMount() {
-    this.generateChartData(this.props.gamesData);
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.gamesData !== this.props.gamesData) {
-      this.generateChartData(nextProps.gamesData);
-    }
-  }
-
   generateChartData(gamesData) {
     const opponentsInfo = Analyzer.computeOpponentsInfo(gamesData.games, gamesData.playerId);
 
     // OGS data allow up to 30k but realistically no one's below 25k on OGS. Subtract 5 so 25k is at leftmost
     const weakestBarRate = opponentsInfo.weakestOpp.rank - 5;
     const strongestBarRate = opponentsInfo.strongestOpp.rank - 5;
-    const userBarRate = this.props.player.ranking - 5;
+    const userBarRate = this.props.player.rank - 5;
 
-    this.setState({
+    return {
       numberOfOpponents: opponentsInfo.numberOfOpponents,
-      weakestLegendStyle: { marginLeft: `${weakestBarRate / 33 * 100}%` },
-      strongestLegendStyle: { marginLeft: `${(strongestBarRate - weakestBarRate) / 33 * 100}%` },
+      weakestLegendStyle: { marginLeft: `${weakestBarRate * 3.03030303}%` },
+      strongestLegendStyle: { marginLeft: `${(strongestBarRate - weakestBarRate) * 3.03030303}%` },
       weakestDisp: {
         href: `${configs.OGS_ROOT}user/view/${opponentsInfo.weakestOpp.id}/${opponentsInfo.weakestOpp.username}`,
         title: `${opponentsInfo.weakestOpp.username} (${rankNumberToKyuDan(opponentsInfo.weakestOpp.rank)})`,
-        style: { left: `${weakestBarRate / 33 * 100}%` },
+        style: { left: `${weakestBarRate * 3.03030303}%` },
         img: `${configs.OGS_API_ROOT}${opponentsInfo.weakestOpp.id}/icon?size=32`
       },
       userDisp: {
         href: `${configs.OGS_ROOT}user/view/${this.props.player.id}/${this.props.player.username}`,
-        title: `${this.props.player.username} (${rankNumberToKyuDan(this.props.player.ranking)})`,
-        style: { left: `${userBarRate / 33 * 100}%` },
+        title: `${this.props.player.username} (${rankNumberToKyuDan(this.props.player.rank)})`,
+        style: { left: `${userBarRate * 3.03030303}%` },
         img: `${configs.OGS_API_ROOT}${this.props.player.id}/icon?size=32`
       },
       strongestDisp: {
         href: `${configs.OGS_ROOT}user/view/${opponentsInfo.strongestOpp.id}/${opponentsInfo.strongestOpp.username}`,
         title: `${opponentsInfo.strongestOpp.username} (${rankNumberToKyuDan(opponentsInfo.strongestOpp.rank)})`,
-        style: { left: `${strongestBarRate / 33 * 100}%` },
+        style: { left: `${strongestBarRate * 3.03030303}%` },
         img: `${configs.OGS_API_ROOT}${opponentsInfo.strongestOpp.id}/icon?size=32`
       },
       mostPlayedDisp: {
@@ -71,53 +59,65 @@ class OpponentChart extends Component {
         gameHref: `http://online-go.com/game/${opponentsInfo.strongestDefeated.url}`
       },
       averageGamePerOpponent: opponentsInfo.averageGamePerOpponent
-    });
+    };
   }
 
   render() {
-    if (!this.state.numberOfOpponents) return <section className="stats_block" />;
+
+    const {
+      numberOfOpponents,
+      weakestLegendStyle,
+      strongestLegendStyle,
+      weakestDisp,
+      userDisp,
+      strongestDisp,
+      mostPlayedDisp,
+      strongestDefeatedDisp,
+      averageGamePerOpponent
+    } = this.generateChartData(this.props.gamesData);
+    if (!numberOfOpponents) return <section className="stats_block" />;
 
     return (
       <section className="stats_block">
-        <h2 id={this.props.id} className="text-center">{this.props.title}: {this.state.numberOfOpponents}</h2>
+        <h2 id={this.props.id} className="text-center">{this.props.title}: {numberOfOpponents}</h2>
 
         <div className="row">
           <div id="opponents_polars_chart" className="opponent_chart col-8 mr-auto ml-auto">
             <ul className="bar_legend">
-              <li style={this.state.weakestLegendStyle}>
+              <li style={weakestLegendStyle}>
                 <div>Weakest Opponent</div><span></span>
               </li>
-              <li style={this.state.strongestLegendStyle}>
+              <li style={strongestLegendStyle}>
                 <div>Strongest Opponent</div><span></span>
               </li>
             </ul>
             <div className="bar_chart">
               <a target="_blank"
                 rel="noopener noreferrer"
-                href={this.state.weakestDisp.href}
+                href={weakestDisp.href}
                 data-toggle="tooltip"
                 data-placement="top"
-                title={this.state.weakestDisp.title}
-                style={this.state.weakestDisp.style}>
-                <img src={this.state.weakestDisp.img} alt={this.state.weakestDisp.title} />
+                title={weakestDisp.title}
+                style={weakestDisp.style}>
+                <img src={weakestDisp.img} alt={weakestDisp.title} />
               </a>
               <a target="_blank"
                 rel="noopener noreferrer"
-                href={this.state.userDisp.href}
+                href={userDisp.href}
                 data-toggle="tooltip"
                 data-placement="top"
-                title={this.state.userDisp.title}
-                style={this.state.userDisp.style}>
-                <img src={this.state.userDisp.img} alt={this.state.userDisp.title} />
+                title={userDisp.title}
+                style={userDisp.style}>
+                <img src={userDisp.img} alt={userDisp.title} />
               </a>
               <a target="_blank"
                 rel="noopener noreferrer"
-                href={this.state.strongestDisp.href}
+                href={strongestDisp.href}
                 data-toggle="tooltip"
                 data-placement="top"
-                title={this.state.strongestDisp.title}
-                style={this.state.strongestDisp.style}>
-                <img src={this.state.strongestDisp.img} alt={this.state.strongestDisp.title} />
+                title={strongestDisp.title}
+                style={strongestDisp.style}>
+                <img src={strongestDisp.img} alt={strongestDisp.title} />
               </a>
             </div>
             <ul className="ruler">
@@ -135,30 +135,30 @@ class OpponentChart extends Component {
               <li>
                 Most played with:
                 {' '}
-                <a target="_blank" rel="noopener noreferrer" href={this.state.mostPlayedDisp.href}>
-                  <img className="img-20" src={this.state.mostPlayedDisp.img} alt={this.state.mostPlayedDisp.username} />
+                <a target="_blank" rel="noopener noreferrer" href={mostPlayedDisp.href}>
+                  <img className="img-20" src={mostPlayedDisp.img} alt={mostPlayedDisp.username} />
                   {' '}
-                  {this.state.mostPlayedDisp.username}
+                  {mostPlayedDisp.username}
                 </a>
                 {' '}
-                in {this.state.mostPlayedDisp.games} games.
+                in {mostPlayedDisp.games} games.
               </li>
               <li>
                 Scored a triumphant victory against
                 {' '}
-                <a target="_blank" rel="noopener noreferrer" href={this.state.strongestDefeatedDisp.href}>
-                  <img className="img-20" src={this.state.strongestDefeatedDisp.img} alt={this.state.strongestDefeatedDisp.username} />
+                <a target="_blank" rel="noopener noreferrer" href={strongestDefeatedDisp.href}>
+                  <img className="img-20" src={strongestDefeatedDisp.img} alt={strongestDefeatedDisp.username} />
                   {' '}
-                  {this.state.strongestDefeatedDisp.username}
+                  {strongestDefeatedDisp.username}
                 </a>
                 {' '}
                 in
                 {' '}
-                <a href={this.state.strongestDefeatedDisp.gameHref} target="_blank" rel="noopener noreferrer">
+                <a href={strongestDefeatedDisp.gameHref} target="_blank" rel="noopener noreferrer">
                   a bloody game
                 </a>.
               </li>
-              <li>Average game per opponent: {this.state.averageGamePerOpponent} games.</li>
+              <li>Average game per opponent: {averageGamePerOpponent} games.</li>
             </ul>
           </div>
         </div>

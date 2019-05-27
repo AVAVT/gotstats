@@ -18,11 +18,15 @@ describe("ResultDistributionChart", () => {
 
   beforeEach(() => {
     props = {
-      title     : "Test title",
-      id        : "Test id",
-      gamesData : {
+      title: "Test title",
+      id: "Test id",
+      gamesData: {
         playerId: 197819,
-        games   : []
+        games: []
+      },
+      player: {
+        username: 'Test user',
+        rank: 6
       }
     };
 

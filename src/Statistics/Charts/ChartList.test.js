@@ -10,7 +10,7 @@ describe("ChartList", () => {
   const getShallow = () => {
     if (!shadowWrapper) {
       shadowWrapper = shallow(
-        <ChartList {...props} />
+        <ChartList.WrappedComponent {...props} />
       );
     }
     return shadowWrapper;
@@ -18,14 +18,11 @@ describe("ChartList", () => {
 
   beforeEach(() => {
     props = {
-      gamesData : {
-        playerId: 197819,
-        games   : []
-      },
-      player : {
-        id      : 197819,
+      chartsData: [],
+      player: {
+        id: 197819,
         username: "AVAVT",
-        ranking : 26
+        ranking: 26
       }
     };
 

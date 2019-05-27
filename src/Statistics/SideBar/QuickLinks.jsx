@@ -15,12 +15,18 @@ const links = [
   ["misc_stats", "Miscellaneous statistics"]
 ]
 
+
 class QuickLinks extends Component {
   static propTypes = {
     scrollToElem: PropTypes.func.isRequired
   }
 
-  renderLink = (linkData, index) => (<li key={index}><a href={`#${linkData[0]}`} onClick={() => this.props.scrollToElem(linkData[0])}>{linkData[1]}</a></li>)
+  onLinkClicked = (event, link) => {
+    event.preventDefault();
+    this.props.scrollToElem(link);
+  }
+
+  renderLink = (linkData, index) => (<li key={index}><a href={`#${linkData[0]}`} onClick={(e) => this.onLinkClicked(e, linkData[0])}>{linkData[1]}</a></li>)
 
   render() {
     return (

@@ -10,7 +10,8 @@ class ResultDistributionChart extends Component {
     gamesData: PropTypes.shape({
       playerId: PropTypes.number.isRequired,
       games: PropTypes.array.isRequired
-    }).isRequired
+    }).isRequired,
+    player: PropTypes.object.isRequired
   }
 
   state = {
@@ -23,7 +24,7 @@ class ResultDistributionChart extends Component {
         position: "bottom",
         textStyle: {
           color: "#f8f8ff",
-          fontName: "Helvetica Neue",
+          fontName: "Roboto",
           fontSize: 14
         }
       }
@@ -38,12 +39,12 @@ class ResultDistributionChart extends Component {
         position: "bottom",
         textStyle: {
           color: "#f8f8ff",
-          fontName: "Helvetica Neue",
+          fontName: "Roboto",
           fontSize: 14
         }
       },
-      hAxis: { textStyle: { color: "#f8f8ff", fontName: "Helvetica Neue", fontSize: 11 } },
-      vAxis: { textStyle: { color: "#f8f8ff", fontName: "Helvetica Neue", fontSize: 11 } }
+      hAxis: { textStyle: { color: "#f8f8ff", fontName: "Roboto", fontSize: 11 } },
+      vAxis: { textStyle: { color: "#f8f8ff", fontName: "Roboto", fontSize: 11 } }
     }
   }
 
@@ -76,7 +77,7 @@ class ResultDistributionChart extends Component {
         ['Other', distributions["Opp+Other"]]
       ],
       chartData3: [
-        ['Outcome', 'Games opponent wins', `Games player wins`],
+        ['Outcome', 'Games opponent wins', `Games ${this.props.player.username} wins`],
         ['40+', distributions["Opp+40+"], null],
         ['30+', distributions["Opp+30+"], null],
         ['20+', distributions["Opp+20+"], null],
@@ -129,7 +130,7 @@ class ResultDistributionChart extends Component {
           {
             this.state.chartData3 ? (
               <div className="col-12">
-                <h3 className="text-center">Score differences distribution</h3>
+                <h3 className="text-center">Final scoring distribution</h3>
                 <Chart
                   chartType="ColumnChart"
                   options={this.state.columnChartOptions}

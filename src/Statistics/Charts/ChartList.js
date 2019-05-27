@@ -77,6 +77,7 @@ class ChartList extends Component {
               title={`Game results distribution`}
               id={"game_results"}
               gamesData={gamesData}
+              player={this.props.player}
             />
           )
         }

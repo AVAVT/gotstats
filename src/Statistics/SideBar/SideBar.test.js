@@ -11,7 +11,7 @@ describe("SideBar", () => {
   const getShallow = () => {
     if (!shadowWrapper) {
       shadowWrapper = shallow(
-        <SideBar {...props} />
+        <SideBar.WrappedComponent {...props} />
       );
     }
     return shadowWrapper;

@@ -10,7 +10,7 @@ describe("WinLoseChart", () => {
   const getShallow = () => {
     if (!shadowWrapper) {
       shadowWrapper = shallow(
-        <WinLoseChart {...props} />
+        <WinLoseChart.WrappedComponent {...props} />
       );
     }
     return shadowWrapper;
@@ -18,11 +18,11 @@ describe("WinLoseChart", () => {
 
   beforeEach(() => {
     props = {
-      title     : "Test title",
-      id        : "Test id",
-      gamesData : {
+      title: "Test title",
+      id: "Test id",
+      gamesData: {
         playerId: 197819,
-        games   : []
+        games: []
       }
     };
 

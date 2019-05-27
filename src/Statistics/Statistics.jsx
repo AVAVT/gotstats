@@ -13,8 +13,11 @@ import ChartList from './Charts/ChartList';
 class Statistics extends Component {
   static propTypes = {
     getPlayerData: PropTypes.func.isRequired,
-    user: PropTypes.string
+    user: PropTypes.string,
+    showLoading: PropTypes.bool.isRequired,
+    showStatistics: PropTypes.bool.isRequired,
   }
+
   scrollToElem(id) {
     $('html,body').animate({ scrollTop: $("#" + id).offset().top }, 'fast');
   }
@@ -53,7 +56,7 @@ class Statistics extends Component {
 }
 
 const mapReduxStateToProps = ({ player, games, chartsData }) => ({
-  showLoading: player.fetching || player.fetchError || games.fetching || games.fetchError,
+  showLoading: !!player.fetching || !!player.fetchError || !!games.fetching || !!games.fetchError,
   showStatistics: chartsData.length > 0
 })
 
