@@ -13,46 +13,43 @@ import SideBar from "./SideBar/SideBar";
 
 import { testGame, testUser } from "./testUtils";
 
-describe("Statistics", () => {
-  const props = {
-    showLoading: false,
-    showStatistics: false,
-    getPlayerData: jest.fn(),
-    history: { push: jest.fn() }
-  };
+const props = {
+  showLoading: false,
+  showStatistics: false,
+  getPlayerData: jest.fn(),
+  history: { push: jest.fn() }
+};
 
-  const mockStore = configureMockStore();
-  const defaultStore = {
-    player: {},
-    games: {},
-    chartsData: []
-  };
+const mockStore = configureMockStore();
+const defaultStore = {
+  player: {},
+  games: {},
+  chartsData: []
+};
 
-  const getMounted = (storeOverrides, propsOverrides) => {
-    const store = mockStore({
-      ...defaultStore,
-      ...storeOverrides
-    });
-
-    return mount(
-      <Provider store={store}><MemoryRouter><Statistics {...{ ...props, ...propsOverrides }} /></MemoryRouter></Provider>,
-    );
-  }
-
-  const getShallow = (storeOverrides, propsOverrides) => {
-    const store = mockStore({
-      ...defaultStore,
-      ...storeOverrides
-    });
-
-    return shallow(
-      <Provider store={store}><Statistics {...{ ...props, ...propsOverrides }} /></Provider>,
-    );
-  }
-
-  beforeEach(() => {
-
+const getMounted = (storeOverrides, propsOverrides) => {
+  const store = mockStore({
+    ...defaultStore,
+    ...storeOverrides
   });
+
+  return mount(
+    <Provider store={store}><MemoryRouter><Statistics {...{ ...props, ...propsOverrides }} /></MemoryRouter></Provider>,
+  );
+}
+
+const getShallow = (storeOverrides, propsOverrides) => {
+  const store = mockStore({
+    ...defaultStore,
+    ...storeOverrides
+  });
+
+  return shallow(
+    <Provider store={store}><Statistics {...{ ...props, ...propsOverrides }} /></Provider>,
+  );
+}
+
+describe("Statistics", () => {
 
   it('renders without crashing', () => {
     getShallow();
