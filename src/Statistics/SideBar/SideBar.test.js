@@ -17,7 +17,9 @@ const props = {
 const mockStore = configureMockStore();
 const defaultStore = {
   player: {},
-  games: {},
+  games: {
+    results: []
+  },
   chartsData: []
 };
 
@@ -53,6 +55,9 @@ describe("SideBar", () => {
 
   it('show QuickLinks when chart data are available', () => {
     const wrapper = getMounted({
+      games: {
+        results: [testGame]
+      },
       chartsData: [testGame]
     });
     expect(wrapper.find(QuickLinks)).toExist();

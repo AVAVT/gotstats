@@ -118,7 +118,7 @@ function computeOpponentsInfo(games, playerId) {
   var strongestDefeated = { rank: 0 };
 
   games.forEach(game => {
-    const { player, opponent } = extractPlayerAndOpponent(game, playerId);
+    const { opponent } = extractPlayerAndOpponent(game, playerId);
 
     if (isPlayerWin(game, playerId) && opponent.ranking > strongestDefeated.rank) {
       strongestDefeated = {
@@ -238,7 +238,6 @@ function computeMiscInfo(allGames, analyzingGames, player) {
     if (isPlayerWin(game, player.id)) {
 
       currentStreak.streak++;
-      console.log(currentStreak.streak);
       currentStreak.start = game;
 
       if (!currentStreak.end) currentStreak.end = game;

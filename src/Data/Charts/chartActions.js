@@ -3,7 +3,7 @@ export const UPDATE_CHART_DATA_SOURCE = "UPDATE_CHART_DATA_SOURCE";
 const minDate = new Date(-8640000000000000);
 const maxDate = new Date(8640000000000000);
 
-export const chooseChartDataTimeRange = ({ from, to } = { from: minDate, to: maxDate }) => (dispatch, getState) => {
+export const chooseChartDataTimeRange = ({ from = minDate, to = maxDate } = { from: minDate, to: maxDate }) => (dispatch, getState) => {
   dispatch(
     updateChartDataSource(
       getState().games.results

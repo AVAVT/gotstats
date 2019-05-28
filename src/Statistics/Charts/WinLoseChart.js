@@ -29,7 +29,12 @@ class WinLoseChart extends Component {
           fontName: "Roboto",
           fontSize: 14
         }
-      }
+      },
+      animation: {
+        startup: true,
+        easing: 'inout',
+        duration: 500,
+      },
     },
     subChartOptions: {
       backgroundColor: "transparent",
@@ -44,7 +49,12 @@ class WinLoseChart extends Component {
           fontName: "Roboto",
           fontSize: 14
         }
-      }
+      },
+      animation: {
+        startup: true,
+        easing: 'inout',
+        duration: 500,
+      },
     }
   }
 

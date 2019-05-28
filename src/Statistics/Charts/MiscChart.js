@@ -36,7 +36,7 @@ class MiscChart extends Component {
     }
   }
 
-  createLinkToGame = (game) => <a href={`${OGS_ROOT}game/${game.related.detail.split("games/")[1]}`} target="_blank" rel="nofollow">{moment(game.ended).format("DD MMM, YYYY")}</a>
+  createLinkToGame = (game) => <a href={`${OGS_ROOT}game/${game.related.detail.split("games/")[1]}`} target="_blank" rel="noopener noreferrer nofollow">{moment(game.ended).format("DD MMM, YYYY")}</a>
 
   render() {
     const { allGames, gamesData, player } = this.props;
@@ -57,7 +57,7 @@ class MiscChart extends Component {
           <ul className="info_list">
             <li>Member since: {moment(memberSince).format("DD MMM, YYYY")}.</li>
             <li>Average games per day: {Math.round(gamesPerDay * 100) / 100}.</li>
-            <li>Longest win streak: {longestStreak.streak} victories in a row{streakDurationDisplay}.</li>
+            <li>Longest win streak: {longestStreak.streak} wins in a row{streakDurationDisplay}.</li>
             <li>Most active day: {moment(mostActiveDay).format("DD MMM, YYYY")} with {gamesOnMostActiveDay} finished games.</li>
           </ul>
         </div>

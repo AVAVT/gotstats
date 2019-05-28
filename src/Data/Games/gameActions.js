@@ -7,6 +7,9 @@ export const FETCH_GAMES_PROGRESS = "FETCH_GAMES_PROGRESS";
 export const FETCH_GAMES_SUCCESS = "FETCH_GAMES_SUCCESS";
 export const FETCH_GAMES_FAILURE = "FETCH_GAMES_FAILURE";
 
+const minDate = new Date(-8640000000000000);
+const maxDate = new Date(8640000000000000);
+
 export const fetchGames = (playerId) => async (dispatch, getState) => {
   const fetching = getState().games.fetching;
   if (fetching) fetching.cancel();
@@ -30,7 +33,15 @@ export const fetchGames = (playerId) => async (dispatch, getState) => {
       data = await promise;
       games.push(...data.results);
     }
-    dispatch(fetchGamesSuccess({ results: games }));
+
+    let startDate = games.length ? new Date(games[games.length - 1].ended) : minDate;
+    startDate.setHours(0, 0, 0, 0);
+
+    dispatch(fetchGamesSuccess({
+      results: games,
+      start: startDate,
+      end: games.length ? new Date(games[0].ended) : maxDate,
+    }));
   }
   catch (error) {
     dispatch(fetchGamesFailure(error.toString()))

@@ -40,8 +40,6 @@ const reducer = (state = initialState, { type, payload }) => {
       ...state,
       fetching: null,
       ...payload,
-      start: new Date(payload.results.length ? payload.results[payload.results.length - 1].ended : minDate),
-      end: new Date(payload.results.length ? payload.results[0].ended : maxDate),
     }
 
     case FETCH_GAMES_FAILURE: return {

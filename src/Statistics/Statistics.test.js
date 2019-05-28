@@ -70,6 +70,7 @@ describe("Statistics", () => {
   it('show loading while fetching user info', () => {
     const wrapper = getMounted({
       player: {
+        ...defaultStore.player,
         fetching: jest.fn()
       }
     });
@@ -79,6 +80,7 @@ describe("Statistics", () => {
   it('show loading on fetching user info error', () => {
     const wrapper = getMounted({
       player: {
+        ...defaultStore.player,
         fetchError: "Error"
       }
     });
@@ -88,6 +90,7 @@ describe("Statistics", () => {
   it('show loading while fetching user games', () => {
     const wrapper = getMounted({
       games: {
+        ...defaultStore.games,
         fetching: jest.fn()
       }
     });
@@ -97,6 +100,7 @@ describe("Statistics", () => {
   it('show loading on fetching user games error', () => {
     const wrapper = getMounted({
       games: {
+        ...defaultStore.games,
         fetchError: "Error"
       }
     });
@@ -106,6 +110,10 @@ describe("Statistics", () => {
   it('show chart list when chart data is available', () => {
     const wrapper = getMounted({
       player: testUser,
+      games: {
+        ...defaultStore.games,
+        results: [testGame]
+      },
       chartsData: [testGame]
     });
     expect(wrapper.find(ChartList)).toExist();
