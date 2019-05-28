@@ -1,11 +1,14 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Chart } from 'react-google-charts';
+import Analyzer from '../../Data/Analyzer';
+import moment from "moment";
+import { OGS_ROOT } from "../../OGSApi/configs.json";
 
 class MiscChart extends Component {
   static propTypes = {
     title: PropTypes.string,
     id: PropTypes.string,
+    allGames: PropTypes.array.isRequired,
     gamesData: PropTypes.shape({
       playerId: PropTypes.number.isRequired,
       games: PropTypes.array.isRequired
@@ -33,30 +36,30 @@ class MiscChart extends Component {
     }
   }
 
-  generateChartData(gamesData) {
-
-  }
+  createLinkToGame = (game) => <a href={`${OGS_ROOT}game/${game.related.detail.split("games/")[1]}`} target="_blank" rel="nofollow">{moment(game.ended).format("DD MMM, YYYY")}</a>
 
   render() {
-    const chartData = this.generateChartData(this.props.gamesData);
+    const { allGames, gamesData, player } = this.props;
+    const {
+      memberSince,
+      gamesPerDay,
+      longestStreak,
+      mostActiveDay,
+      gamesOnMostActiveDay
+    } = Analyzer.computeMiscInfo(allGames, gamesData.games, player);
+
+    const streakDurationDisplay = longestStreak.end ? <span>, from {this.createLinkToGame(longestStreak.start)} to {this.createLinkToGame(longestStreak.end)}</span> : '';
+
     return (
       <section className="stats_block">
         <h2 id={this.props.id} className="text-center">{this.props.title}</h2>
         <div className="row">
-          {
-            chartData ? (
-              <div className="col-12">
-                <h3 className="text-center">Activities in the past 15 days</h3>
-                <Chart
-                  chartType="ColumnChart"
-                  options={this.state.columnChartOptions}
-                  data={chartData}
-                  width={'100%'}
-                  height={'300px'}
-                />
-              </div>
-            ) : null
-          }
+          <ul className="info_list">
+            <li>Member since: {moment(memberSince).format("DD MMM, YYYY")}.</li>
+            <li>Average games per day: {Math.round(gamesPerDay * 100) / 100}.</li>
+            <li>Longest win streak: {longestStreak.streak} victories in a row{streakDurationDisplay}.</li>
+            <li>Most active day: {moment(mostActiveDay).format("DD MMM, YYYY")} with {gamesOnMostActiveDay} finished games.</li>
+          </ul>
         </div>
       </section>
     );

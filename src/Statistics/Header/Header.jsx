@@ -17,7 +17,7 @@ class Header extends Component {
 
   render() {
     const pageTitle = this.props.player.username ? `statistics for player ${this.props.player.username} (${rankNumberToKyuDan(this.props.player.rank)})` : "statistics";
-    const title = `${this.props.player.username && `${this.props.player.username} statistics | `}g0tstats`
+    const title = `${this.props.player.username && `${this.props.player.username} statistics | `}Got Stats?`
     return (
       <nav className="navbar navbar-dark Header">
         <Helmet>

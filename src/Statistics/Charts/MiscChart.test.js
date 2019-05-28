@@ -18,13 +18,14 @@ describe("MiscChart", () => {
 
   beforeEach(() => {
     props = {
-      title     : "Test title",
-      id        : "Test id",
-      gamesData : {
+      title: "Test title",
+      id: "Test id",
+      allGames: [],
+      gamesData: {
         playerId: 197819,
-        games   : []
+        games: []
       },
-      player    : {}
+      player: {}
     };
 
     shadowWrapper = undefined;

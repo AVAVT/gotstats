@@ -150,6 +150,7 @@ class ChartList extends Component {
             <MiscChart
               title={`Miscellaneous statistics`}
               id={"misc_stats"}
+              allGames={this.props.games.results}
               gamesData={gamesData}
               player={this.props.player}
             />
@@ -159,6 +160,6 @@ class ChartList extends Component {
     );
   }
 }
-const mapReduxStateToProps = ({ chartsData, player }) => ({ chartsData, player });
+const mapReduxStateToProps = ({ chartsData, games, player }) => ({ chartsData, games, player });
 
 export default connect(mapReduxStateToProps)(ChartList);

@@ -118,7 +118,7 @@ function computeOpponentsInfo(games, playerId) {
   var strongestDefeated = { rank: 0 };
 
   games.forEach(game => {
-    let opponent = game.players.black.id === playerId ? game.players.white : game.players.black;
+    const { player, opponent } = extractPlayerAndOpponent(game, playerId);
 
     if (isPlayerWin(game, playerId) && opponent.ranking > strongestDefeated.rank) {
       strongestDefeated = {
@@ -180,14 +180,20 @@ function computeOpponentsInfo(games, playerId) {
   }
 }
 
+function extractPlayerAndOpponent(game, playerId) {
+  return game.players.black.id === playerId
+    ? {
+      player: game.players.black,
+      opponent: game.players.white
+    } : {
+      player: game.players.white,
+      opponent: game.players.black
+    }
+}
+
 function isPlayerWin(game, playerId) {
-  if ((game.players.black.id === playerId && game.black_lost)
-    || (game.players.white.id === playerId && game.white_lost)) {
-    return false;
-  }
-  else {
-    return true;
-  }
+  return ((game.players.black.id === playerId && game.white_lost)
+    || (game.players.white.id === playerId && game.black_lost))
 }
 
 function assignGameResultToDistributions(distributions, game) {
@@ -216,11 +222,94 @@ function assignGameResultToDistributions(distributions, game) {
   return distributions;
 }
 
+function computeMiscInfo(allGames, analyzingGames, player) {
+  let mostActiveDay;
+  let currentDay = new Date();
+  currentDay.setHours(0, 0, 0, 0);
+
+  let longestStreak = { streak: 0 }
+  let currentStreak = { streak: 0 }
+
+  let gamesOnMostActiveDay = 0, gamesOnCurrentDay = 0;
+
+  for (let game of analyzingGames) {
+
+    // Longest streak
+    if (isPlayerWin(game, player.id)) {
+
+      currentStreak.streak++;
+      console.log(currentStreak.streak);
+      currentStreak.start = game;
+
+      if (!currentStreak.end) currentStreak.end = game;
+
+      if (currentStreak.streak > longestStreak.streak) longestStreak = currentStreak;
+    }
+    else currentStreak = { streak: 0 }
+
+
+    // Most active day
+    let gameDay = new Date(game.ended);
+    gameDay.setHours(0, 0, 0, 0);
+    if (daysDifferenceBetween(currentDay, gameDay) !== 0) {
+      currentDay = gameDay;
+      gamesOnCurrentDay = 1;
+    }
+    else {
+      gamesOnCurrentDay++;
+    }
+
+    if (gamesOnCurrentDay > gamesOnMostActiveDay) {
+      mostActiveDay = currentDay;
+      gamesOnMostActiveDay = gamesOnCurrentDay;
+    }
+  }
+
+  let memberSince = new Date(player.registrationDate);
+  // Change memberSince to date of first game for player who migrated from old server
+  if (allGames.length) {
+    let firstGameDate = new Date(allGames[allGames.length - 1].started);
+    if (firstGameDate < memberSince) memberSince = firstGameDate;
+  }
+
+  let gamesPerDay = 0;
+  if (analyzingGames.length) {
+    let dateOfFirstGame = new Date(analyzingGames[analyzingGames.length - 1].started)
+    let daysSinceStart = daysDifferenceBetween(new Date(), dateOfFirstGame);
+    gamesPerDay = analyzingGames.length / parseFloat(daysSinceStart);
+  }
+
+  return {
+    memberSince: memberSince,
+    gamesPerDay: gamesPerDay,
+    longestStreak: longestStreak,
+    mostActiveDay: mostActiveDay,
+    gamesOnMostActiveDay: gamesOnMostActiveDay
+  }
+}
+
+function daysDifferenceBetween(day1, day2) {
+  /* Copa pasta I don't even know if there's any bug here */
+
+  // Copy date parts of the timestamps, discarding the time parts.
+  var two = new Date(day1.getFullYear(), day1.getMonth(), day1.getDate());
+  var one = new Date(day2.getFullYear(), day2.getMonth(), day2.getDate());
+
+  // Do the math.
+  var millisecondsPerDay = 1000 * 60 * 60 * 24;
+  var millisBetween = two.getTime() - one.getTime();
+  var days = millisBetween / millisecondsPerDay;
+
+  // Round down.
+  return two > one ? Math.floor(days) : Math.ceil(days);
+}
+
 export default {
   computeWinLoseStatistics,
   computeWinLoseDistributions,
   computeBoardSizes,
   computeTimeSettings,
   computeOpponentsInfo,
-  isPlayerWin
+  computeMiscInfo,
+  isPlayerWin,
 };

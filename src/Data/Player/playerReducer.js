@@ -9,7 +9,8 @@ const initialState = {
   username: "",
   rank: 0,
   fetching: null,
-  fetchError: ""
+  fetchError: "",
+  registrationDate: null
 }
 
 const reducer = (state = initialState, { type, payload }) => {

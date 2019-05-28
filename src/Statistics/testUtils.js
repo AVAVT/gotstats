@@ -1,6 +1,6 @@
 export const testUser = {
   username: "anoek",
-  rank: "10",
+  rank: 10,
   id: 1
 }
 

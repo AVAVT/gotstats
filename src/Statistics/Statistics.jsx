@@ -9,6 +9,7 @@ import { connect } from "react-redux";
 import { fetchPlayer } from "../Data/Player/playerActions";
 import LoadingUser from './LoadingUser/LoadingUser';
 import ChartList from './Charts/ChartList';
+import Footer from './Footer';
 
 class Statistics extends Component {
   static propTypes = {
@@ -50,6 +51,7 @@ class Statistics extends Component {
             </div>
           </div>
         </div>
+        <Footer />
       </main>
     );
   }

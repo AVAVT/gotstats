@@ -23,7 +23,9 @@ const props = {
 const mockStore = configureMockStore();
 const defaultStore = {
   player: {},
-  games: {},
+  games: {
+    results: []
+  },
   chartsData: []
 };
 
