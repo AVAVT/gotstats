@@ -5,6 +5,10 @@ import {
   FETCH_GAMES_PROGRESS
 } from './gameActions';
 
+import {
+  FETCH_PLAYER_START
+} from '../Player/playerActions';
+
 const minDate = new Date(-8640000000000000);
 const maxDate = new Date(8640000000000000);
 
@@ -20,6 +24,7 @@ const initialState = {
 
 const reducer = (state = initialState, { type, payload }) => {
   switch (type) {
+    case FETCH_PLAYER_START: return { ...initialState };
 
     case FETCH_GAMES_START: return {
       ...state,

@@ -16,7 +16,7 @@ const initialState = {
 const reducer = (state = initialState, { type, payload }) => {
   switch (type) {
     case FETCH_PLAYER_START: return {
-      ...state,
+      ...initialState,
       fetching: payload,
       fetchError: ""
     }
