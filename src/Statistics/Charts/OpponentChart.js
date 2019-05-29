@@ -78,10 +78,10 @@ class OpponentChart extends Component {
         <div className="row">
           <div id="opponents_polars_chart" className="opponent_chart col-8 mr-auto ml-auto">
             <ul className="bar_legend">
-              <li style={weakestLegendStyle}>
+              <li style={weakestDisp.style}>
                 <div>Weakest Opponent</div><span></span>
               </li>
-              <li style={strongestLegendStyle}>
+              <li style={strongestDisp.style}>
                 <div>Strongest Opponent</div><span></span>
               </li>
             </ul>

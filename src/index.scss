@@ -243,15 +243,18 @@ h3{
 	padding: 0;
 	list-style: none;
 	font-size: 0;
-	text-align: left;
+  text-align: left;
+  height: 100px;
+  position: relative;
 }
 
 .bar_legend li{
-	font-size: 1.4rem;
+  position: absolute;
+	font-size: 1rem;
 	text-align: center;
 	width: 0;
 	display: inline-block;
-	vertical-align: bottom;
+  bottom: 12px;
 }
 
 .bar_legend li span{
@@ -266,7 +269,7 @@ h3{
 }
 
 .bar_legend li:nth-child(2) span{
-	height: 40px;
+	height: 45px;
 }
 
 .bar_legend li div{

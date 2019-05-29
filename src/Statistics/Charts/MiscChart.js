@@ -60,9 +60,9 @@ class MiscChart extends Component {
           <ul className="info_list">
             <li>Member since: {moment(memberSince).format("DD MMM, YYYY")}.</li>
             <li>Plays {Math.round(gamesPerDay * 100) / 100} games per day on average.</li>
+            <li>Most active day: {moment(mostActiveDay).format("DD MMM, YYYY")} with {gamesOnMostActiveDay} finished games.</li>
             <li>Longest win streak: {longestStreak.streak} wins in a row{streakDurationDisplay}.</li>
             {biggestWinDisplay}
-            <li>Most active day: {moment(mostActiveDay).format("DD MMM, YYYY")} with {gamesOnMostActiveDay} finished games.</li>
           </ul>
         </div>
       </section>
