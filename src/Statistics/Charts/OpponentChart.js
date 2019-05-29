@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import configs from '../../OGSApi/configs.json';
 import Analyzer from '../../Data/Analyzer';
-import { getPlayerRankDisplay } from "../../Data/utils";
+import { getPlayerRankDisplay, getPlayerRank } from "../../Data/utils";
 
 import PlayerLink from "../../SharedComponents/PlayerLink";
 import GameLink from "../../SharedComponents/GameLink";
@@ -25,12 +25,10 @@ class OpponentChart extends Component {
     // OGS data allow up to 30k but realistically no one's below 25k on OGS. Subtract 5 so 25k is at leftmost
     const weakestBarRate = Math.max(opponentsInfo.weakestOpp.rank, 0) - 5;
     const strongestBarRate = Math.min(opponentsInfo.strongestOpp.rank, 44) - 5;
-    const userBarRate = this.props.player.rank - 5;
+    const userBarRate = getPlayerRank(this.props.player) - 5;
 
     return {
       numberOfOpponents: opponentsInfo.numberOfOpponents,
-      weakestLegendStyle: { marginLeft: `${weakestBarRate * 3.03030303}%` },
-      strongestLegendStyle: { marginLeft: `${(strongestBarRate - weakestBarRate) * 3.03030303}%` },
       weakestDisp: {
         href: `${configs.OGS_ROOT}user/view/${opponentsInfo.weakestOpp.id}/${opponentsInfo.weakestOpp.username}`,
         title: `${opponentsInfo.weakestOpp.username} (${getPlayerRankDisplay(opponentsInfo.weakestOpp)})`,
