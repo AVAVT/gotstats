@@ -33,9 +33,13 @@ describe("Header", () => {
     const wrapper = getShallow({
       player: {
         username: 'testoshimasu',
-        rank: '6'
+        ratings: {
+          overall: {
+            rating: 2211.14
+          }
+        }
       }
     });
-    expect(wrapper.find('h1').text()).toEqual(`statistics for player testoshimasu (22k)`);
+    expect(wrapper.find('h1').text()).toEqual(`statistics for player testoshimasu (1k)`);
   });
 });
