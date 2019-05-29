@@ -5,7 +5,7 @@ import moment from 'moment';
 
 import configs from '../../OGSApi/configs.json';
 import Analyzer from '../../Data/Analyzer';
-import { rankNumberToKyuDan } from "../../Data/utils";
+import { getPlayerRankDisplay } from "../../Data/utils";
 
 class OpponentChart extends Component {
   static propTypes = {
@@ -32,32 +32,32 @@ class OpponentChart extends Component {
       strongestLegendStyle: { marginLeft: `${(strongestBarRate - weakestBarRate) * 3.03030303}%` },
       weakestDisp: {
         href: `${configs.OGS_ROOT}user/view/${opponentsInfo.weakestOpp.id}/${opponentsInfo.weakestOpp.username}`,
-        title: `${opponentsInfo.weakestOpp.username} (${rankNumberToKyuDan(opponentsInfo.weakestOpp.rank)})`,
+        title: `${opponentsInfo.weakestOpp.username} (${getPlayerRankDisplay(opponentsInfo.weakestOpp)})`,
         style: { left: `${weakestBarRate * 3.03030303}%` },
         img: `${configs.OGS_API_ROOT}${opponentsInfo.weakestOpp.id}/icon?size=32`
       },
       userDisp: {
         href: `${configs.OGS_ROOT}user/view/${this.props.player.id}/${this.props.player.username}`,
-        title: `${this.props.player.username} (${rankNumberToKyuDan(this.props.player.rank)})`,
+        title: `${this.props.player.username} (${getPlayerRankDisplay(this.props.player)})`,
         style: { left: `${userBarRate * 3.03030303}%` },
         img: `${configs.OGS_API_ROOT}${this.props.player.id}/icon?size=32`
       },
       strongestDisp: {
         href: `${configs.OGS_ROOT}user/view/${opponentsInfo.strongestOpp.id}/${opponentsInfo.strongestOpp.username}`,
-        title: `${opponentsInfo.strongestOpp.username} (${rankNumberToKyuDan(opponentsInfo.strongestOpp.rank)})`,
+        title: `${opponentsInfo.strongestOpp.username} (${getPlayerRankDisplay(opponentsInfo.strongestOpp)})`,
         style: { left: `${strongestBarRate * 3.03030303}%` },
         img: `${configs.OGS_API_ROOT}${opponentsInfo.strongestOpp.id}/icon?size=32`
       },
       mostPlayedDisp: {
         href: `${configs.OGS_ROOT}user/view/${opponentsInfo.mostPlayed.id}/${opponentsInfo.mostPlayed.username}`,
         img: `${configs.OGS_API_ROOT}${opponentsInfo.mostPlayed.id}/icon?size=32`,
-        username: `${opponentsInfo.mostPlayed.username} (${rankNumberToKyuDan(opponentsInfo.mostPlayed.rank)})`,
+        username: `${opponentsInfo.mostPlayed.username} (${getPlayerRankDisplay(opponentsInfo.mostPlayed)})`,
         games: opponentsInfo.mostPlayed.games
       },
       strongestDefeatedDisp: {
         href: `${configs.OGS_ROOT}user/view/${opponentsInfo.strongestDefeated.id}/${opponentsInfo.strongestDefeated.username}`,
         img: `${configs.OGS_API_ROOT}${opponentsInfo.strongestDefeated.id}/icon?size=32`,
-        username: `${opponentsInfo.strongestDefeated.username} (${rankNumberToKyuDan(opponentsInfo.strongestDefeated.rank)})`,
+        username: `${opponentsInfo.strongestDefeated.username} (${getPlayerRankDisplay(opponentsInfo.strongestDefeated)})`,
         date: opponentsInfo.strongestDefeated.date,
         gameHref: `http://online-go.com/game/${opponentsInfo.strongestDefeated.url}`
       },

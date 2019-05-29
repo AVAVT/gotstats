@@ -1,3 +1,5 @@
+import { getPlayerRank } from "./utils";
+
 function computeWinLoseStatistics(games, playerId) {
   var blackGames = 0, whiteGames = 0,
     blackLosses = 0, whiteLosses = 0;
@@ -119,14 +121,13 @@ function computeOpponentsInfo(games, playerId) {
 
   games.forEach(game => {
     const { opponent } = extractPlayerAndOpponent(game, playerId);
-
-    if (isPlayerWin(game, playerId) && opponent.ranking > strongestDefeated.rank) {
+    const opponentRank = getPlayerRank(opponent);
+    if (isPlayerWin(game, playerId) && opponentRank > strongestDefeated.rank) {
       strongestDefeated = {
-        id: opponent.id,
-        username: opponent.username,
-        rank: opponent.ranking,
+        ...opponent,
         url: game.related.detail.split("games/")[1],
-        date: game.ended
+        date: game.ended,
+        rank: opponentRank,
       };
     }
 
@@ -139,28 +140,22 @@ function computeOpponentsInfo(games, playerId) {
 
     if (opponents[opponent.id] > mostPlayed.games) {
       mostPlayed = {
-        id: opponent.id,
-        username: opponent.username,
-        rank: opponent.ranking,
+        ...opponent,
         games: opponents[opponent.id]
       };
     }
 
-    if (opponent.ranking > strongestOpp.rank) {
+    if (opponentRank > strongestOpp.rank)
       strongestOpp = {
-        id: opponent.id,
-        username: opponent.username,
-        rank: opponent.ranking
+        ...opponent,
+        rank: opponentRank
       };
-    }
 
-    if (opponent.ranking < weakestOpp.rank) {
+    if (opponentRank < weakestOpp.rank)
       weakestOpp = {
-        id: opponent.id,
-        username: opponent.username,
-        rank: opponent.ranking
+        ...opponent,
+        rank: opponentRank
       };
-    }
   });
 
   numberOfOpponents = 0;

@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { connect } from "react-redux";
 
 import { Helmet } from "react-helmet";
-import { rankNumberToKyuDan } from "../../Data/utils";
+import { getPlayerRankDisplay } from "../../Data/utils";
 
 
 class Header extends Component {
@@ -16,7 +16,7 @@ class Header extends Component {
   }
 
   render() {
-    const pageTitle = this.props.player.username ? `statistics for player ${this.props.player.username} (${rankNumberToKyuDan(this.props.player.rank)})` : "statistics";
+    const pageTitle = this.props.player.username ? `statistics for player ${this.props.player.username} (${getPlayerRankDisplay(this.props.player)})` : "statistics";
     const title = `${this.props.player.username && `${this.props.player.username} statistics | `}Got Stats?`
     return (
       <nav className="navbar navbar-dark Header">

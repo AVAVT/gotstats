@@ -24,6 +24,7 @@ export const fetchPlayer = (player) => async (dispatch, getState) => {
       id: userData.id,
       username: userData.username,
       rank: parseInt(userData.ranking),
+      ratings: userData.ratings,
       registrationDate: userData.registration_date
     }));
   }
