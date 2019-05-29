@@ -20,14 +20,16 @@ class SearchBox extends Component {
   submit = (event) => {
     event.preventDefault();
 
-    this.props.history.push(`/user/${this.state.username}`)
+    if (this.state.username) {
+      this.props.history.push(`/user/${this.state.username}`)
 
-    this.setState({
-      username: ''
-    });
+      this.setState({
+        username: ''
+      });
 
-    if (document.activeElement) {
-      document.activeElement.blur();
+      if (document.activeElement) {
+        document.activeElement.blur();
+      }
     }
   }
 
@@ -35,7 +37,7 @@ class SearchBox extends Component {
     return (
       <form onSubmit={this.submit}>
         <div className="input-group">
-          <input value={this.state.username} onChange={this.updateSearchUser} name="id" type="text" required placeholder="Username or ID" className="form-control" />
+          <input value={this.state.username} onChange={this.updateSearchUser} name="id" type="text" placeholder="Username or ID" className="form-control" />
           <span className="input-group-btn">
             <button type="submit" className="btn btn-primary">Got Stats?</button>
           </span>
