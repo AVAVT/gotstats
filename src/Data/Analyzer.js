@@ -192,7 +192,7 @@ function isPlayerWin(game, playerId) {
 }
 
 function assignGameResultToDistributions(distributions, game) {
-  const isWin = (game.players.black.id === distributions.id && game.white_lost) || (game.players.white.id === distributions.id && game.black_lost);
+  const isWin = isPlayerWin(game, distributions.id);
 
   if (game.outcome === "Resignation") {
     distributions[`${isWin ? 'Plr' : 'Opp'}+Res`]++;
@@ -227,6 +227,10 @@ function computeMiscInfo(allGames, analyzingGames, player) {
 
   let gamesOnMostActiveDay = 0, gamesOnCurrentDay = 0;
 
+  let biggestWin = {
+    diff: 0
+  }
+
   for (let game of analyzingGames) {
 
     // Longest streak
@@ -240,6 +244,21 @@ function computeMiscInfo(allGames, analyzingGames, player) {
       if (currentStreak.streak > longestStreak.streak) longestStreak = currentStreak;
     }
     else currentStreak = { streak: 0 }
+
+    // Biggest win
+    if (isPlayerWin(game, player.id)) {
+      const { opponent } = extractPlayerAndOpponent(game, player.id);
+      if (!isNaN(game.outcome.split(" ")[0])) {
+        const scoreDiff = parseFloat(game.outcome.split(" ")[0]);
+        if (scoreDiff > biggestWin.diff) {
+          biggestWin = {
+            game: game,
+            opponent: opponent,
+            diff: scoreDiff
+          }
+        }
+      }
+    }
 
 
     // Most active day
@@ -274,11 +293,12 @@ function computeMiscInfo(allGames, analyzingGames, player) {
   }
 
   return {
-    memberSince: memberSince,
-    gamesPerDay: gamesPerDay,
-    longestStreak: longestStreak,
-    mostActiveDay: mostActiveDay,
-    gamesOnMostActiveDay: gamesOnMostActiveDay
+    memberSince,
+    gamesPerDay,
+    longestStreak,
+    mostActiveDay,
+    gamesOnMostActiveDay,
+    biggestWin
   }
 }
 
