@@ -3,10 +3,10 @@ import Header from './Header/Header';
 import Welcome from './Welcome';
 import SideBar from './SideBar/SideBar';
 import PropTypes from 'prop-types';
-import $ from "jquery";
 import { connect } from "react-redux";
 
 import { fetchPlayer } from "../Data/Player/playerActions";
+
 import LoadingUser from './LoadingUser/LoadingUser';
 import ChartList from './Charts/ChartList';
 import Footer from './Footer';
@@ -20,7 +20,7 @@ class Statistics extends Component {
   }
 
   scrollToElem(id) {
-    $('html,body').animate({ scrollTop: $("#" + id).offset().top }, 'fast');
+    document.getElementById(id).scrollIntoView();
   }
 
   componentDidMount() {
