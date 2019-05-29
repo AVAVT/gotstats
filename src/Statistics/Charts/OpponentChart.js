@@ -7,6 +7,9 @@ import configs from '../../OGSApi/configs.json';
 import Analyzer from '../../Data/Analyzer';
 import { getPlayerRankDisplay } from "../../Data/utils";
 
+import PlayerLink from "../../SharedComponents/PlayerLink";
+import GameLink from "../../SharedComponents/GameLink";
+
 class OpponentChart extends Component {
   static propTypes = {
     title: PropTypes.string,
@@ -48,19 +51,8 @@ class OpponentChart extends Component {
         style: { left: `${strongestBarRate * 3.03030303}%` },
         img: `${configs.OGS_API_ROOT}${opponentsInfo.strongestOpp.id}/icon?size=32`
       },
-      mostPlayedDisp: {
-        href: `${configs.OGS_ROOT}user/view/${opponentsInfo.mostPlayed.id}/${opponentsInfo.mostPlayed.username}`,
-        img: `${configs.OGS_API_ROOT}${opponentsInfo.mostPlayed.id}/icon?size=32`,
-        username: `${opponentsInfo.mostPlayed.username} (${getPlayerRankDisplay(opponentsInfo.mostPlayed)})`,
-        games: opponentsInfo.mostPlayed.games
-      },
-      strongestDefeatedDisp: {
-        href: `${configs.OGS_ROOT}user/view/${opponentsInfo.strongestDefeated.id}/${opponentsInfo.strongestDefeated.username}`,
-        img: `${configs.OGS_API_ROOT}${opponentsInfo.strongestDefeated.id}/icon?size=32`,
-        username: `${opponentsInfo.strongestDefeated.username} (${getPlayerRankDisplay(opponentsInfo.strongestDefeated)})`,
-        date: opponentsInfo.strongestDefeated.date,
-        gameHref: `http://online-go.com/game/${opponentsInfo.strongestDefeated.url}`
-      },
+      mostPlayedDisp: opponentsInfo.mostPlayed,
+      strongestDefeatedDisp: opponentsInfo.strongestDefeated,
       averageGamePerOpponent: opponentsInfo.averageGamePerOpponent
     };
   }
@@ -78,6 +70,7 @@ class OpponentChart extends Component {
       strongestDefeatedDisp,
       averageGamePerOpponent
     } = this.generateChartData(this.props.gamesData);
+
     if (!numberOfOpponents) return <section className="stats_block" />;
 
     return (
@@ -136,30 +129,11 @@ class OpponentChart extends Component {
           <div className="col-xs-12">
             <ul className="info_list">
               <li>
-                Most played with:
-                {' '}
-                <a target="_blank" rel="noopener noreferrer" href={mostPlayedDisp.href}>
-                  <img className="img-20" src={mostPlayedDisp.img} alt={mostPlayedDisp.username} />
-                  {' '}
-                  {mostPlayedDisp.username}
-                </a>
-                {' '}
-                in {mostPlayedDisp.games} games.
+                Most played with: <PlayerLink player={mostPlayedDisp} /> in {mostPlayedDisp.games} games.
               </li>
-
               {
                 !!strongestDefeatedDisp.username &&
-                (<li>
-                  Scored a triumphant victory against
-                {' '}
-                  <a target="_blank" rel="noopener noreferrer nofollow" href={strongestDefeatedDisp.href}>
-                    <img className="img-20" src={strongestDefeatedDisp.img} alt={strongestDefeatedDisp.username} />
-                    {' '}
-                    {strongestDefeatedDisp.username}
-                  </a>
-                  {' '}
-                  on <a href={strongestDefeatedDisp.gameHref} target="_blank" rel="noopener noreferrer nofollow">{moment(strongestDefeatedDisp.date).format('MMM DD, YYYY')}</a>.
-              </li>)
+                <li>Scored a triumphant victory against <PlayerLink player={strongestDefeatedDisp} /> on <GameLink game={strongestDefeatedDisp.game} />.</li>
               }
               <li>Average game per opponent: {averageGamePerOpponent} games.</li>
             </ul>

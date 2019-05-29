@@ -2,8 +2,9 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Analyzer from '../../Data/Analyzer';
 import moment from "moment";
-import { getPlayerRankDisplay } from "../../Data/utils";
-import { OGS_ROOT, OGS_API_ROOT } from "../../OGSApi/configs.json";
+
+import PlayerLink from "../../SharedComponents/PlayerLink";
+import GameLink from "../../SharedComponents/GameLink";
 
 class MiscChart extends Component {
   static propTypes = {
@@ -37,19 +38,6 @@ class MiscChart extends Component {
     }
   }
 
-  createLinkToGame = (game) => <a href={`${OGS_ROOT}game/${game.related.detail.split("games/")[1]}`} target="_blank" rel="noopener noreferrer nofollow">{moment(game.ended).format("DD MMM, YYYY")}</a>
-
-  createLinkToPlayer = (player) => {
-    const href = `${OGS_ROOT}user/view/${player.id}/${player.username}`;
-    const img = `${OGS_API_ROOT}${player.id}/icon?size=32`;
-    const username = `${player.username} (${getPlayerRankDisplay(player)})`;
-
-    return (
-      <a target="_blank" rel="noopener noreferrer nofollow" href={href}>
-        <img className="img-20" src={img} alt={username} /> {username}
-      </a>
-    )
-  }
   render() {
     const { allGames, gamesData, player } = this.props;
     const {
@@ -61,9 +49,9 @@ class MiscChart extends Component {
       biggestWin
     } = Analyzer.computeMiscInfo(allGames, gamesData.games, player);
 
-    const streakDurationDisplay = longestStreak.end ? <span>, from {this.createLinkToGame(longestStreak.start)} to {this.createLinkToGame(longestStreak.end)}</span> : '';
+    const streakDurationDisplay = longestStreak.end ? <span>, from <GameLink game={longestStreak.start} /> to  <GameLink game={longestStreak.end} /></span> : '';
     const biggestWinDisplay = biggestWin.game && (
-      <li>Biggest win: {biggestWin.diff} points victory against {this.createLinkToPlayer(biggestWin.opponent)} on {this.createLinkToGame(biggestWin.game)}.</li>
+      <li>Biggest win: {biggestWin.diff} points victory against <PlayerLink player={biggestWin.opponent} /> on  <GameLink game={biggestWin.game} />.</li>
     )
     return (
       <section className="stats_block">

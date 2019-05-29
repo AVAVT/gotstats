@@ -125,9 +125,8 @@ function computeOpponentsInfo(games, playerId) {
     if (isPlayerWin(game, playerId) && opponentRank > strongestDefeated.rank) {
       strongestDefeated = {
         ...opponent,
-        url: game.related.detail.split("games/")[1],
-        date: game.ended,
         rank: opponentRank,
+        game,
       };
     }
 
