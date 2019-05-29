@@ -23,8 +23,8 @@ class OpponentChart extends Component {
     const opponentsInfo = Analyzer.computeOpponentsInfo(gamesData.games, gamesData.playerId);
 
     // OGS data allow up to 30k but realistically no one's below 25k on OGS. Subtract 5 so 25k is at leftmost
-    const weakestBarRate = opponentsInfo.weakestOpp.rank - 5;
-    const strongestBarRate = opponentsInfo.strongestOpp.rank - 5;
+    const weakestBarRate = Math.max(opponentsInfo.weakestOpp.rank, 0) - 5;
+    const strongestBarRate = Math.min(opponentsInfo.strongestOpp.rank, 44) - 5;
     const userBarRate = this.props.player.rank - 5;
 
     return {
