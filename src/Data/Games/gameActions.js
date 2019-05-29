@@ -11,8 +11,8 @@ const minDate = new Date(-8640000000000000);
 const maxDate = new Date(8640000000000000);
 
 export const fetchGames = (playerId) => async (dispatch, getState) => {
-  const fetching = getState().games.fetching;
-  if (fetching) fetching.cancel();
+  const fetchingPromise = getState().games.fetching;
+  if (fetchingPromise) fetchingPromise.cancel();
 
   try {
     let games = [];
@@ -44,7 +44,9 @@ export const fetchGames = (playerId) => async (dispatch, getState) => {
     }));
   }
   catch (error) {
-    dispatch(fetchGamesFailure(error.toString()))
+    console.error(error);
+    if (typeof error === "string") dispatch(fetchGamesFailure(error))
+    else dispatch(fetchGamesFailure("An error has occured while fetching user games. Please try again later."));
   }
 
   dispatch(chooseChartDataTimeRange());

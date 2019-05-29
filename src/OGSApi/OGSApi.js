@@ -31,7 +31,7 @@ export const fetchUserDataById = (id) => {
         resolve(res);
       })
       .fail(function (err) {
-        reject(`Error connecting to OGS server. <strong>Error code: ${err.status}</strong>. Please try again later or contact me if you really have the need to stalk that person.`);
+        reject(`Error connecting to OGS server. Error code: ${err.status}. Please try again later or contact me if you really have the need to stalk that person.`);
       });
   });
 }
