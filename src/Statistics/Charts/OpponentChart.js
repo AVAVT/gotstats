@@ -124,7 +124,7 @@ class OpponentChart extends Component {
         </div>
 
         <div className="row">
-          <div className="col-xs-12">
+          <div className="col-12">
             <ul className="info_list">
               <li>
                 Most played with: <PlayerLink player={mostPlayedDisp} /> in {mostPlayedDisp.games} games.

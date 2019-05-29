@@ -60,7 +60,7 @@ class ChartList extends Component {
               footer={
                 lostGames >= 50 ? (
                   <div className="row">
-                    <div className="col-xs-12">
+                    <div className="col-12">
                       <p className="gratz">
                         Congratulations, <a target="_blank" rel="noopener noreferrer" href="http://senseis.xmp.net/?page=LoseYourFirst50GamesAsQuicklyAsPossible">you have lost your first 50 games</a>!
                       </p>
