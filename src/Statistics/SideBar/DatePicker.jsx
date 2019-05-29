@@ -20,17 +20,12 @@ class DatePicker extends Component {
 
   onDateChanged = (dates) => {
     const date = dates[0];
-    this.setState({ date });
-  }
-
-  filterGames = (event) => {
-    event.preventDefault();
-    this.props.changeStartDate(this.state.date);
+    this.setState({ date }, () => this.props.changeStartDate(this.state.date));
   }
 
   render() {
     return (
-      <form onSubmit={this.filterGames}>
+      <div>
         <p>Analyze games starting from</p>
         <div className="input-group">
           <Flatpickr
@@ -46,11 +41,8 @@ class DatePicker extends Component {
               enableSeconds: false
             }}
           />
-          <div className="input-group-append">
-            <button type="submit" className="input-group-btn btn btn-primary"><i className="fa fa-search"></i></button>
-          </div>
         </div>
-      </form>
+      </div>
     )
   }
 }

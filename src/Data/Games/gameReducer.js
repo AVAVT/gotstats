@@ -14,7 +14,7 @@ const maxDate = new Date(8640000000000000);
 
 const initialState = {
   results: [],
-  fetching: false,
+  fetching: null,
   fetchingPage: 0,
   fetchingTotalPage: 0,
   fetchError: "",
@@ -24,7 +24,7 @@ const initialState = {
 
 const reducer = (state = initialState, { type, payload }) => {
   switch (type) {
-    case FETCH_PLAYER_START: return { ...initialState };
+    case FETCH_PLAYER_START: return { ...initialState, fetching: state.fetching };
 
     case FETCH_GAMES_START: return {
       ...state,

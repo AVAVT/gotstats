@@ -16,13 +16,13 @@ class SideBar extends Component {
 
   render() {
     const quickLinks = this.props.showQuickLinks ? (
-      <div className="navi hidden-sm hidden-xs">
+      <div className="navi d-none d-md-block">
         <hr />
         <QuickLinks scrollToElem={this.props.scrollToElem} />
       </div>
     ) : null;
     const datePicker = this.props.showDatePicker ? (
-      <div className="hidden-sm hidden-xs">
+      <div className=" d-none d-md-block">
         <hr />
         <DatePicker />
       </div>

@@ -19,14 +19,14 @@ class Header extends Component {
     const pageTitle = this.props.player.username ? `statistics for player ${this.props.player.username} (${getPlayerRankDisplay(this.props.player)})` : "statistics";
     const title = `${this.props.player.username && `${this.props.player.username} statistics | `}Got Stats?`
     return (
-      <nav className="navbar navbar-dark Header">
+      <nav className="navbar navbar-dark Header justify-content-start">
         <Helmet>
           <title>{title}</title>
         </Helmet>
         <a href={`${process.env.PUBLIC_URL}/`} className="navbar-brand">
           <img className="OGS_logo d-inline-block align-top" src="https://cdn.online-go.com/assets/ogs_dark.svg" alt="OGS logo" />
-          <h1 className="page_title">{pageTitle}</h1>
         </a>
+        <h1 className="page_title">{pageTitle}</h1>
       </nav>
     );
   }
