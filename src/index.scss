@@ -316,13 +316,14 @@ h3{
 }
 
 .navi_list li{
+  padding: 5px 0;
 	display: block;
 }
 
 .navi_list li a{
 	display: block;
-	padding: 5px 7px;
-	color: #f8f8ff;
+	padding: 0 7px;
+	color: #909096;
 }
 
 .navi_list li.active a,
