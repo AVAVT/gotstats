@@ -57,8 +57,6 @@ class OpponentChart extends Component {
 
     const {
       numberOfOpponents,
-      weakestLegendStyle,
-      strongestLegendStyle,
       weakestDisp,
       userDisp,
       strongestDisp,
