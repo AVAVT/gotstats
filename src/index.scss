@@ -31,6 +31,18 @@ button:focus{
 	outline: 0 none;
 }
 
+input[type="checkbox"]:checked{
+  outline: 1px solid #41CD64;
+}
+input[type="checkbox"]:not(:checked){
+  outline: 1px solid #d93344;
+}
+
+input[type="checkbox"],
+label[for]{
+  cursor: pointer;
+}
+
 .input-group-btn .btn.btn-primary{
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
@@ -355,10 +367,10 @@ h3{
 }
 
 .footer{
-	padding-top: 20px;
+	padding-top: 30px;
 	padding-bottom: 20px;
-	margin-top: 20px;
-	border-top: 1px solid #cccccc;
+	margin-top: 40px;
+	border-top: 1px solid rgba(0, 0, 0, 0.1);
 	min-height: 30vh;
 }
 

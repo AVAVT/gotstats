@@ -1,6 +1,6 @@
 import { fetchGamePage } from "../../OGSApi/OGSApi";
 
-import { chooseChartDataTimeRange } from "../Charts/chartActions";
+import { applyGameFilters } from "../Charts/chartActions";
 
 export const FETCH_GAMES_START = "FETCH_GAMES_START";
 export const FETCH_GAMES_PROGRESS = "FETCH_GAMES_PROGRESS";
@@ -49,7 +49,7 @@ export const fetchGames = (playerId) => async (dispatch, getState) => {
     else dispatch(fetchGamesFailure("An error has occured while fetching user games. Please try again later."));
   }
 
-  dispatch(chooseChartDataTimeRange());
+  dispatch(applyGameFilters());
 };
 
 const fetchGamesStart = (promise) => ({

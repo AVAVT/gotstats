@@ -13,6 +13,17 @@ import SideBar from "./SideBar/SideBar";
 
 import { testGame, testUser } from "./testUtils";
 
+import {
+  minDate,
+  maxDate,
+  rankedValues,
+  tournamentValues,
+  boardSizeValues,
+  timeSettingsValues,
+  colorValues,
+  handicapValues
+} from "../Data/Charts/chartActions";
+
 const props = {
   showLoading: false,
   showStatistics: false,
@@ -26,7 +37,17 @@ const defaultStore = {
   games: {
     results: []
   },
-  chartsData: []
+  chartsData: {
+    startDate: minDate,
+    endDate: maxDate,
+    ranked: rankedValues,
+    tournament: tournamentValues,
+    boardSize: boardSizeValues,
+    timeSettings: timeSettingsValues,
+    handicap: handicapValues,
+    color: colorValues,
+    results: []
+  }
 };
 
 const getMounted = (storeOverrides, propsOverrides) => {
@@ -114,7 +135,10 @@ describe("Statistics", () => {
         ...defaultStore.games,
         results: [testGame]
       },
-      chartsData: [testGame]
+      chartsData: {
+        ...defaultStore.chartsData,
+        results: [testGame]
+      }
     });
     expect(wrapper.find(ChartList)).toExist();
   })

@@ -216,19 +216,19 @@ function assignGameResultToDistributions(distributions, game) {
   return distributions;
 }
 
-function computeMiscInfo(allGames, analyzingGames, player) {
+function computeMiscInfo(analyzingGames, player) {
   let mostActiveDay;
   let currentDay = new Date();
   currentDay.setHours(0, 0, 0, 0);
+
+  let totalLosses = 0;
 
   let longestStreak = { streak: 0 }
   let currentStreak = { streak: 0 }
 
   let gamesOnMostActiveDay = 0, gamesOnCurrentDay = 0;
 
-  let biggestWin = {
-    diff: 0
-  }
+  let biggestWin = { diff: 0 }
 
   for (let game of analyzingGames) {
 
@@ -258,6 +258,8 @@ function computeMiscInfo(allGames, analyzingGames, player) {
         }
       }
     }
+    // Total losses
+    else totalLosses++;
 
 
     // Most active day
@@ -279,8 +281,8 @@ function computeMiscInfo(allGames, analyzingGames, player) {
 
   let memberSince = new Date(player.registrationDate);
   // Change memberSince to date of first game for player who migrated from old server
-  if (allGames.length) {
-    let firstGameDate = new Date(allGames[allGames.length - 1].started);
+  if (analyzingGames.length) {
+    let firstGameDate = new Date(analyzingGames[analyzingGames.length - 1].started);
     if (firstGameDate < memberSince) memberSince = firstGameDate;
   }
 
@@ -291,13 +293,25 @@ function computeMiscInfo(allGames, analyzingGames, player) {
     gamesPerDay = analyzingGames.length / parseFloat(daysSinceStart);
   }
 
+  const uniqueTournaments = analyzingGames
+    .filter(game => game.tournament !== null)
+    .reduce((result, game) => {
+      if (result.indexOf(game.tournament) === -1) {
+        result.push(game.tournament);
+      }
+
+      return result;
+    }, []).length;
+
   return {
     memberSince,
     gamesPerDay,
     longestStreak,
     mostActiveDay,
     gamesOnMostActiveDay,
-    biggestWin
+    biggestWin,
+    uniqueTournaments,
+    totalLosses
   }
 }
 

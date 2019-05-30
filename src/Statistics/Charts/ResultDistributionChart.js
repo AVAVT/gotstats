@@ -67,7 +67,7 @@ class ResultDistributionChart extends Component {
         ['Other', distributions["Opp+Other"]]
       ],
       chartData3: [
-        ['Outcome', 'Games opponent wins', `Games ${this.props.player.username} wins`],
+        ['Outcome', 'Losses', `Wins`],
         ['40+', distributions["Opp+40+"], null],
         ['30+', distributions["Opp+30+"], null],
         ['20+', distributions["Opp+20+"], null],

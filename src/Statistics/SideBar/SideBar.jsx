@@ -5,7 +5,6 @@ import SearchBox from './SearchBox';
 import QuickLinks from './QuickLinks';
 
 import { connect } from "react-redux";
-import DatePicker from './DatePicker';
 
 class SideBar extends Component {
   static propTypes = {
@@ -21,23 +20,19 @@ class SideBar extends Component {
         <QuickLinks scrollToElem={this.props.scrollToElem} />
       </div>
     ) : null;
-    const datePicker = this.props.showDatePicker ? (
-      <div className=" d-none d-md-block">
-        <hr />
-        <DatePicker />
-      </div>
-    ) : null;
+
 
     return (
       <div className="col-lg-3 col-md-4 order-md-2 sidebar">
         <nav className="side_nav sticky-top">
           <SearchBox />
           {quickLinks}
-          {datePicker}
+          <hr />
+          <a href="https://forums.online-go.com/t/g0tstats-is-back-with-more-stats/6524" target="_blank" rel="noopener noreferrer nofollow">Support thread on OGS</a>
         </nav>
       </div>
     );
   }
 }
-const mapReduxStateToProps = ({ chartsData, games }) => ({ showQuickLinks: chartsData.length > 0, showDatePicker: games.results.length > 0 })
+const mapReduxStateToProps = ({ chartsData, games }) => ({ showQuickLinks: chartsData.results.length > 0 })
 export default connect(mapReduxStateToProps)(SideBar);

@@ -20,7 +20,16 @@ const defaultStore = {
   games: {
     results: []
   },
-  chartsData: []
+  chartsData: {
+    startDate: new Date(-8640000000000000),
+    ranked: 0,
+    tournament: 0,
+    boardSize: 0,
+    timeSettings: 0,
+    color: 0,
+    handicap: 0,
+    results: []
+  }
 };
 
 const getShallow = () => {
@@ -58,7 +67,16 @@ describe("SideBar", () => {
       games: {
         results: [testGame]
       },
-      chartsData: [testGame]
+      chartsData: {
+        startDate: new Date(-8640000000000000),
+        ranked: 0,
+        tournament: 0,
+        boardSize: 0,
+        timeSettings: 0,
+        color: 0,
+        handicap: 0,
+        results: [testGame]
+      }
     });
     expect(wrapper.find(QuickLinks)).toExist();
   })
