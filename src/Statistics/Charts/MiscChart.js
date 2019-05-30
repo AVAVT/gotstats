@@ -50,9 +50,9 @@ class MiscChart extends Component {
       uniqueTournaments
     } = Analyzer.computeMiscInfo(gamesData.games, player);
 
-    const streakDurationDisplay = longestStreak.end ? <span>, from <GameLink game={longestStreak.start} /> to  <GameLink game={longestStreak.end} /></span> : '';
+    const streakDurationDisplay = longestStreak.end ? <span>, from <GameLink game={longestStreak.start} /> to <GameLink game={longestStreak.end} /></span> : '';
     const biggestWinDisplay = biggestWin.game && (
-      <li>Biggest win: {biggestWin.diff} points victory against <PlayerLink player={biggestWin.opponent} /> on  <GameLink game={biggestWin.game} />.</li>
+      <li>Biggest win: {biggestWin.diff} points victory against <PlayerLink player={biggestWin.opponent} /> on <GameLink game={biggestWin.game} />.</li>
     )
     return (
       <section className="stats_block">
@@ -60,13 +60,7 @@ class MiscChart extends Component {
         <ul className="info_list">
           <li>Member since: {moment(memberSince).format("DD MMM, YYYY")}.</li>
           {totalLosses >= 50 && (
-            <div className="row">
-              <div className="col-12">
-                <p className="gratz">
-                  Congratulations, <a target="_blank" rel="noopener noreferrer" href="http://senseis.xmp.net/?page=LoseYourFirst50GamesAsQuicklyAsPossible">you have lost your first 50 games</a>!
-                      </p>
-              </div>
-            </div>
+            <li>Congratulations, <a target="_blank" rel="noopener noreferrer nofollow" href="http://senseis.xmp.net/?page=LoseYourFirst50GamesAsQuicklyAsPossible">you have lost your first 50 games</a>!</li>
           )}
           <li>Plays {Math.round(gamesPerDay * 100) / 100} games per day on average.</li>
           <li>Most active day: {moment(mostActiveDay).format("DD MMM, YYYY")} with {gamesOnMostActiveDay} finished games.</li>
