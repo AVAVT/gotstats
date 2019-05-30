@@ -32,7 +32,7 @@ class DatePicker extends Component {
           name="date"
           onChange={this.onDateChanged}
           options={{
-            dateFormat: "d M, Y",
+            dateFormat: "M d, Y",
             minDate: this.props.minDate,
             maxDate: this.props.maxDate,
             enableTime: false,
