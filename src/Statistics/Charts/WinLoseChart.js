@@ -19,7 +19,7 @@ class WinLoseChart extends Component {
   state = {
     mainChartOptions: {
       backgroundColor: "transparent",
-      chartArea: { top: 30 },
+      chartArea: { top: 60 },
       colors: ["#000000", "#f8f8ff"],
       pieSliceTextStyle: { color: "#d93344" },
       legend: {
@@ -93,7 +93,7 @@ class WinLoseChart extends Component {
                   options={this.state.mainChartOptions}
                   data={chartData1}
                   width={'100%'}
-                  height={'300px'}
+                  height={'400px'}
                 />
               </div>
             ) : null

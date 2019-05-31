@@ -17,12 +17,17 @@ class BoardSizesChart extends Component {
   state = {
     mainChartOptions: {
       backgroundColor: "transparent",
-      chartArea: { top: 30 },
+      chartArea: {
+        top: 60,
+        left: 0,
+        right: 0
+      },
       colors: ["#d93344", "#41CD64", "#5486d1", "#9d4dc5"],
       pieSliceTextStyle: { color: "#ffffff" },
       legend: {
         maxLines: 2,
         position: "bottom",
+        alignment: 'center',
         textStyle: {
           color: "#f8f8ff",
           fontName: "Roboto",
@@ -102,7 +107,7 @@ class BoardSizesChart extends Component {
                   options={this.state.mainChartOptions}
                   data={chartData1}
                   width={'100%'}
-                  height={'300px'}
+                  height={'400px'}
                 />
               </div>
             ) : null
