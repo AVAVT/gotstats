@@ -55,7 +55,7 @@ class Statistics extends Component {
 const mapReduxStateToProps = ({ player, games }) => ({
   player,
   showLoading: !!player.fetching || !!player.fetchError || !!games.fetching || !!games.fetchError,
-  showStatistics: games.results.length > 0
+  showStatistics: player.id > -1
 })
 
 const mapReduxDispatchToProps = dispatch => ({

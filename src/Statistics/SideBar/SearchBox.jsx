@@ -5,6 +5,8 @@ import { connect } from "react-redux";
 import { saveAs } from 'file-saver';
 import { importPlayer, fetchPlayer } from "../../Data/Player/playerActions";
 
+const exporterVersion = 0;
+
 class SearchBox extends Component {
   static propTypes = {
     history: PropTypes.object.isRequired
@@ -41,7 +43,7 @@ class SearchBox extends Component {
     const {
       id,
       username,
-      rating,
+      ratings,
       rank,
       registrationDate
     } = this.props.player;
@@ -53,6 +55,7 @@ class SearchBox extends Component {
     } = this.props.games;
 
     const jsonString = JSON.stringify({
+      exporterVersion,
       player: {
         id,
         username,
