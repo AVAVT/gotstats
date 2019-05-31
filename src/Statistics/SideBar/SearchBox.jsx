@@ -72,7 +72,7 @@ class SearchBox extends Component {
 
     var blob = new Blob([jsonString], { type: "text/json;charset=utf-8" });
     saveAs(blob, `gotstats_${username}.json`);
-    window.alert("Player data file exported.\nPlease keep this file and use it for quick import in the future.")
+    window.alert("Player data file exported.\nYou can use it for quick import in the future.")
   }
 
   readFile = (event) => {
@@ -93,14 +93,18 @@ class SearchBox extends Component {
   render() {
     return (
       <form onSubmit={this.submit}>
-        <div className="input-group">
-          <input value={this.state.username} onChange={this.updateSearchUser} name="id" type="text" placeholder="Username or ID" className="form-control" />
-          <span className="input-group-btn">
-            <button type="submit" className="btn btn-primary">Got Stats?</button>
-          </span>
+        <div className="form-group">
+          <div className="input-group">
+            <input value={this.state.username} onChange={this.updateSearchUser} name="id" type="text" placeholder="Username or ID" className="form-control" />
+            <span className="input-group-btn">
+              <button type="submit" className="btn btn-primary">Got Stats?</button>
+            </span>
+          </div>
         </div>
+
         <p className="text-center"><small className="tip help-block"><em>-- or --</em></small></p>
-        <div>
+
+        <div className="form-group">
           <p className="d-flex justify-content-between">
             <input type="file" onChange={this.readFile} id="file_input" style={{ display: 'none' }} />
             <button className="btn btn-secondary" onClick={() => document.getElementById("file_input").click()}>Import Data</button>
