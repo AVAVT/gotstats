@@ -56,7 +56,7 @@ class SearchBox extends Component {
       player: {
         id,
         username,
-        rating,
+        ratings,
         rank,
         registrationDate
       },
