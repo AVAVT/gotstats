@@ -14,6 +14,7 @@ import Footer from './Footer';
 class Statistics extends Component {
   static propTypes = {
     getPlayerData: PropTypes.func.isRequired,
+    player: PropTypes.object.isRequired,
     user: PropTypes.string,
     showLoading: PropTypes.bool.isRequired,
     showStatistics: PropTypes.bool.isRequired,
@@ -26,12 +27,6 @@ class Statistics extends Component {
   componentDidMount() {
     if (this.props.user) {
       this.props.getPlayerData(this.props.user);
-    }
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.user !== this.props.user) {
-      this.props.getPlayerData(nextProps.user);
     }
   }
 
@@ -58,6 +53,7 @@ class Statistics extends Component {
 }
 
 const mapReduxStateToProps = ({ player, games }) => ({
+  player,
   showLoading: !!player.fetching || !!player.fetchError || !!games.fetching || !!games.fetchError,
   showStatistics: games.results.length > 0
 })

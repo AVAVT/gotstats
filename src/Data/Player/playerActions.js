@@ -5,6 +5,14 @@ export const FETCH_PLAYER_START = "FETCH_PLAYER_START";
 export const FETCH_PLAYER_SUCCESS = "FETCH_PLAYER_SUCCESS";
 export const FETCH_PLAYER_FAILURE = "FETCH_PLAYER_FAILURE";
 
+export const importPlayer = ({ player, games }) => (dispatch, getState) => {
+  const fetchingPromise = getState().player.fetching;
+  if (fetchingPromise) fetchingPromise.cancel();
+
+  dispatch(fetchPlayerSuccess(player));
+  dispatch(fetchGames(player.id, games.results));
+}
+
 export const fetchPlayer = (player) => async (dispatch, getState) => {
   const fetchingPromise = getState().player.fetching;
   if (fetchingPromise) fetchingPromise.cancel();

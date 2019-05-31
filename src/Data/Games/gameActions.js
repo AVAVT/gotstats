@@ -10,29 +10,34 @@ export const FETCH_GAMES_FAILURE = "FETCH_GAMES_FAILURE";
 const minDate = new Date(-8640000000000000);
 const maxDate = new Date(8640000000000000);
 
-export const fetchGames = (playerId) => async (dispatch, getState) => {
+export const fetchGames = (playerId, cachedGames = []) => async (dispatch, getState) => {
   const fetchingPromise = getState().games.fetching;
   if (fetchingPromise) fetchingPromise.cancel();
 
+  const latestId = cachedGames.length > 0 ? cachedGames[0].id : null;
+
   try {
     let games = [];
-
-    let promise = fetchGamePage(playerId);
-    dispatch(fetchGamesStart(promise));
-    let data = await promise;
-
-    games.push(...data.results);
-
     let fetchingPage = 0;
-    const fetchingTotalPage = Math.ceil(data.count / 50);
-
-    while (data.next) {
-      fetchingPage++;
-      let promise = fetchGamePage(playerId, data.next);
-      dispatch(fetchGamesProgress({ promise, fetchingPage, fetchingTotalPage }))
+    let data;
+    let fetchingTotalPage = 0;
+    let shouldContinueFetching = true;
+    do {
+      const promise = fetchGamePage(playerId, data ? data.next : undefined);
+      dispatch(fetchingPage === 0 ? fetchGamesStart(promise) : fetchGamesProgress({ promise, fetchingPage, fetchingTotalPage }))
       data = await promise;
-      games.push(...data.results);
-    }
+      for (const game of data.results) {
+        if (game.id !== latestId) games.push(game);
+        else {
+          shouldContinueFetching = false;
+          games = [...games, ...cachedGames];
+          break;
+        }
+      }
+
+      fetchingPage++;
+      fetchingTotalPage = Math.ceil(data.count / 50);
+    } while (data.next && shouldContinueFetching)
 
     let startDate = games.length ? new Date(games[games.length - 1].ended) : minDate;
     startDate.setHours(0, 0, 0, 0);
@@ -51,6 +56,10 @@ export const fetchGames = (playerId) => async (dispatch, getState) => {
 
   dispatch(applyGameFilters());
 };
+
+export const updateGames = (playerId) => async (dispatch, getState) => {
+
+}
 
 const fetchGamesStart = (promise) => ({
   type: FETCH_GAMES_START,

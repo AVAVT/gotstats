@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types'
 import { withRouter } from 'react-router-dom';
+import { connect } from "react-redux";
+import { saveAs } from 'file-saver';
+import { importPlayer, fetchPlayer } from "../../Data/Player/playerActions";
 
 class SearchBox extends Component {
   static propTypes = {
@@ -22,6 +25,7 @@ class SearchBox extends Component {
 
     if (this.state.username) {
       this.props.history.push(`/user/${this.state.username}`)
+      this.props.getPlayerData(this.state.username);
 
       this.setState({
         username: ''
@@ -33,6 +37,55 @@ class SearchBox extends Component {
     }
   }
 
+  downloadJSON = () => {
+    const {
+      id,
+      username,
+      rating,
+      rank,
+      registrationDate
+    } = this.props.player;
+
+    const {
+      start,
+      end,
+      results
+    } = this.props.games;
+
+    const jsonString = JSON.stringify({
+      player: {
+        id,
+        username,
+        rating,
+        rank,
+        registrationDate
+      },
+      games: {
+        start,
+        end,
+        results
+      }
+    });
+
+    var blob = new Blob([jsonString], { type: "text/json;charset=utf-8" });
+    saveAs(blob, `gotstats_${username}.json`);
+  }
+
+  readFile = (event) => {
+    const file = event.target.files[0];
+    var reader = new FileReader();
+    reader.onload = (evt) => {
+      this.readImportedJSON(evt.target.result);
+    };
+    reader.readAsText(file);
+  }
+
+  readImportedJSON = (jsonString) => {
+    const data = JSON.parse(jsonString);
+    this.props.history.push(`/user/${data.player.username}`)
+    this.props.importPlayerData(data);
+  }
+
   render() {
     return (
       <form onSubmit={this.submit}>
@@ -42,9 +95,23 @@ class SearchBox extends Component {
             <button type="submit" className="btn btn-primary">Got Stats?</button>
           </span>
         </div>
+        <p className="text-center"><small className="tip help-block"><em>-- or --</em></small></p>
+        <div>
+          <p className="d-flex justify-content-between">
+            <input type="file" onChange={this.readFile} id="file_input" style={{ display: 'none' }} />
+            <button className="btn btn-secondary" onClick={() => document.getElementById("file_input").click()}>Import Data</button>
+            {this.props.games.results.length > 0 && (<button className="btn btn-secondary" onClick={this.downloadJSON}>Export Data</button>)}
+          </p>
+        </div>
       </form>
     );
   }
 }
 
-export default withRouter(SearchBox);
+const mapReduxStateToProps = ({ player, games }) => ({ player, games })
+const mapDispatchToProps = (dispatch) => ({
+  importPlayerData: data => dispatch(importPlayer(data)),
+  getPlayerData: player => dispatch(fetchPlayer(player))
+})
+
+export default withRouter(connect(mapReduxStateToProps, mapDispatchToProps)(SearchBox));
