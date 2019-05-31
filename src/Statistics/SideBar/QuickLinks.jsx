@@ -8,7 +8,7 @@ const links = [
   ["board_sizes_stats", "Performance across board sizes"],
   ["time_settings_stats", "Performance across time settings"],
   ["opponents_stats", "Opponents statistics"],
-  ["misc_stats", "Miscellaneous statistics"]
+  ["misc_stats", "Miscellaneous information"]
 ]
 
 
