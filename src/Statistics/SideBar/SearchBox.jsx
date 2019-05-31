@@ -72,6 +72,7 @@ class SearchBox extends Component {
 
     var blob = new Blob([jsonString], { type: "text/json;charset=utf-8" });
     saveAs(blob, `gotstats_${username}.json`);
+    window.alert("Player data file exported.\nPlease keep this file and use it for quick import in the future.")
   }
 
   readFile = (event) => {
