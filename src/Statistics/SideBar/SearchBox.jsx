@@ -42,7 +42,6 @@ class SearchBox extends Component {
             <button type="submit" className="btn btn-primary">Got Stats?</button>
           </span>
         </div>
-        <small className="tip help-block"><em>*Tip: mouse over/tap on a chart to see more info.</em></small>
       </form>
     );
   }

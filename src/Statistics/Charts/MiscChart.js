@@ -59,14 +59,14 @@ class MiscChart extends Component {
         <h2 id={this.props.id} className="text-center">{this.props.title}</h2>
         <ul className="info_list">
           <li>Member since: {moment(memberSince).format("DD MMM, YYYY")}.</li>
-          {totalLosses >= 50 && (
-            <li>Congratulations, <a target="_blank" rel="noopener noreferrer nofollow" href="http://senseis.xmp.net/?page=LoseYourFirst50GamesAsQuicklyAsPossible">you have lost your first 50 games</a>!</li>
-          )}
           <li>Plays {Math.round(gamesPerDay * 100) / 100} games per day on average.</li>
           <li>Most active day: {moment(mostActiveDay).format("DD MMM, YYYY")} with {gamesOnMostActiveDay} finished games.</li>
           <li>Played in {uniqueTournaments} different tournaments.</li>
           <li>Longest win streak: {longestStreak.streak} wins in a row{streakDurationDisplay}.</li>
           {biggestWinDisplay}
+          {totalLosses >= 50 && (
+            <li>Congratulations, <a target="_blank" rel="noopener noreferrer nofollow" href="http://senseis.xmp.net/?page=LoseYourFirst50GamesAsQuicklyAsPossible">you have lost your first 50 games</a>!</li>
+          )}
         </ul>
       </section>
     );

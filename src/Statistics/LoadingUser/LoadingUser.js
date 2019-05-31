@@ -19,7 +19,7 @@ class LoadingUser extends Component {
     } = this.props;
 
     const totalMessage = totalPages ? ` of ${totalPages}` : "";
-    const loadMessage = isFetchingPlayer ? `Fetching user info from OGS` : `Fetching games result from OGS: page ${currentPage}${totalMessage}`;
+    const loadMessage = isFetchingPlayer ? `Fetching user info from OGS` : `Fetching games result from OGS: page ${currentPage + 1}${totalMessage}`;
 
     return (
       <div className="loading_wrapper">

@@ -1,3 +1,38 @@
+const minDate = new Date(-8640000000000000);
+const maxDate = new Date(8640000000000000);
+
+export const emptyStore = {
+  player: {
+    id: -1,
+    username: "",
+    rating: 0,
+    rank: 0,
+    fetching: null,
+    fetchError: "",
+    registrationDate: null
+  },
+  games: {
+    results: [],
+    fetching: null,
+    fetchingPage: 0,
+    fetchingTotalPage: 0,
+    fetchError: "",
+    start: minDate,
+    end: maxDate
+  },
+  chartsData: {
+    startDate: minDate,
+    endDate: maxDate,
+    ranked: 0,
+    tournament: 0,
+    boardSize: 0,
+    timeSettings: 0,
+    color: 0,
+    handicap: 0,
+    results: []
+  }
+};
+
 export const testUser = {
   username: "anoek",
   rank: 10,

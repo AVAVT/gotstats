@@ -31,10 +31,7 @@ class ChartList extends Component {
 
     const charts = filteredGamesData.games.length > 0 && (
       <div>
-        <hr />
         <WinLoseChart
-          title={`${filteredGamesData.games.length} of ${allGamesData.games.length} games match the filters`}
-          id={"total_games_stats"}
           gamesData={filteredGamesData}
         />
         <ResultDistributionChart
@@ -69,20 +66,23 @@ class ChartList extends Component {
       <div>
         <ChartFilter />
 
+        <hr />
+        <h2 id="total_games_stats" className="text-center">{`${filteredGamesData.games.length} of ${allGamesData.games.length} games match the filters`}</h2>
+
         {charts}
 
         {
           allGamesData.games.length > 0 && (
             <div>
-              <hr />
+              <h2 className="all_time_title">Lifetime Statistics</h2>
               <OpponentChart
-                title={`Number of opponents faced`}
+                title={`Unique opponents faced`}
                 id={"opponents_stats"}
                 gamesData={allGamesData}
                 player={this.props.player}
               />
               <MiscChart
-                title={`Miscellaneous statistics`}
+                title={`Miscellaneous`}
                 id={"misc_stats"}
                 gamesData={allGamesData}
                 player={this.props.player}

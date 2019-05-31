@@ -29,7 +29,7 @@ const reducer = (state = initialState, { type, payload }) => {
     case FETCH_GAMES_START: return {
       ...state,
       fetching: payload,
-      fetchingPage: 1,
+      fetchingPage: 0,
       fetchingTotalPage: 0,
       fetchError: "",
       start: minDate,

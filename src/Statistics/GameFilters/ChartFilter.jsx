@@ -104,12 +104,12 @@ class ChartFilter extends Component {
             <DatePicker className="form-group col-sm-6 col-lg-4" changeStartDate={this.onStartDateChanged} />
           </div>
         </div>
-        {this.renderCheckBoxItems(rankedValues, ranked, "ranked")}
-        {this.renderCheckBoxItems(boardSizeValues, boardSize, "boardSize", true)}
-        {this.renderCheckBoxItems(timeSettingsValues, timeSettings, "timeSettings")}
-        {this.renderCheckBoxItems(handicapValues, handicap, "handicap")}
-        {this.renderCheckBoxItems(colorValues, color, "color")}
-        {this.renderCheckBoxItems(tournamentValues, tournament, "tournament")}
+        {this.renderCheckBoxItems(rankedValues.values, ranked, "ranked")}
+        {this.renderCheckBoxItems(boardSizeValues.values, boardSize, "boardSize", true)}
+        {this.renderCheckBoxItems(timeSettingsValues.values, timeSettings, "timeSettings")}
+        {this.renderCheckBoxItems(handicapValues.values, handicap, "handicap")}
+        {this.renderCheckBoxItems(colorValues.values, color, "color")}
+        {this.renderCheckBoxItems(tournamentValues.values, tournament, "tournament")}
       </form>
     );
   }

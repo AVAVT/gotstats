@@ -15,22 +15,7 @@ const props = {
 };
 
 const mockStore = configureMockStore();
-const defaultStore = {
-  player: {},
-  games: {
-    results: []
-  },
-  chartsData: {
-    startDate: new Date(-8640000000000000),
-    ranked: 0,
-    tournament: 0,
-    boardSize: 0,
-    timeSettings: 0,
-    color: 0,
-    handicap: 0,
-    results: []
-  }
-};
+
 
 const getShallow = () => {
   return shallow(<SideBar.WrappedComponent {...props} />);

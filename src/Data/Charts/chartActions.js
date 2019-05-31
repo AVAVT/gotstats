@@ -6,15 +6,40 @@ import {
 
 export const UPDATE_CHART_DATA_SOURCE = "UPDATE_CHART_DATA_SOURCE";
 
-export const RANKED = "Ranked";
-export const UNRANKED = "Unranked";
-
-export const rankedValues = ["Ranked", "Unranked"]
-export const tournamentValues = ["Tournament", "Non-tournament"]
-export const boardSizeValues = ["19x19", "13x13", "9x9", "Others"]
-export const timeSettingsValues = ["Blitz", "Live", "Correspondence"]
-export const colorValues = ["Play as Black", "Play as White"]
-export const handicapValues = ["Even game", "Handicap giver", "Handicap taker"]
+export const rankedValues = {
+  Ranked: "Ranked",
+  Unranked: "Unranked",
+  values: ["Ranked", "Unranked"]
+}
+export const tournamentValues = {
+  Tournament: "Tournament",
+  NonTournament: "Non-tournament",
+  values: ["Tournament", "Non-tournament"]
+}
+export const boardSizeValues = {
+  Nineteens: "19x19",
+  Thirteens: "13x13",
+  Nines: "9x9",
+  Others: "Others",
+  values: ["19x19", "13x13", "9x9", "Others"]
+}
+export const timeSettingsValues = {
+  Blitz: "Blitz",
+  Live: "Live",
+  Correspondence: "Correspondence",
+  values: ["Blitz", "Live", "Correspondence"]
+}
+export const colorValues = {
+  Black: "Play as Black",
+  White: "Play as White",
+  values: ["Play as Black", "Play as White"]
+}
+export const handicapValues = {
+  Even: "Even game",
+  Taker: "Handicap taker",
+  Giver: "Handicap giver",
+  values: ["Even game", "Handicap taker", "Handicap giver"]
+}
 
 export const minDate = new Date(-8640000000000000);
 export const maxDate = new Date(8640000000000000);
@@ -22,25 +47,27 @@ export const maxDate = new Date(8640000000000000);
 const defaultActionParams = {
   startDate: minDate,
   endDate: maxDate,
-  ranked: rankedValues,
-  tournament: tournamentValues,
-  boardSize: boardSizeValues,
-  timeSettings: timeSettingsValues,
-  handicap: handicapValues,
-  color: colorValues
+  ranked: rankedValues.values,
+  tournament: tournamentValues.values,
+  boardSize: boardSizeValues.values,
+  timeSettings: timeSettingsValues.values,
+  handicap: handicapValues.values,
+  color: colorValues.values
 }
 
 export const applyGameFilters = ({
   startDate = minDate,
   endDate = maxDate,
-  ranked = rankedValues,
-  tournament = tournamentValues,
-  boardSize = boardSizeValues,
-  timeSettings = timeSettingsValues,
-  handicap = handicapValues,
-  color = colorValues
+  ranked = rankedValues.values,
+  tournament = tournamentValues.values,
+  boardSize = boardSizeValues.values,
+  timeSettings = timeSettingsValues.values,
+  handicap = handicapValues.values,
+  color = colorValues.values
 } = defaultActionParams) => (dispatch, getState) => {
+
   const playerId = getState().player.id;
+
   const params = {
     startDate,
     endDate,
@@ -86,15 +113,15 @@ const composeFilterFunction = ({
 }
 
 const gameSatisfyRankedRule = (game, ranked) => {
-  if (game.ranked && !ranked.includes("Ranked")) return false;
-  if (!game.ranked && !ranked.includes("Unranked")) return false;
+  if (game.ranked && !ranked.includes(rankedValues.Ranked)) return false;
+  if (!game.ranked && !ranked.includes(rankedValues.Unranked)) return false;
   return true;
 }
 
 const gameSatisfyTournamentRule = (game, tournament) => {
   const isTournamentGame = game.tournament !== null;
-  if (isTournamentGame && !tournament.includes("Tournament")) return false;
-  if (!isTournamentGame && !tournament.includes("Non-tournament")) return false;
+  if (isTournamentGame && !tournament.includes(tournamentValues.Tournament)) return false;
+  if (!isTournamentGame && !tournament.includes(tournamentValues.NonTournament)) return false;
   return true;
 }
 
@@ -114,8 +141,8 @@ const gameSatisfyHandicapRule = (game, handicap, playerId) => {
 }
 
 const gameSatisfyColorRule = (game, color, playerId) => {
-  if (game.players.black.id === playerId && !color.includes("Play as Black")) return false;
-  if (game.players.white.id === playerId && !color.includes("Play as White")) return false;
+  if (game.players.black.id === playerId && !color.includes(colorValues.Black)) return false;
+  if (game.players.white.id === playerId && !color.includes(colorValues.White)) return false;
   return true;
 }
 

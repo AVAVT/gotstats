@@ -16,12 +16,12 @@ import {
 const initialState = {
   startDate: minDate,
   endDate: maxDate,
-  ranked: rankedValues,
-  tournament: tournamentValues,
-  boardSize: boardSizeValues,
-  timeSettings: timeSettingsValues,
-  handicap: handicapValues,
-  color: colorValues,
+  ranked: rankedValues.values,
+  tournament: tournamentValues.values,
+  boardSize: boardSizeValues.values,
+  timeSettings: timeSettingsValues.values,
+  handicap: handicapValues.values,
+  color: colorValues.values,
   results: []
 }
 
