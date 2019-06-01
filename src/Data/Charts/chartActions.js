@@ -42,7 +42,7 @@ export const handicapValues = {
 }
 
 export const minDate = new Date(-8640000000000000);
-export const maxDate = new Date(8640000000000000);
+export const maxDate = new Date();
 
 const defaultActionParams = {
   startDate: minDate,

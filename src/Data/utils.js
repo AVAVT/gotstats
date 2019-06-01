@@ -18,8 +18,28 @@ export const getPlayerRank = (player) => {
   }
 }
 
+export const getPlayerUnroundedRank = (player) => {
+  try {
+    const rating = player.ratings.overall.rating
+    var rank = Math.log(rating / 850.0) / 0.032;
+    return rank;
+  }
+  catch (err) {
+    return player.ranking;
+  }
+}
+
+export const getPlayerRating = (player) => player.ratings.overall.rating;
+
 export const getPlayerRankDisplay = (player) => {
   return rankNumberToKyuDan(getPlayerRank(player));
+}
+
+export const ratingToKyuDan = (rating) => {
+  var rank = Math.floor(
+    Math.log(rating / 850.0) / 0.032
+  );
+  return rankNumberToKyuDan(rank);
 }
 
 export const getGameBoardSize = (game) => {

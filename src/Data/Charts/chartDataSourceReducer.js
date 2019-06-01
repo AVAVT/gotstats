@@ -1,5 +1,5 @@
 import { UPDATE_CHART_DATA_SOURCE } from "./chartActions";
-import { FETCH_GAMES_START } from "../Games/gameActions";
+import { FETCH_GAMES_START, FETCH_GAMES_SUCCESS } from "../Games/gameActions";
 import { FETCH_PLAYER_START } from '../Player/playerActions';
 
 import {
@@ -38,6 +38,11 @@ const reducer = (state = initialState, { type, payload }) => {
         ...initialState
       };
 
+    case FETCH_GAMES_SUCCESS:
+      return {
+        ...state,
+        startDate: payload.start
+      }
     default: return state;
   }
 }

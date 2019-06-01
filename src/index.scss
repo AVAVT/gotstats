@@ -18,6 +18,13 @@ a{
 	color: #d93344;
 }
 
+.text-red{
+  color: #d93344;
+}
+.text-green{
+  color: #41CD64;
+}
+
 a:hover,
 a:active,
 a:focus{
@@ -62,6 +69,13 @@ label[for]{
   background: #d93344;
   border-color: #d93344;
   box-shadow: 0 0 transparent;
+}
+
+.App .google-visualization-tooltip{
+  padding: 7px 15px;
+  background: lighten(#25252F, 5%);
+  border: 0 none;
+  box-shadow: 0 0 5px rgba(0,0,0,0.2)
 }
 
 

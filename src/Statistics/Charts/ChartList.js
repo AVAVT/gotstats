@@ -9,6 +9,7 @@ import TimeSettingsChart from './TimeSettingsChart';
 import OpponentChart from './OpponentChart';
 import MiscChart from './MiscChart';
 import ChartFilter from '../GameFilters/ChartFilter';
+import GameHistoryChart from './GameHistoryChart';
 
 
 class ChartList extends Component {
@@ -31,9 +32,14 @@ class ChartList extends Component {
 
     const charts = filteredGamesData.games.length > 0 && (
       <div>
+        <GameHistoryChart
+          gamesData={filteredGamesData}
+          player={this.props.player} />
+
         <WinLoseChart
           gamesData={filteredGamesData}
         />
+
         <ResultDistributionChart
           title={`Game results distribution`}
           id={"game_results"}

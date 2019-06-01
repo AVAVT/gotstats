@@ -1,4 +1,4 @@
-import { getPlayerRank } from "./utils";
+import { getPlayerRank, getPlayerRating } from "./utils";
 
 function computeWinLoseStatistics(games, playerId) {
   var blackGames = 0, whiteGames = 0,
@@ -112,17 +112,41 @@ function computeTimeSettings(games, playerId) {
   }
 }
 
-function computeOpponentsInfo(games, playerId) {
+function computeGameHistory(games, player) {
+  let historicalWinloss = [{
+    date: new Date(),
+    playerRating: getPlayerRating(player)
+  }];
+  for (const game of games) {
+    const isWin = isPlayerWin(game, player.id);
+    const { historicalPlayer, historicalOpponent } = extractHistoricalPlayerAndOpponent(game, player.id);
+    historicalWinloss.push(
+      {
+        isWin,
+        date: new Date(game.ended),
+        playerRating: getPlayerRating(historicalPlayer),
+        opponentRating: getPlayerRating(historicalOpponent),
+        gameId: game.id
+      }
+    )
+  }
+  return historicalWinloss;
+}
+
+function computeOpponentsInfo(games, player) {
   var opponents = [], numberOfOpponents = 0;
   var weakestOpp = { rank: 70 };
   var strongestOpp = { rank: 0 };
   var mostPlayed = { games: 0 };
   var strongestDefeated = { rank: 0 };
 
-  games.forEach(game => {
-    const { opponent } = extractPlayerAndOpponent(game, playerId);
+
+  for (const game of games) {
+    const isWin = isPlayerWin(game, player.id);
+
+    const { opponent } = extractPlayerAndOpponent(game, player.id);
     const opponentRank = getPlayerRank(opponent);
-    if (isPlayerWin(game, playerId) && opponentRank > strongestDefeated.rank) {
+    if (isWin && opponentRank > strongestDefeated.rank) {
       strongestDefeated = {
         ...opponent,
         rank: opponentRank,
@@ -155,7 +179,7 @@ function computeOpponentsInfo(games, playerId) {
         ...opponent,
         rank: opponentRank
       };
-  });
+  }
 
   numberOfOpponents = 0;
   for (var k in opponents) {
@@ -182,6 +206,17 @@ function extractPlayerAndOpponent(game, playerId) {
     } : {
       player: game.players.white,
       opponent: game.players.black
+    }
+}
+
+function extractHistoricalPlayerAndOpponent(game, playerId) {
+  return game.players.black.id === playerId
+    ? {
+      historicalPlayer: game.historical_ratings.black,
+      historicalOpponent: game.historical_ratings.white
+    } : {
+      historicalPlayer: game.historical_ratings.white,
+      historicalOpponent: game.historical_ratings.black
     }
 }
 
@@ -231,9 +266,10 @@ function computeMiscInfo(analyzingGames, player) {
   let biggestWin = { diff: 0 }
 
   for (let game of analyzingGames) {
+    const isWin = isPlayerWin(game, player.id);
 
     // Longest streak
-    if (isPlayerWin(game, player.id)) {
+    if (isWin) {
 
       currentStreak.streak++;
       currentStreak.start = game;
@@ -245,7 +281,7 @@ function computeMiscInfo(analyzingGames, player) {
     else currentStreak = { streak: 0 }
 
     // Biggest win
-    if (isPlayerWin(game, player.id)) {
+    if (isWin) {
       const { opponent } = extractPlayerAndOpponent(game, player.id);
       if (!isNaN(game.outcome.split(" ")[0])) {
         const scoreDiff = parseFloat(game.outcome.split(" ")[0]);
@@ -339,4 +375,5 @@ export default {
   computeOpponentsInfo,
   computeMiscInfo,
   isPlayerWin,
+  computeGameHistory
 };
