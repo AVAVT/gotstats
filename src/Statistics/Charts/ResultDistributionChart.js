@@ -17,7 +17,7 @@ class ResultDistributionChart extends Component {
   state = {
     pieChartOptions: {
       backgroundColor: "transparent",
-      chartArea: { top: 10 },
+      chartArea: { top: 10, left: 0, right: 0 },
       colors: ["#d93344", "#41CD64", "#5486d1", "#9d4dc5"],
       pieSliceTextStyle: { color: "#ffffff" },
       legend: {
