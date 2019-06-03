@@ -30,7 +30,7 @@ class SideBar extends Component {
           {quickLinks}
 
           <hr />
-          <a href="https://forums.online-go.com/t/g0tstats-is-back-with-more-stats/6524" target="_blank" rel="noopener noreferrer nofollow">Support thread on OGS</a>
+          <a href="https://forums.online-go.com/t/g0tstats-is-back-with-more-stats/6524" target="_blank" rel="noopener noreferrer nofollow">Support thread on OGS forum</a>
         </nav>
       </div>
     );
