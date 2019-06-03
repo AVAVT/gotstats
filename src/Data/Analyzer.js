@@ -138,18 +138,21 @@ function computeOpponentsInfo(games, player) {
   var weakestOpp = { rank: 70 };
   var strongestOpp = { rank: 0 };
   var mostPlayed = { games: 0 };
-  var strongestDefeated = { rank: 0 };
+  var strongestDefeated = { ratingDiff: -9999 };
 
 
   for (const game of games) {
     const isWin = isPlayerWin(game, player.id);
 
     const { opponent } = extractPlayerAndOpponent(game, player.id);
+    const { historicalOpponent, historicalPlayer } = extractHistoricalPlayerAndOpponent(game, player.id);
     const opponentRank = getPlayerRank(opponent);
-    if (isWin && opponentRank > strongestDefeated.rank) {
-      strongestDefeated = {
+
+    if (isWin) {
+      const ratingDiff = getPlayerRating(opponent) - getPlayerRating(player) + getPlayerRating(historicalOpponent) - getPlayerRating(historicalPlayer);
+      if (ratingDiff > strongestDefeated.ratingDiff) strongestDefeated = {
         ...opponent,
-        rank: opponentRank,
+        ratingDiff,
         game,
       };
     }
