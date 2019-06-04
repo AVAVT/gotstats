@@ -43,8 +43,7 @@ class GameHistoryChart extends Component {
       vAxis: { textStyle: { color: "#f8f8ff", fontName: "Roboto", fontSize: 11 }, gridlines: { count: 0 } },
       tooltip: {
         isHtml: true, trigger: 'selection'
-      },
-      focusTarget: 'category'
+      }
     }
   }
 
@@ -62,19 +61,23 @@ class GameHistoryChart extends Component {
     const chartData = [
       [
         'Date',
-        { 'type': 'string', 'role': 'tooltip', 'p': { 'html': true } },
         { type: 'number', label: 'Player Rating' },
+        { 'type': 'string', 'role': 'tooltip', 'p': { 'html': true } },
         { type: 'number', label: 'Opponent Rating (Loss)' },
+        { 'type': 'string', 'role': 'tooltip', 'p': { 'html': true } },
         { type: 'number', label: 'Opponent Rating (Win)' },
+        { 'type': 'string', 'role': 'tooltip', 'p': { 'html': true } },
       ],
       ...(
         historicalWinloss.map(
           item => [
             item.date,
-            this.renderChartTooltip(item.isWin, item.date, item.playerRating, item.opponentRating, item.gameId),
             item.playerRating,
+            this.renderChartTooltip(item.isWin, item.date, item.playerRating, item.opponentRating, item.gameId),
             item.isWin ? null : item.opponentRating,
-            item.isWin ? item.opponentRating : null
+            this.renderChartTooltip(item.isWin, item.date, item.playerRating, item.opponentRating, item.gameId),
+            item.isWin ? item.opponentRating : null,
+            this.renderChartTooltip(item.isWin, item.date, item.playerRating, item.opponentRating, item.gameId),
           ]
         )
       )
