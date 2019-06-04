@@ -14,7 +14,8 @@ class GameHistoryChart extends Component {
       playerId: PropTypes.number.isRequired,
       games: PropTypes.array.isRequired
     }).isRequired,
-    player: PropTypes.object.isRequired
+    player: PropTypes.object.isRequired,
+    insertCurrentRank: PropTypes.bool.isRequired
   }
 
   state = {
@@ -56,7 +57,7 @@ class GameHistoryChart extends Component {
       <div>Player rating: ${Math.round(playerRating)} (${ratingToKyuDan(playerRating)})</div>`
 
   render() {
-    const historicalWinloss = Analyzer.computeGameHistory(this.props.gamesData.games, this.props.player);
+    const historicalWinloss = Analyzer.computeGameHistory(this.props.gamesData.games, this.props.player, this.props.insertCurrentRank);
 
     const chartData = [
       [

@@ -34,7 +34,8 @@ class ChartList extends Component {
       <div>
         <GameHistoryChart
           gamesData={filteredGamesData}
-          player={this.props.player} />
+          player={this.props.player}
+          insertCurrentRank={!this.props.chartsData.limitEndDate} />
 
         <WinLoseChart
           gamesData={filteredGamesData}

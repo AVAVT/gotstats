@@ -22,6 +22,7 @@ const initialState = {
   timeSettings: timeSettingsValues.values,
   handicap: handicapValues.values,
   color: colorValues.values,
+  limitEndDate: false,
   results: []
 }
 

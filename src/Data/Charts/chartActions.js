@@ -44,31 +44,12 @@ export const handicapValues = {
 export const minDate = new Date(-8640000000000000);
 export const maxDate = new Date();
 
-const defaultActionParams = {
-  startDate: minDate,
-  endDate: maxDate,
-  ranked: rankedValues.values,
-  tournament: tournamentValues.values,
-  boardSize: boardSizeValues.values,
-  timeSettings: timeSettingsValues.values,
-  handicap: handicapValues.values,
-  color: colorValues.values
-}
-
-export const applyGameFilters = ({
-  startDate = minDate,
-  endDate = maxDate,
-  ranked = rankedValues.values,
-  tournament = tournamentValues.values,
-  boardSize = boardSizeValues.values,
-  timeSettings = timeSettingsValues.values,
-  handicap = handicapValues.values,
-  color = colorValues.values
-} = defaultActionParams) => (dispatch, getState) => {
+export const applyGameFilters = (filters) => (dispatch, getState) => {
 
   const playerId = getState().player.id;
+  const dateOfLastGame = getState().games.end;
 
-  const params = {
+  const {
     startDate,
     endDate,
     ranked,
@@ -77,12 +58,37 @@ export const applyGameFilters = ({
     timeSettings,
     handicap,
     color,
-    playerId
-  };
-  const filterFunction = composeFilterFunction(params);
+    limitEndDate
+  } = getState().chartsData;
+
+  const latestLimitEndDate = ((filters && filters.hasOwnProperty('limitEndDate')) ? filters.limitEndDate : limitEndDate);
+  const latestEndDate = ((filters && filters.hasOwnProperty('endDate')) ? filters.endDate : endDate);
+
+  const newEndDate = latestLimitEndDate
+    ? (latestEndDate < dateOfLastGame
+      ? latestEndDate
+      : dateOfLastGame)
+    : maxDate;
+
+  const filterFunctionParams = {
+    startDate,
+    ranked,
+    tournament,
+    boardSize,
+    timeSettings,
+    handicap,
+    color,
+    playerId,
+    limitEndDate,
+    ...filters,
+    endDate: newEndDate
+  }
+
+  const filterFunction = composeFilterFunction(filterFunctionParams);
+
   dispatch(
     updateChartDataSource({
-      ...params,
+      ...filterFunctionParams,
       results: getState().games.results
         .filter(filterFunction)
     })
@@ -100,7 +106,6 @@ const composeFilterFunction = ({
   color,
   playerId
 }) => (game, index) => {
-
   const date = new Date(game.ended);
   if (date < startDate || date > endDate) return false;
 

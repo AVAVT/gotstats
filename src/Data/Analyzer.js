@@ -112,11 +112,16 @@ function computeTimeSettings(games, playerId) {
   }
 }
 
-function computeGameHistory(games, player) {
-  let historicalWinloss = [{
-    date: new Date(),
-    playerRating: getPlayerRating(player)
-  }];
+function computeGameHistory(games, player, insertCurrentRank = true) {
+  let historicalWinloss = [];
+
+  if (insertCurrentRank) {
+    historicalWinloss.push({
+      date: new Date(),
+      playerRating: getPlayerRating(player)
+    })
+  }
+
   for (const game of games) {
     const isWin = isPlayerWin(game, player.id);
     const { historicalPlayer, historicalOpponent } = extractHistoricalPlayerAndOpponent(game, player.id);
