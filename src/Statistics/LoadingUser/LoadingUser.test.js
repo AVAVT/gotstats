@@ -51,7 +51,7 @@ describe("LoadingUser", () => {
       }
     });
 
-    expect(wrapper.find('.loading_text')).toHaveText("Fetching games result from OGS: page 6");
+    expect(wrapper.find('.loading_text')).toHaveText("Fetching games result from OGS: page 7");
   });
 
   it('show status while with total page information', () => {
@@ -63,7 +63,7 @@ describe("LoadingUser", () => {
       }
     });
 
-    expect(wrapper.find('.loading_text')).toHaveText("Fetching games result from OGS: page 6 of 20");
+    expect(wrapper.find('.loading_text')).toHaveText("Fetching games result from OGS: page 7 of 20");
   });
 
   it('show show error for fetching user info', () => {
