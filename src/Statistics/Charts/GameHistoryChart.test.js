@@ -3,11 +3,13 @@ import { mount, shallow } from "enzyme";
 
 import GameHistoryChart from './GameHistoryChart';
 
+import { testUser } from '../testUtils';
+
 const props = {
   title: "Test title",
   id: "Test id",
   games: [],
-  player: {},
+  player: testUser,
   insertCurrentRank: false
 };
 

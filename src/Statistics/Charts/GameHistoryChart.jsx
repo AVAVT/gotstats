@@ -52,7 +52,7 @@ class GameHistoryChart extends Component {
   computeGameHistory = (games, player, insertCurrentRank) => {
     let historicalWinloss = [];
 
-    if (insertCurrentRank) {
+    if (insertCurrentRank || games.length < 2) {
       historicalWinloss.push({
         date: new Date(),
         playerRating: getPlayerRating(player)
