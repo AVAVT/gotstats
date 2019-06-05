@@ -1,14 +1,13 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Chart } from 'react-google-charts';
-import { connect } from 'react-redux';
 import { isPlayerWin } from '../../Data/utils';
 
 class BoardSizesChart extends Component {
   static propTypes = {
     title: PropTypes.string,
     id: PropTypes.string,
-    chartsData: PropTypes.object.isRequired,
+    games: PropTypes.array.isRequired,
     player: PropTypes.object.isRequired
   }
 
@@ -80,41 +79,44 @@ class BoardSizesChart extends Component {
   }
 
   generateChartData = (games, playerId) => {
-    const sizes = this.computeBoardSizes(games, playerId);
+    const {
+      nineteenGames, thirteenGames, nineGames, otherGames,
+      nineteenLosses, thirteenLosses, nineLosses, otherLosses
+    } = this.computeBoardSizes(games, playerId);
 
     return {
       chartData1: [
         ['Size', 'Games'],
-        ['19x19', sizes.nineteenGames],
-        ['13x13', sizes.thirteenGames],
-        ['9x9', sizes.nineGames],
-        ['Other', sizes.otherGames],
+        ['19x19', nineteenGames],
+        ['13x13', thirteenGames],
+        ['9x9', nineGames],
+        ['Other', otherGames],
       ],
-      chartData2: sizes.nineteenGames > 0 ? [
+      chartData2: nineteenGames > 0 ? [
         ['Result', 'Games'],
-        ['Losses', sizes.nineteenLosses],
-        ['Wins', (sizes.nineteenGames - sizes.nineteenLosses)],
+        ['Losses', nineteenLosses],
+        ['Wins', (nineteenGames - nineteenLosses)],
       ] : null,
-      chartData3: sizes.thirteenGames > 0 ? [
+      chartData3: thirteenGames > 0 ? [
         ['Result', 'Games'],
-        ['Losses', sizes.thirteenLosses],
-        ['Wins', (sizes.thirteenGames - sizes.thirteenLosses)],
+        ['Losses', thirteenLosses],
+        ['Wins', (thirteenGames - thirteenLosses)],
       ] : null,
-      chartData4: sizes.nineGames > 0 ? [
+      chartData4: nineGames > 0 ? [
         ['Result', 'Games'],
-        ['Losses', sizes.nineLosses],
-        ['Wins', (sizes.nineGames - sizes.nineLosses)],
+        ['Losses', nineLosses],
+        ['Wins', (nineGames - nineLosses)],
       ] : null,
-      chartData5: sizes.otherGames > 0 ? [
+      chartData5: otherGames > 0 ? [
         ['Result', 'Games'],
-        ['Losses', sizes.otherLosses],
-        ['Wins', (sizes.otherGames - sizes.otherLosses)],
+        ['Losses', otherLosses],
+        ['Wins', (otherGames - otherLosses)],
       ] : null
     };
   }
 
   render() {
-    const { chartsData, player } = this.props;
+    const { games, player } = this.props;
 
     const {
       chartData1,
@@ -122,7 +124,7 @@ class BoardSizesChart extends Component {
       chartData3,
       chartData4,
       chartData5
-    } = this.generateChartData(chartsData.results, player.id);
+    } = this.generateChartData(games, player.id);
 
     return (
       <section className="stats_block">
@@ -206,4 +208,4 @@ class BoardSizesChart extends Component {
   }
 }
 
-export default connect(({ chartsData, player }) => ({ chartsData, player }))(BoardSizesChart);
+export default BoardSizesChart;

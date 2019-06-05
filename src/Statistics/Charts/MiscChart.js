@@ -1,7 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import Analyzer from '../../Data/Analyzer';
 import moment from "moment";
+
+import {
+  isPlayerWin,
+  extractPlayerAndOpponent,
+  daysDifferenceBetween
+} from '../../Data/utils';
 
 import PlayerLink from "../../SharedComponents/PlayerLink";
 import GameLink from "../../SharedComponents/GameLink";
@@ -10,10 +15,7 @@ class MiscChart extends Component {
   static propTypes = {
     title: PropTypes.string,
     id: PropTypes.string,
-    gamesData: PropTypes.shape({
-      playerId: PropTypes.number.isRequired,
-      games: PropTypes.array.isRequired
-    }).isRequired,
+    games: PropTypes.array.isRequired,
     player: PropTypes.object.isRequired
   }
 
@@ -37,8 +39,108 @@ class MiscChart extends Component {
     }
   }
 
+  computeMiscInfo = (analyzingGames, player) => {
+    let mostActiveDay;
+    let currentDay = new Date();
+    currentDay.setHours(0, 0, 0, 0);
+
+    let totalLosses = 0;
+
+    let longestStreak = { streak: 0 }
+    let currentStreak = { streak: 0 }
+
+    let gamesOnMostActiveDay = 0, gamesOnCurrentDay = 0;
+
+    let biggestWin = { diff: 0 }
+
+    for (let game of analyzingGames) {
+      const isWin = isPlayerWin(game, player.id);
+
+      // Longest streak
+      if (isWin) {
+
+        currentStreak.streak++;
+        currentStreak.start = game;
+
+        if (!currentStreak.end) currentStreak.end = game;
+
+        if (currentStreak.streak > longestStreak.streak) longestStreak = currentStreak;
+      }
+      else currentStreak = { streak: 0 }
+
+      // Biggest win
+      if (isWin) {
+        const { opponent } = extractPlayerAndOpponent(game, player.id);
+        if (!isNaN(game.outcome.split(" ")[0])) {
+          const scoreDiff = parseFloat(game.outcome.split(" ")[0]);
+          if (scoreDiff > biggestWin.diff) {
+            biggestWin = {
+              game: game,
+              opponent: opponent,
+              diff: scoreDiff
+            }
+          }
+        }
+      }
+      // Total losses
+      else totalLosses++;
+
+
+      // Most active day
+      let gameDay = new Date(game.ended);
+      gameDay.setHours(0, 0, 0, 0);
+      if (daysDifferenceBetween(currentDay, gameDay) !== 0) {
+        currentDay = gameDay;
+        gamesOnCurrentDay = 1;
+      }
+      else {
+        gamesOnCurrentDay++;
+      }
+
+      if (gamesOnCurrentDay > gamesOnMostActiveDay) {
+        mostActiveDay = currentDay;
+        gamesOnMostActiveDay = gamesOnCurrentDay;
+      }
+    }
+
+    let memberSince = new Date(player.registrationDate);
+    // Change memberSince to date of first game for player who migrated from old server
+    if (analyzingGames.length) {
+      let firstGameDate = new Date(analyzingGames[analyzingGames.length - 1].started);
+      if (firstGameDate < memberSince) memberSince = firstGameDate;
+    }
+
+    let gamesPerDay = 0;
+    if (analyzingGames.length) {
+      let dateOfFirstGame = new Date(analyzingGames[analyzingGames.length - 1].started)
+      let daysSinceStart = daysDifferenceBetween(new Date(), dateOfFirstGame);
+      gamesPerDay = analyzingGames.length / parseFloat(daysSinceStart);
+    }
+
+    const uniqueTournaments = analyzingGames
+      .filter(game => game.tournament !== null)
+      .reduce((result, game) => {
+        if (result.indexOf(game.tournament) === -1) {
+          result.push(game.tournament);
+        }
+
+        return result;
+      }, []).length;
+
+    return {
+      memberSince,
+      gamesPerDay,
+      longestStreak,
+      mostActiveDay,
+      gamesOnMostActiveDay,
+      biggestWin,
+      uniqueTournaments,
+      totalLosses
+    }
+  }
+
   render() {
-    const { gamesData, player } = this.props;
+    const { games, player } = this.props;
     const {
       memberSince,
       gamesPerDay,
@@ -48,7 +150,7 @@ class MiscChart extends Component {
       biggestWin,
       totalLosses,
       uniqueTournaments
-    } = Analyzer.computeMiscInfo(gamesData.games, player);
+    } = this.computeMiscInfo(games, player);
 
     const streakDurationDisplay = longestStreak.end ? <span>, from <GameLink game={longestStreak.start} /> to <GameLink game={longestStreak.end} /></span> : '';
     const biggestWinDisplay = biggestWin.game && (

@@ -19,49 +19,48 @@ class ChartList extends Component {
     player: PropTypes.object.isRequired
   }
 
-  createGameData(games) {
-    return {
-      playerId: this.props.player.id,
-      games: games
-    }
-  }
-
   render() {
-    const filteredGamesData = this.createGameData(this.props.chartsData.results);
-    const allGamesData = this.createGameData(this.props.games.results);
+    const { player, chartsData, games } = this.props;
 
-    const charts = filteredGamesData.games.length > 0 && (
+    const filteredGamesData = chartsData.results;
+    const allGamesData = games.results;
+
+    const charts = filteredGamesData.length > 0 && (
       <div>
         <GameHistoryChart
-          gamesData={filteredGamesData}
-          player={this.props.player}
-          insertCurrentRank={!this.props.chartsData.limitEndDate} />
+          games={filteredGamesData}
+          player={player}
+          insertCurrentRank={!chartsData.limitEndDate}
+        />
 
         <WinLoseChart
-          gamesData={filteredGamesData}
+          games={filteredGamesData}
+          player={player}
         />
 
         <ResultDistributionChart
           title={`Game results distribution`}
           id={"game_results"}
-          gamesData={filteredGamesData}
-          player={this.props.player}
+          games={filteredGamesData}
+          player={player}
         />
         {
-          this.props.chartsData.boardSize.length > 1 && (
+          chartsData.boardSize.length > 1 && (
             <BoardSizesChart
               title={`Performance across board sizes`}
               id={"board_sizes_stats"}
-              gamesData={filteredGamesData}
+              games={filteredGamesData}
+              player={player}
             />
           )
         }
         {
-          this.props.chartsData.timeSettings.length > 1 && (
+          chartsData.timeSettings.length > 1 && (
             <TimeSettingsChart
               title={`Performance across time settings`}
               id={"time_settings_stats"}
-              gamesData={filteredGamesData}
+              games={filteredGamesData}
+              player={player}
             />
           )
         }
@@ -74,25 +73,29 @@ class ChartList extends Component {
         <ChartFilter />
 
         <hr />
-        <h2 id="total_games_stats" className="text-center">{`${filteredGamesData.games.length} of ${allGamesData.games.length} games match the filters`}</h2>
+        <h2
+          id="total_games_stats"
+          className="text-center">
+          {`${filteredGamesData.length} of ${allGamesData.length} games match the filters`}
+        </h2>
 
         {charts}
 
         {
-          allGamesData.games.length > 0 && (
+          allGamesData.length > 0 && (
             <div>
               <h2 className="all_time_title">Lifetime Statistics</h2>
               <OpponentChart
                 title={`Unique opponents faced`}
                 id={"opponents_stats"}
-                gamesData={allGamesData}
-                player={this.props.player}
+                games={allGamesData}
+                player={player}
               />
               <MiscChart
                 title={`Miscellaneous`}
                 id={"misc_stats"}
-                gamesData={allGamesData}
-                player={this.props.player}
+                games={allGamesData}
+                player={player}
               />
             </div>
           )

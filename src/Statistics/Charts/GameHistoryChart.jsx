@@ -3,17 +3,18 @@ import PropTypes from 'prop-types';
 import Chart from 'react-google-charts';
 
 import configs from '../../OGSApi/configs.json';
-import Analyzer from '../../Data/Analyzer';
-import { ratingToKyuDan } from "../../Data/utils";
+import {
+  ratingToKyuDan,
+  getPlayerRating,
+  isPlayerWin,
+  extractHistoricalPlayerAndOpponent
+} from "../../Data/utils";
 
 import moment from "moment";
 
 class GameHistoryChart extends Component {
   static propTypes = {
-    gamesData: PropTypes.shape({
-      playerId: PropTypes.number.isRequired,
-      games: PropTypes.array.isRequired
-    }).isRequired,
+    games: PropTypes.array.isRequired,
     player: PropTypes.object.isRequired,
     insertCurrentRank: PropTypes.bool.isRequired
   }
@@ -39,13 +40,39 @@ class GameHistoryChart extends Component {
       hAxis: {
         textStyle: { color: "#f8f8ff", fontName: "Roboto", fontSize: 11 }, gridlines: {
           color: 'transparent', count: 2
-        }, format: 'MMM yy'
+        }, format: "MMM ''yy"
       },
       vAxis: { textStyle: { color: "#f8f8ff", fontName: "Roboto", fontSize: 11 }, gridlines: { count: 0 } },
       tooltip: {
         isHtml: true, trigger: 'selection'
       }
     }
+  }
+
+  computeGameHistory = (games, player, insertCurrentRank) => {
+    let historicalWinloss = [];
+
+    if (insertCurrentRank) {
+      historicalWinloss.push({
+        date: new Date(),
+        playerRating: getPlayerRating(player)
+      })
+    }
+
+    for (const game of games) {
+      const isWin = isPlayerWin(game, player.id);
+      const { historicalPlayer, historicalOpponent } = extractHistoricalPlayerAndOpponent(game, player.id);
+      historicalWinloss.push(
+        {
+          isWin,
+          date: new Date(game.ended),
+          playerRating: getPlayerRating(historicalPlayer),
+          opponentRating: getPlayerRating(historicalOpponent),
+          gameId: game.id
+        }
+      )
+    }
+    return historicalWinloss;
   }
 
   renderChartTooltip = (isWin, date, playerRating, opponentRating, gameId) => opponentRating
@@ -57,7 +84,11 @@ class GameHistoryChart extends Component {
       <div>Player rating: ${Math.round(playerRating)} (${ratingToKyuDan(playerRating)})</div>`
 
   render() {
-    const historicalWinloss = Analyzer.computeGameHistory(this.props.gamesData.games, this.props.player, this.props.insertCurrentRank);
+    const {
+      games, player, insertCurrentRank
+    } = this.props;
+
+    const historicalWinloss = this.computeGameHistory(games, player, insertCurrentRank);
 
     const chartData = [
       [

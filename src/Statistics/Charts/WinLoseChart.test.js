@@ -3,6 +3,8 @@ import ReactDOM from 'react-dom';
 import { mount, shallow } from "enzyme";
 import WinLoseChart from './WinLoseChart';
 
+import { testUser } from '../testUtils';
+
 describe("WinLoseChart", () => {
   let props;
   let shadowWrapper;
@@ -10,7 +12,7 @@ describe("WinLoseChart", () => {
   const getShallow = () => {
     if (!shadowWrapper) {
       shadowWrapper = shallow(
-        <WinLoseChart.WrappedComponent {...props} />
+        <WinLoseChart {...props} />
       );
     }
     return shadowWrapper;
@@ -20,10 +22,8 @@ describe("WinLoseChart", () => {
     props = {
       title: "Test title",
       id: "Test id",
-      gamesData: {
-        playerId: 197819,
-        games: []
-      }
+      games: [],
+      player: testUser
     };
 
     shadowWrapper = undefined;

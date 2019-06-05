@@ -3,6 +3,8 @@ import ReactDOM from 'react-dom';
 import { mount, shallow } from "enzyme";
 import OpponentChart from './OpponentChart';
 
+import { testUser } from '../testUtils';
+
 describe("OpponentChart", () => {
   let props;
   let shadowWrapper;
@@ -18,13 +20,10 @@ describe("OpponentChart", () => {
 
   beforeEach(() => {
     props = {
-      title     : "Test title",
-      id        : "Test id",
-      gamesData : {
-        playerId: 197819,
-        games   : []
-      },
-      player    : {}
+      title: "Test title",
+      id: "Test id",
+      games: [],
+      player: testUser
     };
 
     shadowWrapper = undefined;

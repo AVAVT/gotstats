@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { mount, shallow } from "enzyme";
 import TimeSettingsChart from './TimeSettingsChart';
+import { testUser } from '../testUtils';
 
 describe("BoardSizesChart", () => {
   let props;
@@ -18,12 +19,10 @@ describe("BoardSizesChart", () => {
 
   beforeEach(() => {
     props = {
-      title     : "Test title",
-      id        : "Test id",
-      gamesData : {
-        playerId: 197819,
-        games   : []
-      }
+      title: "Test title",
+      id: "Test id",
+      games: [],
+      player: testUser
     };
 
     shadowWrapper = undefined;

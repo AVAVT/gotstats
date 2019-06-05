@@ -65,3 +65,41 @@ export const isPlayerWin = (game, playerId) => {
   return ((game.players.black.id === playerId && game.white_lost)
     || (game.players.white.id === playerId && game.black_lost))
 }
+
+export const extractPlayerAndOpponent = (game, playerId) => {
+  return game.players.black.id === playerId
+    ? {
+      player: game.players.black,
+      opponent: game.players.white
+    } : {
+      player: game.players.white,
+      opponent: game.players.black
+    }
+}
+
+export const extractHistoricalPlayerAndOpponent = (game, playerId) => {
+  return game.players.black.id === playerId
+    ? {
+      historicalPlayer: game.historical_ratings.black,
+      historicalOpponent: game.historical_ratings.white
+    } : {
+      historicalPlayer: game.historical_ratings.white,
+      historicalOpponent: game.historical_ratings.black
+    }
+}
+
+export const daysDifferenceBetween = (day1, day2) => {
+  /* Copa pasta I don't even know if there's any bug here */
+
+  // Copy date parts of the timestamps, discarding the time parts.
+  var two = new Date(day1.getFullYear(), day1.getMonth(), day1.getDate());
+  var one = new Date(day2.getFullYear(), day2.getMonth(), day2.getDate());
+
+  // Do the math.
+  var millisecondsPerDay = 1000 * 60 * 60 * 24;
+  var millisBetween = two.getTime() - one.getTime();
+  var days = millisBetween / millisecondsPerDay;
+
+  // Round down.
+  return two > one ? Math.floor(days) : Math.ceil(days);
+}

@@ -2,16 +2,14 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Chart } from 'react-google-charts';
 
-import Analyzer from '../../Data/Analyzer';
+import { isPlayerWin } from '../../Data/utils';
 
 class TimeSettingsChart extends Component {
   static propTypes = {
     title: PropTypes.string,
     id: PropTypes.string,
-    gamesData: PropTypes.shape({
-      playerId: PropTypes.number.isRequired,
-      games: PropTypes.array.isRequired
-    }).isRequired
+    games: PropTypes.array.isRequired,
+    player: PropTypes.object.isRequired
   }
 
   state = {
@@ -51,8 +49,38 @@ class TimeSettingsChart extends Component {
     }
   }
 
-  generateChartData(gamesData) {
-    const times = Analyzer.computeTimeSettings(gamesData.games, gamesData.playerId);
+  computeTimeSettings = (games, playerId) => {
+    var blitzGames = 0, liveGames = 0, correspondenceGames = 0,
+      blitzLosses = 0, liveLosses = 0, correspondenceLosses = 0;
+    games.forEach(game => {
+      if (game.time_per_move < 20) {
+        blitzGames++;
+        if (!isPlayerWin(game, playerId)) {
+          blitzLosses++;
+        }
+      }
+      else if (game.time_per_move > 10800) {
+        correspondenceGames++;
+        if (!isPlayerWin(game, playerId)) {
+          correspondenceLosses++;
+        }
+      }
+      else {
+        liveGames++;
+        if (!isPlayerWin(game, playerId)) {
+          liveLosses++;
+        }
+      }
+    });
+
+    return {
+      blitzGames, liveGames, correspondenceGames,
+      blitzLosses, liveLosses, correspondenceLosses
+    }
+  }
+
+  generateChartData(games, playerId) {
+    const times = this.computeTimeSettings(games, playerId);
 
     return {
       chartData1: [
@@ -80,12 +108,13 @@ class TimeSettingsChart extends Component {
   }
 
   render() {
+    const { games, player } = this.props;
     const {
       chartData1,
       chartData2,
       chartData3,
       chartData4
-    } = this.generateChartData(this.props.gamesData);
+    } = this.generateChartData(games, player.id);
 
     return (
       <section className="stats_block">

@@ -2,17 +2,12 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Chart } from 'react-google-charts';
 
-import Analyzer from '../../Data/Analyzer';
-import { connect } from "react-redux";
-
 class WinLoseChart extends Component {
   static propTypes = {
     title: PropTypes.string,
     id: PropTypes.string,
-    gamesData: PropTypes.shape({
-      playerId: PropTypes.number.isRequired,
-      games: PropTypes.array.isRequired,
-    }).isRequired,
+    games: PropTypes.array.isRequired,
+    player: PropTypes.object.isRequired,
     footer: PropTypes.element
   }
 
@@ -58,8 +53,37 @@ class WinLoseChart extends Component {
     }
   }
 
+  computeWinLoseStatistics = (games, playerId) => {
+    var blackGames = 0, whiteGames = 0,
+      blackLosses = 0, whiteLosses = 0;
+    for (let game of games) {
+      if (game.players.black.id === playerId) {
+        blackGames++;
+        if (game.black_lost) {
+          blackLosses++;
+        }
+      }
+      else {
+        whiteGames++;
+        if (game.white_lost) {
+          whiteLosses++;
+        }
+      }
+    };
+
+    return {
+      blackGames,
+      blackLosses,
+      whiteGames,
+      whiteLosses
+    }
+  }
+
   render() {
-    const statistics = Analyzer.computeWinLoseStatistics(this.props.gamesData.games, this.props.gamesData.playerId);
+    const { games, player } = this.props;
+
+    const statistics = this.computeWinLoseStatistics(games, player.id);
+
     const chartData1 = [
       ['Color', 'Games'],
       ['Black', statistics.blackGames],
@@ -150,9 +174,4 @@ class WinLoseChart extends Component {
   }
 }
 
-const mapReduxStateToProps = ({ player, chartsData }) => ({
-  playerId: player.id,
-  games: chartsData
-})
-
-export default connect(mapReduxStateToProps)(WinLoseChart);
+export default WinLoseChart;

@@ -1,16 +1,14 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Chart } from 'react-google-charts';
-import Analyzer from '../../Data/Analyzer';
+
+import { isPlayerWin } from '../../Data/utils';
 
 class ResultDistributionChart extends Component {
   static propTypes = {
     title: PropTypes.string,
     id: PropTypes.string,
-    gamesData: PropTypes.shape({
-      playerId: PropTypes.number.isRequired,
-      games: PropTypes.array.isRequired
-    }).isRequired,
+    games: PropTypes.array.isRequired,
     player: PropTypes.object.isRequired
   }
 
@@ -48,8 +46,60 @@ class ResultDistributionChart extends Component {
     }
   }
 
-  generateChartData(gamesData) {
-    const distributions = Analyzer.computeWinLoseDistributions(gamesData.games, gamesData.playerId);
+  assignGameResultToDistributions = (distributions, game) => {
+    const isWin = isPlayerWin(game, distributions.id);
+
+    if (game.outcome === "Resignation") {
+      distributions[`${isWin ? 'Plr' : 'Opp'}+Res`]++;
+    }
+    else if (game.outcome === "Timeout") {
+      distributions[`${isWin ? 'Plr' : 'Opp'}+Time`]++;
+    }
+    else if (!isNaN(game.outcome.split(" ")[0])) {
+      const points = parseFloat(game.outcome.split(" ")[0], 10);
+      const pointDiff = Math.floor(points / 10);
+
+      var result = (pointDiff < 4 ? pointDiff : 4) * 10 + "+";
+      result = `${isWin ? 'Plr' : 'Opp'}+${result}`;
+
+      distributions[`${isWin ? 'Plr' : 'Opp'}+Count`]++;
+      distributions[result]++;
+    }
+    else {
+      distributions[`${isWin ? 'Plr' : 'Opp'}+Other`]++;
+    }
+
+    return distributions;
+  }
+
+  computeWinLoseDistributions = (games, playerId) => {
+    var distributions = {
+      "id": playerId,
+      "Opp+Other": 0,
+      "Opp+Count": 0,
+      "Opp+Time": 0,
+      "Opp+Res": 0,
+      "Opp+40+": 0,
+      "Opp+30+": 0,
+      "Opp+20+": 0,
+      "Opp+10+": 0,
+      "Opp+0+": 0,
+      "Plr+0+": 0,
+      "Plr+10+": 0,
+      "Plr+20+": 0,
+      "Plr+30+": 0,
+      "Plr+40+": 0,
+      "Plr+Res": 0,
+      "Plr+Time": 0,
+      "Plr+Count": 0,
+      "Plr+Other": 0
+    };
+
+    return games.reduce(this.assignGameResultToDistributions, distributions);
+  }
+
+  generateChartData(games, playerId) {
+    const distributions = this.computeWinLoseDistributions(games, playerId);
 
     return {
       chartData1: [
@@ -83,11 +133,13 @@ class ResultDistributionChart extends Component {
   }
 
   render() {
+    const { games, player } = this.props;
+
     const {
       chartData1,
       chartData2,
       chartData3
-    } = this.generateChartData(this.props.gamesData);
+    } = this.generateChartData(games, player.id);
 
     return (
       <section className="stats_block">

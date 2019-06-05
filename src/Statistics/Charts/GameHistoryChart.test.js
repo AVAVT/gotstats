@@ -1,20 +1,21 @@
 import React from 'react';
 import { mount, shallow } from "enzyme";
 
-import BoardSizesChart from './BoardSizesChart';
+import GameHistoryChart from './GameHistoryChart';
 
 const props = {
   title: "Test title",
   id: "Test id",
   games: [],
-  player: {}
+  player: {},
+  insertCurrentRank: false
 };
 
 const getMounted = () => {
-  return mount(<BoardSizesChart {...props} />);
+  return mount(<GameHistoryChart {...props} />);
 }
 
-describe("BoardSizesChart", () => {
+describe("GameHistoryChart", () => {
 
   it('renders without crashing', () => {
     const wrapper = getMounted();

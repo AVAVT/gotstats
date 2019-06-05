@@ -2,8 +2,14 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import configs from '../../OGSApi/configs.json';
-import Analyzer from '../../Data/Analyzer';
-import { getPlayerRankDisplay, getPlayerRank } from "../../Data/utils";
+import {
+  isPlayerWin,
+  getPlayerRankDisplay,
+  getPlayerRank,
+  getPlayerRating,
+  extractPlayerAndOpponent,
+  extractHistoricalPlayerAndOpponent
+} from "../../Data/utils";
 
 import PlayerLink from "../../SharedComponents/PlayerLink";
 import GameLink from "../../SharedComponents/GameLink";
@@ -12,15 +18,80 @@ class OpponentChart extends Component {
   static propTypes = {
     title: PropTypes.string,
     id: PropTypes.string,
-    gamesData: PropTypes.shape({
-      playerId: PropTypes.number.isRequired,
-      games: PropTypes.array.isRequired
-    }).isRequired,
+    games: PropTypes.array.isRequired,
     player: PropTypes.object.isRequired
   }
 
-  generateChartData(gamesData) {
-    const opponentsInfo = Analyzer.computeOpponentsInfo(gamesData.games, this.props.player);
+  computeOpponentsInfo = (games, player) => {
+    var opponents = [], numberOfOpponents = 0;
+    var weakestOpp = { rank: 70 };
+    var strongestOpp = { rank: 0 };
+    var mostPlayed = { games: 0 };
+    var strongestDefeated = { ratingDiff: -9999 };
+
+
+    for (const game of games) {
+      const isWin = isPlayerWin(game, player.id);
+
+      const { opponent } = extractPlayerAndOpponent(game, player.id);
+      const { historicalOpponent, historicalPlayer } = extractHistoricalPlayerAndOpponent(game, player.id);
+      const opponentRank = getPlayerRank(opponent);
+
+      if (isWin) {
+        const ratingDiff = getPlayerRating(opponent) - getPlayerRating(player) + getPlayerRating(historicalOpponent) - getPlayerRating(historicalPlayer);
+        if (ratingDiff > strongestDefeated.ratingDiff) strongestDefeated = {
+          ...opponent,
+          ratingDiff,
+          game,
+        };
+      }
+
+      if (!opponents[opponent.id]) {
+        opponents[opponent.id] = 1;
+      }
+      else {
+        opponents[opponent.id]++;
+      }
+
+      if (opponents[opponent.id] > mostPlayed.games) {
+        mostPlayed = {
+          ...opponent,
+          games: opponents[opponent.id]
+        };
+      }
+
+      if (opponentRank > strongestOpp.rank)
+        strongestOpp = {
+          ...opponent,
+          rank: opponentRank
+        };
+
+      if (opponentRank < weakestOpp.rank)
+        weakestOpp = {
+          ...opponent,
+          rank: opponentRank
+        };
+    }
+
+    numberOfOpponents = 0;
+    for (var k in opponents) {
+      if (opponents.hasOwnProperty(k)) {
+        numberOfOpponents++;
+      }
+    }
+
+    return {
+      strongestOpp,
+      weakestOpp,
+      mostPlayed,
+      strongestDefeated,
+      numberOfOpponents,
+      averageGamePerOpponent: (games.length / numberOfOpponents).toFixed(2)
+    }
+  }
+
+  generateChartData(games, player) {
+    const opponentsInfo = this.computeOpponentsInfo(games, player);
 
     // OGS data allow up to 30k but realistically no one's below 25k on OGS. Subtract 5 so 25k is at leftmost
     const weakestBarRate = Math.max(opponentsInfo.weakestOpp.rank, 0) - 5;
@@ -54,7 +125,7 @@ class OpponentChart extends Component {
   }
 
   render() {
-
+    const { games, player } = this.props;
     const {
       numberOfOpponents,
       weakestDisp,
@@ -63,7 +134,7 @@ class OpponentChart extends Component {
       mostPlayedDisp,
       strongestDefeatedDisp,
       averageGamePerOpponent
-    } = this.generateChartData(this.props.gamesData);
+    } = this.generateChartData(games, player);
 
     if (!numberOfOpponents) return <section className="stats_block" />;
 

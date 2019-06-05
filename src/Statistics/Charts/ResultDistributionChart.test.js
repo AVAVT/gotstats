@@ -1,6 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { mount, shallow } from "enzyme";
+import { testUser } from '../testUtils';
+
 import ResultDistributionChart from './ResultDistributionChart';
 
 describe("ResultDistributionChart", () => {
@@ -20,14 +22,8 @@ describe("ResultDistributionChart", () => {
     props = {
       title: "Test title",
       id: "Test id",
-      gamesData: {
-        playerId: 197819,
-        games: []
-      },
-      player: {
-        username: 'Test user',
-        rank: 6
-      }
+      games: [],
+      player: testUser
     };
 
     shadowWrapper = undefined;

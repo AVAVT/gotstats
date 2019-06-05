@@ -3,6 +3,8 @@ import ReactDOM from 'react-dom';
 import { mount, shallow } from "enzyme";
 import MiscChart from './MiscChart';
 
+import { testUser } from '../testUtils';
+
 describe("MiscChart", () => {
   let props;
   let shadowWrapper;
@@ -21,11 +23,8 @@ describe("MiscChart", () => {
       title: "Test title",
       id: "Test id",
       allGames: [],
-      gamesData: {
-        playerId: 197819,
-        games: []
-      },
-      player: {}
+      games: [],
+      player: testUser
     };
 
     shadowWrapper = undefined;
