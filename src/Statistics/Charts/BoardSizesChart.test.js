@@ -1,33 +1,41 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import { mount, shallow } from "enzyme";
+
+import configureMockStore from "redux-mock-store";
+import { Provider } from "react-redux";
+import { MemoryRouter } from 'react-router-dom';
+
+import { emptyStore } from "../testUtils";
+
 import BoardSizesChart from './BoardSizesChart';
 
-describe("BoardSizesChart", () => {
-  let props;
-  let shadowWrapper;
+const props = {
+  title: "Test title",
+  id: "Test id",
+  chartsData: {
+    results: []
+  },
+  player: {}
+};
 
-  const getShallow = () => {
-    if (!shadowWrapper) {
-      shadowWrapper = shallow(
-        <BoardSizesChart {...props} />
-      );
-    }
-    return shadowWrapper;
-  }
+const mockStore = configureMockStore();
 
-  beforeEach(() => {
-    props = {
-      title     : "Test title",
-      id        : "Test id",
-      gamesData : {
-        playerId: 197819,
-        games   : []
-      }
-    };
+const getShallow = () => {
+  return shallow(<BoardSizesChart.WrappedComponent {...props} />);
+}
 
-    shadowWrapper = undefined;
+const getMounted = (storeOverrides, propsOverrides) => {
+  const store = mockStore({
+    ...emptyStore,
+    ...storeOverrides
   });
+
+  return mount(
+    <Provider store={store}><MemoryRouter><BoardSizesChart {...{ ...props, ...propsOverrides }} /></MemoryRouter></Provider>,
+  );
+}
+
+describe("BoardSizesChart", () => {
 
   it('renders without crashing', () => {
     const wrapper = getShallow();

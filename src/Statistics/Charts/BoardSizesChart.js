@@ -1,17 +1,15 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Chart } from 'react-google-charts';
-
-import Analyzer from '../../Data/Analyzer';
+import { connect } from 'react-redux';
+import { isPlayerWin } from '../../Data/utils';
 
 class BoardSizesChart extends Component {
   static propTypes = {
     title: PropTypes.string,
     id: PropTypes.string,
-    gamesData: PropTypes.shape({
-      playerId: PropTypes.number.isRequired,
-      games: PropTypes.array.isRequired
-    }).isRequired
+    chartsData: PropTypes.object.isRequired,
+    player: PropTypes.object.isRequired
   }
 
   state = {
@@ -52,8 +50,37 @@ class BoardSizesChart extends Component {
     }
   }
 
-  generateChartData(gamesData) {
-    const sizes = Analyzer.computeBoardSizes(gamesData.games, gamesData.playerId);
+  computeBoardSizes = (games, playerId) => {
+    var nineteenGames = 0, thirteenGames = 0, nineGames = 0, otherGames = 0,
+      nineteenLosses = 0, thirteenLosses = 0, nineLosses = 0, otherLosses = 0;
+
+    games.forEach(game => {
+      if (game.width === 19 && game.height === 19) {
+        nineteenGames++;
+        if (!isPlayerWin(game, playerId)) nineteenLosses++;
+      }
+      else if (game.width === 13 && game.height === 13) {
+        thirteenGames++;
+        if (!isPlayerWin(game, playerId)) thirteenLosses++;
+      }
+      else if (game.width === 9 && game.height === 9) {
+        nineGames++;
+        if (!isPlayerWin(game, playerId)) nineLosses++;
+      }
+      else {
+        otherGames++;
+        if (!isPlayerWin(game, playerId)) otherLosses++;
+      }
+    });
+
+    return {
+      nineteenGames, thirteenGames, nineGames, otherGames,
+      nineteenLosses, thirteenLosses, nineLosses, otherLosses
+    }
+  }
+
+  generateChartData = (games, playerId) => {
+    const sizes = this.computeBoardSizes(games, playerId);
 
     return {
       chartData1: [
@@ -87,13 +114,15 @@ class BoardSizesChart extends Component {
   }
 
   render() {
+    const { chartsData, player } = this.props;
+
     const {
       chartData1,
       chartData2,
       chartData3,
       chartData4,
       chartData5
-    } = this.generateChartData(this.props.gamesData);
+    } = this.generateChartData(chartsData.results, player.id);
 
     return (
       <section className="stats_block">
@@ -177,4 +206,4 @@ class BoardSizesChart extends Component {
   }
 }
 
-export default BoardSizesChart;
+export default connect(({ chartsData, player }) => ({ chartsData, player }))(BoardSizesChart);

@@ -11,18 +11,7 @@ import LoadingUser from "./LoadingUser/LoadingUser";
 import ChartList from "./Charts/ChartList";
 import SideBar from "./SideBar/SideBar";
 
-import { testGame, testUser } from "./testUtils";
-
-import {
-  minDate,
-  maxDate,
-  rankedValues,
-  tournamentValues,
-  boardSizeValues,
-  timeSettingsValues,
-  colorValues,
-  handicapValues
-} from "../Data/Charts/chartActions";
+import { emptyStore as defaultStore, testGame, testUser } from "./testUtils";
 
 const props = {
   showLoading: false,
@@ -32,23 +21,6 @@ const props = {
 };
 
 const mockStore = configureMockStore();
-const defaultStore = {
-  player: {},
-  games: {
-    results: []
-  },
-  chartsData: {
-    startDate: minDate,
-    endDate: maxDate,
-    ranked: rankedValues,
-    tournament: tournamentValues,
-    boardSize: boardSizeValues,
-    timeSettings: timeSettingsValues,
-    handicap: handicapValues,
-    color: colorValues,
-    results: []
-  }
-};
 
 const getMounted = (storeOverrides, propsOverrides) => {
   const store = mockStore({

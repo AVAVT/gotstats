@@ -1,32 +1,42 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import { mount, shallow } from "enzyme";
+
+import configureMockStore from "redux-mock-store";
+import { Provider } from "react-redux";
+import { MemoryRouter } from 'react-router-dom';
+
+import { emptyStore } from "../testUtils";
+
 import SearchBox from './SearchBox';
 
-describe("SearchBox", () => {
-  let props;
-  let shadowWrapper;
-  let wrapper;
+const props = {
+  history: {
+    push: jest.fn()
+  },
+  games: {
+    results: []
+  },
+  getPlayerData: jest.fn()
+};
 
-  const getShallow = (propsOverrides) => {
-    if (!shadowWrapper) {
-      shadowWrapper = shallow(
-        <SearchBox.WrappedComponent {...{ ...props, ...propsOverrides }} />
-      );
-    }
-    return shadowWrapper;
-  }
+const mockStore = configureMockStore();
 
-  beforeEach(() => {
-    props = {
-      history: {
-        push: jest.fn()
-      }
-    };
+const getShallow = () => {
+  return shallow(<SearchBox.WrappedComponent {...props} />);
+}
 
-    shadowWrapper = undefined;
+const getMounted = (storeOverrides, propsOverrides) => {
+  const store = mockStore({
+    ...emptyStore,
+    ...storeOverrides
   });
 
+  return mount(
+    <Provider store={store}><MemoryRouter><SearchBox {...{ ...props, ...propsOverrides }} /></MemoryRouter></Provider>,
+  );
+}
+
+describe("SearchBox", () => {
   it('change url on submit', () => {
     const wrapper = getShallow();
 
@@ -37,5 +47,6 @@ describe("SearchBox", () => {
     wrapper.find('form').simulate('submit', { preventDefault: jest.fn() });
 
     expect(props.history.push).toHaveBeenCalledWith('/user/mock user');
+    expect(props.getPlayerData).toHaveBeenCalledWith('mock user');
   });
 });

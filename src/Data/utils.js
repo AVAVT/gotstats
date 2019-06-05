@@ -60,3 +60,8 @@ export const getGameHandicapState = (game, playerId) => {
   else if (game.players.black.id === playerId) return "Handicap taker";
   else return "Handicap giver";
 }
+
+export const isPlayerWin = (game, playerId) => {
+  return ((game.players.black.id === playerId && game.white_lost)
+    || (game.players.white.id === playerId && game.black_lost))
+}

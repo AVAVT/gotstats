@@ -8,7 +8,7 @@ import { MemoryRouter } from 'react-router-dom';
 
 import SearchBox from "./SearchBox";
 import QuickLinks from "./QuickLinks";
-import { testGame } from "../testUtils";
+import { emptyStore, testGame } from "../testUtils";
 
 const props = {
   scrollToElem: jest.fn()
@@ -23,7 +23,7 @@ const getShallow = () => {
 
 const getMounted = (storeOverrides, propsOverrides) => {
   const store = mockStore({
-    ...defaultStore,
+    ...emptyStore,
     ...storeOverrides
   });
 

@@ -7,7 +7,11 @@ import {
 const initialState = {
   id: -1,
   username: "",
-  ratings: 0,
+  ratings: {
+    overall: {
+      rating: 0
+    }
+  },
   rank: 0,
   fetching: null,
   fetchError: "",

@@ -1,4 +1,4 @@
-import { getPlayerRank, getPlayerRating } from "./utils";
+import { getPlayerRank, getPlayerRating, isPlayerWin } from "./utils";
 
 function computeWinLoseStatistics(games, playerId) {
   var blackGames = 0, whiteGames = 0,
@@ -51,35 +51,6 @@ function computeWinLoseDistributions(games, playerId) {
   };
 
   return games.reduce(assignGameResultToDistributions, distributions);
-}
-
-function computeBoardSizes(games, playerId) {
-  var nineteenGames = 0, thirteenGames = 0, nineGames = 0, otherGames = 0,
-    nineteenLosses = 0, thirteenLosses = 0, nineLosses = 0, otherLosses = 0;
-
-  games.forEach(game => {
-    if (game.width === 19 && game.height === 19) {
-      nineteenGames++;
-      if (!isPlayerWin(game, playerId)) nineteenLosses++;
-    }
-    else if (game.width === 13 && game.height === 13) {
-      thirteenGames++;
-      if (!isPlayerWin(game, playerId)) thirteenLosses++;
-    }
-    else if (game.width === 9 && game.height === 9) {
-      nineGames++;
-      if (!isPlayerWin(game, playerId)) nineLosses++;
-    }
-    else {
-      otherGames++;
-      if (!isPlayerWin(game, playerId)) otherLosses++;
-    }
-  });
-
-  return {
-    nineteenGames, thirteenGames, nineGames, otherGames,
-    nineteenLosses, thirteenLosses, nineLosses, otherLosses
-  }
 }
 
 function computeTimeSettings(games, playerId) {
@@ -228,11 +199,6 @@ function extractHistoricalPlayerAndOpponent(game, playerId) {
     }
 }
 
-function isPlayerWin(game, playerId) {
-  return ((game.players.black.id === playerId && game.white_lost)
-    || (game.players.white.id === playerId && game.black_lost))
-}
-
 function assignGameResultToDistributions(distributions, game) {
   const isWin = isPlayerWin(game, distributions.id);
 
@@ -378,7 +344,6 @@ function daysDifferenceBetween(day1, day2) {
 export default {
   computeWinLoseStatistics,
   computeWinLoseDistributions,
-  computeBoardSizes,
   computeTimeSettings,
   computeOpponentsInfo,
   computeMiscInfo,
