@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import { mount, shallow } from "enzyme";
 import MiscChart from './MiscChart';
 
-import { testUser } from '../testUtils';
+import { testUser } from '../../testUtils';
 
 describe("MiscChart", () => {
   let props;

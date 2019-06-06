@@ -3,7 +3,7 @@ import { mount, shallow } from "enzyme";
 
 import GameHistoryChart from './GameHistoryChart';
 
-import { testUser } from '../testUtils';
+import { testUser } from '../../testUtils';
 
 const props = {
   title: "Test title",

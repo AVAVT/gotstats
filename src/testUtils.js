@@ -1,3 +1,7 @@
+import configureMockStore from "redux-mock-store";
+import reduxThunk from "redux-thunk";
+import MockApi from "./OGSApi/MockApi";
+
 import {
   minDate,
   maxDate,
@@ -7,7 +11,7 @@ import {
   timeSettingsValues,
   colorValues,
   handicapValues
-} from "../Data/Charts/chartActions";
+} from "./Data/Charts/chartActions";
 
 export const emptyStore = {
   player: {
@@ -162,4 +166,13 @@ export const testGame = {
       "ui_class": ""
     }
   }
+}
+
+export const createMockStore = (storeOverrides) => {
+  const mockStore = configureMockStore([reduxThunk.withExtraArgument(MockApi)]);
+
+  return mockStore({
+    ...emptyStore,
+    ...storeOverrides
+  });
 }

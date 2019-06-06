@@ -5,7 +5,7 @@ import configureMockStore from "redux-mock-store";
 import { Provider } from "react-redux";
 import { MemoryRouter } from 'react-router-dom';
 
-import { emptyStore } from "../testUtils";
+import { emptyStore } from "../../testUtils";
 
 import SearchBox from './SearchBox';
 

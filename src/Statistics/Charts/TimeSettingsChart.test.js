@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { mount, shallow } from "enzyme";
 import TimeSettingsChart from './TimeSettingsChart';
-import { testUser } from '../testUtils';
+import { testUser } from '../../testUtils';
 
 describe("BoardSizesChart", () => {
   let props;

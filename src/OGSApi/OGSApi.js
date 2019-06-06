@@ -25,6 +25,7 @@ const OGSApi = {
       }
     });
   },
+
   fetchUserDataById: (id) => {
     return new CancelablePromise((resolve, reject) => {
       axios.get(`${configs.OGS_API_ROOT}${id}`)
@@ -37,6 +38,7 @@ const OGSApi = {
         });
     });
   },
+
   fetchGamePage: (playerId, url) => {
     if (url === undefined) url = `${configs.OGS_API_ROOT}${playerId}/games/?ended__isnull=false&annulled=false&ordering=-ended&page_size=50`;
 

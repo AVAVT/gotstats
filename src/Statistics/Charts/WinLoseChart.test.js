@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import { mount, shallow } from "enzyme";
 import WinLoseChart from './WinLoseChart';
 
-import { testUser } from '../testUtils';
+import { testUser } from '../../testUtils';
 
 describe("WinLoseChart", () => {
   let props;

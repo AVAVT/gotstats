@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { mount, shallow } from "enzyme";
-import { testUser } from '../testUtils';
+import { testUser } from '../../testUtils';
 
 import ResultDistributionChart from './ResultDistributionChart';
 

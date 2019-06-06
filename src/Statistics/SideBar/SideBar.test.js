@@ -8,7 +8,7 @@ import { MemoryRouter } from 'react-router-dom';
 
 import SearchBox from "./SearchBox";
 import QuickLinks from "./QuickLinks";
-import { emptyStore, testGame } from "../testUtils";
+import { emptyStore, testGame } from "../../testUtils";
 
 const props = {
   scrollToElem: jest.fn()

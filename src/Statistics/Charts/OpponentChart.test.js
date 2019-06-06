@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import { mount, shallow } from "enzyme";
 import OpponentChart from './OpponentChart';
 
-import { testUser } from '../testUtils';
+import { testUser } from '../../testUtils';
 
 describe("OpponentChart", () => {
   let props;

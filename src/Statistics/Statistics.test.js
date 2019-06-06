@@ -1,7 +1,6 @@
 import React from 'react';
 import { mount, shallow } from "enzyme";
 
-import configureMockStore from "redux-mock-store";
 import { Provider } from "react-redux";
 import { MemoryRouter } from 'react-router-dom';
 
@@ -11,7 +10,7 @@ import LoadingUser from "./LoadingUser/LoadingUser";
 import ChartList from "./Charts/ChartList";
 import SideBar from "./SideBar/SideBar";
 
-import { emptyStore as defaultStore, testGame, testUser } from "./testUtils";
+import { createMockStore, emptyStore as defaultStore, testGame, testUser } from "../testUtils";
 
 const props = {
   showLoading: false,
@@ -20,13 +19,8 @@ const props = {
   history: { push: jest.fn() }
 };
 
-const mockStore = configureMockStore();
-
 const getMounted = (storeOverrides, propsOverrides) => {
-  const store = mockStore({
-    ...defaultStore,
-    ...storeOverrides
-  });
+  const store = createMockStore(storeOverrides);
 
   return mount(
     <Provider store={store}><MemoryRouter><Statistics {...{ ...props, ...propsOverrides }} /></MemoryRouter></Provider>,
@@ -34,10 +28,7 @@ const getMounted = (storeOverrides, propsOverrides) => {
 }
 
 const getShallow = (storeOverrides, propsOverrides) => {
-  const store = mockStore({
-    ...defaultStore,
-    ...storeOverrides
-  });
+  const store = createMockStore(storeOverrides);
 
   return shallow(
     <Provider store={store}><Statistics {...{ ...props, ...propsOverrides }} /></Provider>,
