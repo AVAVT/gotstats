@@ -1,5 +1,3 @@
-import { fetchGamePage } from "../../OGSApi/OGSApi";
-
 import { applyGameFilters } from "../Charts/chartActions";
 
 export const FETCH_GAMES_START = "FETCH_GAMES_START";
@@ -10,7 +8,7 @@ export const FETCH_GAMES_FAILURE = "FETCH_GAMES_FAILURE";
 const minDate = new Date(-8640000000000000);
 const maxDate = new Date(8640000000000000);
 
-export const fetchGames = (playerId, cachedGames = []) => async (dispatch, getState) => {
+export const fetchGames = (playerId, cachedGames = []) => async (dispatch, getState, OGSApi) => {
   const fetchingPromise = getState().games.fetching;
   if (fetchingPromise) fetchingPromise.cancel();
 
@@ -23,7 +21,7 @@ export const fetchGames = (playerId, cachedGames = []) => async (dispatch, getSt
     let fetchingTotalPage = 0;
     let shouldContinueFetching = true;
     do {
-      const promise = fetchGamePage(playerId, data ? data.next : undefined);
+      const promise = OGSApi.fetchGamePage(playerId, data ? data.next : undefined);
       dispatch(fetchingPage === 0 ? fetchGamesStart(promise) : fetchGamesProgress({ promise, fetchingPage, fetchingTotalPage }))
       data = await promise;
       for (const game of data.results) {

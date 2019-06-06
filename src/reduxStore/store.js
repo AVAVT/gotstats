@@ -2,12 +2,13 @@ import { composeWithDevTools as composeWithReduxDevTools } from "redux-devtools-
 import reduxThunk from "redux-thunk";
 import reducer from "../Data/reducer";
 import { createStore, applyMiddleware } from "redux";
+import OGSApi from '../OGSApi/OGSApi';
 
 export const createReduxStore = () => {
   return createStore(
     reducer,
     composeWithReduxDevTools(
-      applyMiddleware(reduxThunk)
+      applyMiddleware(reduxThunk.withExtraArgument(OGSApi))
     )
   );
 }

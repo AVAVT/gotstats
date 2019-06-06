@@ -1,4 +1,3 @@
-import { fetchUserId, fetchUserDataById } from "../../OGSApi/OGSApi";
 import { fetchGames } from "../Games/gameActions";
 
 export const FETCH_PLAYER_START = "FETCH_PLAYER_START";
@@ -13,16 +12,16 @@ export const importPlayer = ({ player, games }) => (dispatch, getState) => {
   dispatch(fetchGames(player.id, games.results));
 }
 
-export const fetchPlayer = (player) => async (dispatch, getState) => {
+export const fetchPlayer = (player) => async (dispatch, getState, OGSApi) => {
   const fetchingPromise = getState().player.fetching;
   if (fetchingPromise) fetchingPromise.cancel();
 
   try {
-    const userIdPromise = fetchUserId(player);
+    const userIdPromise = OGSApi.fetchUserId(player);
     dispatch(fetchPlayerStart(userIdPromise));
     const userId = await userIdPromise;
 
-    const userDataPromise = fetchUserDataById(userId);
+    const userDataPromise = OGSApi.fetchUserDataById(userId);
     dispatch(fetchPlayerStart(userDataPromise));
     const userData = await userDataPromise;
 
