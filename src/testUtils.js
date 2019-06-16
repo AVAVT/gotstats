@@ -11,7 +11,7 @@ import {
   timeSettingsValues,
   colorValues,
   handicapValues
-} from "./Data/Charts/chartActions";
+} from "./Redux/Charts/chartActions";
 
 export const emptyStore = {
   player: {
@@ -169,10 +169,11 @@ export const testGame = {
 }
 
 export const createMockStore = (storeOverrides) => {
-  const mockStore = configureMockStore([reduxThunk.withExtraArgument(MockApi)]);
+  const mockStore = configureMockStore([reduxThunk]);
 
   return mockStore({
     ...emptyStore,
+    OGSApi: MockApi,
     ...storeOverrides
   });
 }

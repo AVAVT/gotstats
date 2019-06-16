@@ -1,12 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
-import { createReduxStore } from './reduxStore/store';
+import { createMockStore } from './testUtils';
 
 it('renders without crashing', () => {
   const div = document.createElement('div');
 
-  const reduxStore = createReduxStore();
+  const reduxStore = createMockStore();
 
   ReactDOM.render(
     <App reduxStore={reduxStore} />,

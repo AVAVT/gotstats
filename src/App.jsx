@@ -1,6 +1,6 @@
 import React from 'react';
 import { Provider as ReduxProvider } from "react-redux";
-import Statistics from './Statistics/Statistics';
+import Statistics from './WebApp/Statistics';
 import { HashRouter as Router, Route } from "react-router-dom";
 
 const App = ({ reduxStore }) => (

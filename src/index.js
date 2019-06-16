@@ -6,7 +6,7 @@ import './index.scss';
 
 import App from './App';
 import * as serviceWorker from './serviceWorker';
-import { createReduxStore } from './reduxStore/store';
+import { createReduxStore } from './Redux/store';
 
 const reduxStore = createReduxStore();
 
