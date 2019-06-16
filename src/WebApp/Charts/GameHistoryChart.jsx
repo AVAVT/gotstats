@@ -39,7 +39,7 @@ class GameHistoryChart extends Component {
       ],
       hAxis: {
         textStyle: { color: "#f8f8ff", fontName: "Roboto", fontSize: 11 }, gridlines: {
-          color: 'transparent', count: 2
+          color: 'transparent'
         }, format: "MMM ''yy"
       },
       vAxis: { textStyle: { color: "#f8f8ff", fontName: "Roboto", fontSize: 11 }, gridlines: { count: 0 } },
