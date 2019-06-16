@@ -1,5 +1,9 @@
-## This project is the "next" version of [g0tStats](https://github.com/AVAVT/g0tStats)
+## GotStats? - Player statistic tool for [Online Go Server](https://online-g.com)
 
-Once progress in this version has matched that of the old version, I will swap the old version with this one.
+Provide (interesting?) analytic data for player on OGS.
 
-PR are much appreciated! Please check issues to see what you can do to help.
+Website with usage instruction: https://avavt.github.io/gotstats/.
+
+### Not an OGS player but want to see how it works?
+
+Check out [my own statistics](https://avavt.github.io/gotstats/#/user/Chinitsu).
