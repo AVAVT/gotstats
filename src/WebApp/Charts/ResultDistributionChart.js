@@ -104,15 +104,15 @@ class ResultDistributionChart extends Component {
     return {
       chartData1: [
         ['Result', 'Games'],
-        ['Resign', distributions["Plr+Res"]],
         ['Timeout', distributions["Plr+Time"]],
+        ['Resign', distributions["Plr+Res"]],
         ['Scoring', distributions["Plr+Count"]],
         ['Other', distributions["Plr+Other"]]
       ],
       chartData2: [
         ['Result', 'Games'],
-        ['Resign', distributions["Opp+Res"]],
         ['Timeout', distributions["Opp+Time"]],
+        ['Resign', distributions["Opp+Res"]],
         ['Scoring', distributions["Opp+Count"]],
         ['Other', distributions["Opp+Other"]]
       ],
