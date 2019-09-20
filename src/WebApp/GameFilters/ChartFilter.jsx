@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import Flatpickr from "react-flatpickr";
 import 'flatpickr/dist/themes/material_red.css'
 import { connect } from "react-redux";
+import { Collapse, Button } from 'reactstrap';
 
 import {
   applyGameFilters,
@@ -29,6 +30,9 @@ class ChartFilter extends PureComponent {
     handicap: PropTypes.array.isRequired,
     color: PropTypes.array.isRequired,
     filterGames: PropTypes.func.isRequired,
+  }
+  state = {
+    expanded: false
   }
 
   onCheckboxChanged = (event) => {
@@ -114,56 +118,61 @@ class ChartFilter extends PureComponent {
     } = this.props;
 
     return (
-      <form onSubmit={this.onSubmit} className="row">
-        <div className="col-12">
-          <div className="row">
-            <div className="form-group col-sm-6 col-lg-4">
-              <label>Analyze games starting from</label>
-              <Flatpickr
-                value={this.props.startDate || ""}
-                className="form-control flatpickr-input"
-                name="startDate"
-                onChange={(dates) => this.onDateChanged('startDate', dates)}
-                options={{
-                  dateFormat: "M d, Y",
-                  minDate: this.props.minDate,
-                  maxDate: this.props.maxDate,
-                  enableTime: false,
-                  enableSeconds: false
-                }}
-              />
+      <>
+        <Button color="secondary" className="mb-3" onClick={() => this.setState({ expanded: !this.state.expanded })}>Filters {this.state.expanded ? '-' : '+'}</Button>
+        <Collapse isOpen={this.state.expanded}>
+          <form onSubmit={e => e.preventDefault()} className="row">
+            <div className="col-12">
+              <div className="row">
+                <div className="form-group col-sm-6 col-lg-4">
+                  <label>Analyze games starting from</label>
+                  <Flatpickr
+                    value={this.props.startDate || ""}
+                    className="form-control flatpickr-input"
+                    name="startDate"
+                    onChange={(dates) => this.onDateChanged('startDate', dates)}
+                    options={{
+                      dateFormat: "M d, Y",
+                      minDate: this.props.minDate,
+                      maxDate: this.props.maxDate,
+                      enableTime: false,
+                      enableSeconds: false
+                    }}
+                  />
+                </div>
+                <div className="form-group col-sm-6 col-lg-4">
+                  <label className="form-check">
+                    <input name="limitEndDate" className="form-check-input" type="checkbox" id="limit_endDate" value="limitEndDate" defaultChecked={this.props.limitEndDate} onChange={this.onToggleChanged} />
+                    <label className="form-check-label" htmlFor="limit_endDate">{`limit end date${this.props.limitEndDate ? ' to' : ''}`}</label>
+                  </label>
+                  {
+                    this.props.limitEndDate &&
+                    <Flatpickr
+                      value={this.props.endDate || ""}
+                      className="form-control flatpickr-input"
+                      name="endDate"
+                      onChange={(dates) => this.onDateChanged('endDate', dates)}
+                      options={{
+                        dateFormat: "M d, Y",
+                        minDate: this.props.minDate,
+                        maxDate: this.props.maxDate,
+                        enableTime: false,
+                        enableSeconds: false
+                      }}
+                    />
+                  }
+                </div>
+              </div>
             </div>
-            <div className="form-group col-sm-6 col-lg-4">
-              <label className="form-check">
-                <input name="limitEndDate" className="form-check-input" type="checkbox" id="limit_endDate" value="limitEndDate" defaultChecked={this.props.limitEndDate} onChange={this.onToggleChanged} />
-                <label className="form-check-label" htmlFor="limit_endDate">{`limit end date${this.props.limitEndDate ? ' to' : ''}`}</label>
-              </label>
-              {
-                this.props.limitEndDate &&
-                <Flatpickr
-                  value={this.props.endDate || ""}
-                  className="form-control flatpickr-input"
-                  name="endDate"
-                  onChange={(dates) => this.onDateChanged('endDate', dates)}
-                  options={{
-                    dateFormat: "M d, Y",
-                    minDate: this.props.minDate,
-                    maxDate: this.props.maxDate,
-                    enableTime: false,
-                    enableSeconds: false
-                  }}
-                />
-              }
-            </div>
-          </div>
-        </div>
-        {this.renderCheckBoxItems(rankedValues.values, ranked, "ranked")}
-        {this.renderCheckBoxItems(boardSizeValues.values, boardSize, "boardSize", true)}
-        {this.renderCheckBoxItems(timeSettingsValues.values, timeSettings, "timeSettings")}
-        {this.renderCheckBoxItems(handicapValues.values, handicap, "handicap")}
-        {this.renderCheckBoxItems(colorValues.values, color, "color")}
-        {this.renderCheckBoxItems(tournamentValues.values, tournament, "tournament")}
-      </form>
+            {this.renderCheckBoxItems(rankedValues.values, ranked, "ranked")}
+            {this.renderCheckBoxItems(boardSizeValues.values, boardSize, "boardSize", true)}
+            {this.renderCheckBoxItems(timeSettingsValues.values, timeSettings, "timeSettings")}
+            {this.renderCheckBoxItems(handicapValues.values, handicap, "handicap")}
+            {this.renderCheckBoxItems(colorValues.values, color, "color")}
+            {this.renderCheckBoxItems(tournamentValues.values, tournament, "tournament")}
+          </form>
+        </Collapse>
+      </>
     );
   }
 }

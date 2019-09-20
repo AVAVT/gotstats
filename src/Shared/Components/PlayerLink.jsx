@@ -9,7 +9,7 @@ const PlayerLink = ({ player }) => {
   const img = `${OGS_API_ROOT}${player.id}/icon?size=32`;
   const username = `${player.username} (${getPlayerRankDisplay(player)})`;
 
-  return (<ExtLink href={href}><img className="img-20" src={img} alt={username} /> {username}</ExtLink>)
+  return (<ExtLink href={href} title={username}><img className="img-20" src={img} alt={username} /> {username}</ExtLink>)
 }
 
 export default PlayerLink;

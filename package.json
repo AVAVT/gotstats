@@ -1,5 +1,5 @@
 {
-  "name": "g0tstats",
+  "name": "gotstats",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -19,6 +19,7 @@
     "react-router": "^5.0.0",
     "react-router-dom": "^5.0.0",
     "react-scrollspy": "^3.4.0",
+    "reactstrap": "^8.0.1",
     "redux": "^4.0.1",
     "redux-thunk": "^2.3.0"
   },
