@@ -1,4 +1,4 @@
-import { FETCH_GAMES } from "./gameActions";
+import { FETCH_GAMES, CANCEL_QUERY } from "./gameActions";
 
 import { REQUEST, SUCCESS, FAILURE, PROGRESS } from "../promiseUtils";
 
@@ -8,6 +8,7 @@ import { minDate, maxDate } from "../../Shared/constants";
 
 const initialState = {
   results: [],
+  canceled: false,
   fetching: null,
   fetchingPage: 0,
   fetchingTotalPage: 0,
@@ -54,6 +55,12 @@ const reducer = (state = initialState, { type, payload }) => {
         ...state,
         fetching: null,
         fetchError: payload.error,
+      };
+    case CANCEL_QUERY:
+      return {
+        ...state,
+        canceled: true,
+        fetching: null,
       };
 
     default:

@@ -4,6 +4,7 @@ import SearchBox from "./SearchBox";
 import QuickLinks from "./QuickLinks";
 import LoadingIcon from "../../Shared/Components/LoadingIcon/LoadingIcon";
 import { connect } from "react-redux";
+import { cancelQuery } from "../../Redux/Games/gameActions";
 
 class SideBar extends Component {
   render() {
@@ -13,6 +14,8 @@ class SideBar extends Component {
       currentPage,
       totalPages,
       showQuickLinks,
+      cancelQuery,
+      canceled,
     } = this.props;
 
     const quickLinks = showQuickLinks ? (
@@ -24,22 +27,45 @@ class SideBar extends Component {
         <QuickLinks scrollToElem={this.props.scrollToElem} />
       </div>
     ) : null;
-    const searchBoxOrLoadProgress = errorMessage ? (
-      <>
-        <div className="mb-3 text-danger">{errorMessage}</div>
-        <SearchBox />
-      </>
-    ) : fetching && totalPages > 0 ? (
-      <div className="d-flex align-items-center">
-        <LoadingIcon style={{ width: 36, height: 36, marginRight: 15 }} />
-        <div>
-          Fetching games result from OGS - Page {currentPage + 1}
-          {totalPages && ` of ${totalPages}`}
-        </div>
-      </div>
-    ) : (
-      <SearchBox />
-    );
+    const searchBoxOrLoadProgress =
+      errorMessage || !(fetching && totalPages > 0) ? (
+        <>
+          {errorMessage && (
+            <div className="mb-3 text-danger">{errorMessage}</div>
+          )}
+          {canceled && (
+            <div className="mb-3 text-secondary">
+              Request cancelled, displaying data based on some recent games.
+            </div>
+          )}
+          <SearchBox />
+        </>
+      ) : (
+        <>
+          <div className="d-flex align-items-center">
+            <LoadingIcon
+              style={{
+                width: 32,
+                height: 32,
+                marginRight: 15,
+                flex: "0 0 auto",
+              }}
+            />
+            <div>
+              Fetching games result from OGS - Page {currentPage + 1}
+              {totalPages && ` of ${totalPages}`}
+            </div>
+          </div>
+          <div className="mt-3">
+            <button
+              className="btn btn-block btn-secondary"
+              onClick={cancelQuery}
+            >
+              Stop here
+            </button>
+          </div>
+        </>
+      );
 
     return (
       <div className="col-lg-3 col-md-4 order-md-2 sidebar">
@@ -61,12 +87,15 @@ class SideBar extends Component {
     );
   }
 }
-const mapReduxStateToProps = ({ chartsData, player, games }) => ({
+const mapReduxStateToProps = ({ chartsData, games }) => ({
   fetching: games.fetching,
   currentPage: games.fetchingPage,
   totalPages: games.fetchingTotalPage,
-  errorMessage: player.fetchError || games.fetchError,
+  errorMessage: games.fetchError,
   showQuickLinks: chartsData.results.length > 0,
+  canceled: games.canceled,
 });
 
-export default connect(mapReduxStateToProps)(SideBar);
+const mapDispatchToProps = { cancelQuery };
+
+export default connect(mapReduxStateToProps, mapDispatchToProps)(SideBar);
