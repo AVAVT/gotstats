@@ -1,15 +1,14 @@
-import React, { Component } from 'react';
-import Header from './Header/Header';
-import Welcome from './Welcome';
-import SideBar from './SideBar/SideBar';
-import PropTypes from 'prop-types';
+import React, { Component } from "react";
+import Header from "./Header/Header";
+import Welcome from "./Welcome";
+import SideBar from "./SideBar/SideBar";
+import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
 import { fetchPlayer } from "../Redux/Player/playerActions";
-
-import LoadingUser from './LoadingUser/LoadingUser';
-import ChartList from './Charts/ChartList';
-import Footer from './Footer/Footer';
+import LoadingUser from "./LoadingUser/LoadingUser";
+import ChartList from "./Charts/ChartList";
+import Footer from "./Footer/Footer";
 
 class Statistics extends Component {
   static propTypes = {
@@ -18,7 +17,7 @@ class Statistics extends Component {
     user: PropTypes.string,
     showLoading: PropTypes.bool.isRequired,
     showStatistics: PropTypes.bool.isRequired,
-  }
+  };
 
   scrollToElem(id) {
     document.getElementById(id).scrollIntoView();
@@ -38,11 +37,13 @@ class Statistics extends Component {
           <div className="row">
             <SideBar scrollToElem={this.scrollToElem} />
             <div className="col-lg-9 order-md-1 col-md-8 content-wrapper">
-              {this.props.showLoading
-                ? <LoadingUser />
-                : this.props.showStatistics
-                  ? <ChartList />
-                  : <Welcome />}
+              {this.props.showStatistics ? (
+                <ChartList />
+              ) : this.props.showLoading ? (
+                <LoadingUser />
+              ) : (
+                <Welcome />
+              )}
             </div>
           </div>
         </div>
@@ -54,12 +55,19 @@ class Statistics extends Component {
 
 const mapReduxStateToProps = ({ player, games }) => ({
   player,
-  showLoading: !!player.fetching || !!player.fetchError || !!games.fetching || !!games.fetchError,
-  showStatistics: player.id > -1
-})
+  showLoading:
+    !!player.fetching ||
+    !!player.fetchError ||
+    !!games.fetching ||
+    !!games.fetchError,
+  showStatistics: player.id > -1 && games.results.length > 0,
+});
 
-const mapReduxDispatchToProps = dispatch => ({
-  getPlayerData: player => dispatch(fetchPlayer(player))
-})
+const mapReduxDispatchToProps = (dispatch) => ({
+  getPlayerData: (player) => dispatch(fetchPlayer(player)),
+});
 
-export default connect(mapReduxStateToProps, mapReduxDispatchToProps)(Statistics);
+export default connect(
+  mapReduxStateToProps,
+  mapReduxDispatchToProps
+)(Statistics);

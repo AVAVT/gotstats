@@ -1,19 +1,19 @@
 import { UPDATE_CHART_DATA_SOURCE } from "./chartActions";
 import { FETCH_GAMES } from "../Games/gameActions";
-import { FETCH_PLAYER } from '../Player/playerActions';
+import { FETCH_PLAYER } from "../Player/playerActions";
 
-import { REQUEST, SUCCESS } from '../promiseUtils';
+import { REQUEST, SUCCESS } from "../promiseUtils";
 
 import {
-  minDate,
-  maxDate,
   rankedValues,
   tournamentValues,
   boardSizeValues,
   timeSettingsValues,
   colorValues,
-  handicapValues
+  handicapValues,
 } from "./chartActions";
+
+import { minDate, maxDate } from "../../Shared/constants";
 
 const initialState = {
   startDate: minDate,
@@ -25,29 +25,31 @@ const initialState = {
   handicap: handicapValues.values,
   color: colorValues.values,
   limitEndDate: false,
-  results: []
-}
+  results: [],
+};
 
 const reducer = (state = initialState, { type, payload }) => {
   switch (type) {
-    case UPDATE_CHART_DATA_SOURCE: return {
-      ...state,
-      ...payload
-    };
+    case UPDATE_CHART_DATA_SOURCE:
+      return {
+        ...state,
+        ...payload,
+      };
 
     case REQUEST(FETCH_GAMES):
     case REQUEST(FETCH_PLAYER):
       return {
-        ...initialState
+        ...initialState,
       };
 
     case SUCCESS(FETCH_GAMES):
       return {
         ...state,
-        startDate: payload.start
-      }
-    default: return state;
+        startDate: payload.start,
+      };
+    default:
+      return state;
   }
-}
+};
 
 export default reducer;

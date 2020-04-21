@@ -1,0 +1,43 @@
+.small_loading_icon_bg {
+  animation: loadingIconBg 4s linear infinite;
+}
+
+.small_loading_icon_ring {
+  animation: loadingRing 4s linear infinite;
+}
+
+@keyframes loadingIconBg {
+  0% {
+    fill: black;
+  }
+  45% {
+    fill: black;
+  }
+  50% {
+    fill: white;
+  }
+  95% {
+    fill: white;
+  }
+  100% {
+    fill: black;
+  }
+}
+
+@keyframes loadingRing {
+  0% {
+    stroke-dashoffset: -289.02652413026095;
+  }
+  49.99999% {
+    stroke-dashoffset: 0;
+    stroke: white;
+  }
+  50% {
+    stroke-dashoffset: -289.02652413026095;
+    stroke: black;
+  }
+  100% {
+    stroke-dashoffset: 0;
+    stroke: black;
+  }
+}

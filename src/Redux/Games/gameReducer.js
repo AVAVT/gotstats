@@ -1,15 +1,10 @@
-import {
-  FETCH_GAMES
-} from './gameActions';
+import { FETCH_GAMES } from "./gameActions";
 
-import { REQUEST, SUCCESS, FAILURE, PROGRESS } from '../promiseUtils';
+import { REQUEST, SUCCESS, FAILURE, PROGRESS } from "../promiseUtils";
 
-import {
-  FETCH_PLAYER
-} from '../Player/playerActions';
+import { FETCH_PLAYER } from "../Player/playerActions";
 
-const minDate = new Date(-8640000000000000);
-const maxDate = new Date(8640000000000000);
+import { minDate, maxDate } from "../../Shared/constants";
 
 const initialState = {
   results: [],
@@ -18,45 +13,52 @@ const initialState = {
   fetchingTotalPage: 0,
   fetchError: "",
   start: minDate,
-  end: maxDate
-}
+  end: maxDate,
+};
 
 const reducer = (state = initialState, { type, payload }) => {
   switch (type) {
-    case REQUEST(FETCH_PLAYER): return {
-      ...initialState,
-      fetching: state.fetching
-    };
+    case REQUEST(FETCH_PLAYER):
+      return {
+        ...initialState,
+        fetching: state.fetching,
+      };
 
-    case REQUEST(FETCH_GAMES): return {
-      ...state,
-      fetching: payload,
-      fetchingPage: 0,
-      fetchingTotalPage: 0,
-      fetchError: "",
-      start: minDate,
-      end: maxDate
-    }
+    case REQUEST(FETCH_GAMES):
+      return {
+        ...state,
+        fetching: payload,
+        fetchingPage: 0,
+        fetchingTotalPage: 0,
+        fetchError: "",
+        results: [],
+        start: minDate,
+        end: maxDate,
+      };
 
-    case PROGRESS(FETCH_GAMES): return {
-      ...state,
-      ...payload
-    }
+    case PROGRESS(FETCH_GAMES):
+      return {
+        ...state,
+        ...payload,
+      };
 
-    case SUCCESS(FETCH_GAMES): return {
-      ...state,
-      fetching: null,
-      ...payload,
-    }
+    case SUCCESS(FETCH_GAMES):
+      return {
+        ...state,
+        fetching: null,
+        ...payload,
+      };
 
-    case FAILURE(FETCH_GAMES): return {
-      ...state,
-      fetching: null,
-      fetchError: payload.error
-    }
+    case FAILURE(FETCH_GAMES):
+      return {
+        ...state,
+        fetching: null,
+        fetchError: payload.error,
+      };
 
-    default: return state;
+    default:
+      return state;
   }
-}
+};
 
 export default reducer;
