@@ -5,7 +5,6 @@ import { minDate, maxDate } from "../../Shared/constants";
 
 export const FETCH_GAMES = "FETCH_GAMES";
 export const FETCH_GAMES_PROGRESS = "FETCH_GAMES_PROGRESS";
-export const CANCEL_QUERY = "CANCEL_QUERY";
 
 export const fetchGames = (playerId, cachedGames = []) => async (
   dispatch,
@@ -26,7 +25,6 @@ export const fetchGames = (playerId, cachedGames = []) => async (
     let data;
     let fetchingTotalPage = 0;
     let shouldContinueFetching = true;
-    let canceled = false;
     do {
       const promise = OGSApi.fetchGamePage(
         playerId,
@@ -44,22 +42,17 @@ export const fetchGames = (playerId, cachedGames = []) => async (
       );
       dispatch(applyGameFilters());
       data = await promise;
-      canceled = getState().games.canceled;
-      if (canceled) {
-        shouldContinueFetching = false;
-      } else {
-        for (const game of data.results) {
-          if (game.id !== latestId) games.push(game);
-          else {
-            shouldContinueFetching = false;
-            games = [...games, ...cachedGames];
-            break;
-          }
+      for (const game of data.results) {
+        if (game.id !== latestId) games.push(game);
+        else {
+          shouldContinueFetching = false;
+          games = [...games, ...cachedGames];
+          break;
         }
-
-        fetchingPage++;
-        fetchingTotalPage = Math.ceil(data.count / 50);
       }
+
+      fetchingPage++;
+      fetchingTotalPage = Math.ceil(data.count / 50);
     } while (data.next && shouldContinueFetching);
 
     dispatch(fetchGamesSuccess(dispatchStateFrom(games)));
@@ -114,8 +107,4 @@ const fetchGamesSuccess = (data) => ({
 const fetchGamesFailure = (error) => ({
   type: FAILURE(FETCH_GAMES),
   payload: { error },
-});
-
-export const cancelQuery = () => ({
-  type: CANCEL_QUERY,
 });
