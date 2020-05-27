@@ -75,7 +75,6 @@ const dispatchStateFrom = (games) => {
     ? new Date(games[games.length - 1].ended)
     : minDate;
   startDate.setHours(0, 0, 0, 0);
-  console.log(startDate);
 
   return {
     results: games,
@@ -108,3 +107,21 @@ const fetchGamesFailure = (error) => ({
   type: FAILURE(FETCH_GAMES),
   payload: { error },
 });
+
+export const freezeQuery = () => (dispatch, getState) => {
+  const games = getState().games.results;
+  console.log("aaa");
+
+  if (games.length === 0) return;
+
+  let startDate = games.length
+    ? new Date(games[games.length - 1].ended)
+    : minDate;
+
+  startDate.setHours(0, 0, 0, 0);
+  dispatch(
+    applyGameFilters({
+      startDate,
+    })
+  );
+};
