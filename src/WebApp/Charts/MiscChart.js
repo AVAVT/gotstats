@@ -25,7 +25,7 @@ class MiscChart extends Component {
       backgroundColor: "transparent",
       isStacked: true,
       chartArea: { top: 10 },
-      colors: ["#d93344", "#41CD64", "#5486d1", "#9d4dc5"],
+      colors: ["#d93344", "#CEEC97", "#6369D1", "#D8D2E1"],
       legend: {
         maxLines: 2,
         position: "bottom",
