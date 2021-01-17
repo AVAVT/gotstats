@@ -1,4 +1,4 @@
-import { UPDATE_CHART_DATA_SOURCE } from "./chartActions";
+import { resultTypeValues, UPDATE_CHART_DATA_SOURCE } from "./chartActions";
 import { FETCH_GAMES } from "../Games/gameActions";
 import { FETCH_PLAYER } from "../Player/playerActions";
 
@@ -24,6 +24,7 @@ const initialState = {
   timeSettings: timeSettingsValues.values,
   handicap: handicapValues.values,
   color: colorValues.values,
+  resultType: resultTypeValues.values,
   limitEndDate: false,
   results: [],
 };

@@ -41,13 +41,6 @@ button:focus {
   outline: 0 none;
 }
 
-// input[type="checkbox"]:checked{
-//   outline: 1px solid #CEEC97;
-// }
-// input[type="checkbox"]:not(:checked){
-//   outline: 1px solid #d93344;
-// }
-
 input[type="checkbox"],
 label[for] {
   cursor: pointer;
@@ -74,19 +67,19 @@ label[for] {
   box-shadow: 0 0 transparent;
 }
 
-.App .google-visualization-tooltip {
-  padding: 7px 15px;
-  background: lighten(#25252f, 5%);
-  border: 0 none;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
-}
-
 .btn.btn-primary:not(:disabled):not(.disabled):active,
 .btn.btn-primary:not(:disabled):not(.disabled):hover {
-  background: saturate(#d93344, 15%);
-  border-color: saturate(#d93344, 15%);
+  background: #dd4858;
+  border-color: #dd4858;
   outline: 0 none;
   box-shadow: 0 0 transparent;
+}
+
+.App .google-visualization-tooltip {
+  padding: 7px 15px;
+  background: #30303d;
+  border: 0 none;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
 }
 
 input.form-control {
@@ -398,6 +391,14 @@ h3 {
   margin-top: 40px;
   border-top: 1px solid rgba(0, 0, 0, 0.1);
   min-height: 30vh;
+}
+
+.recurring-opponent-list {
+  max-height: 25vh;
+  overflow-y: auto;
+  width: 100%;
+  display: grid;
+  grid-template-columns: auto auto 1fr auto auto;
 }
 
 @media screen and (min-width: 768px) {

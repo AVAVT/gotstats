@@ -13,6 +13,7 @@ import {
   timeSettingsValues,
   colorValues,
   handicapValues,
+  resultTypeValues,
 } from "../../Redux/Charts/chartActions";
 
 const minDate = new Date("Jan 1 2008").getTime();
@@ -29,6 +30,7 @@ class ChartFilter extends PureComponent {
     timeSettings: PropTypes.array.isRequired,
     handicap: PropTypes.array.isRequired,
     color: PropTypes.array.isRequired,
+    resultType: PropTypes.array.isRequired,
     filterGames: PropTypes.func.isRequired,
   };
   state = {
@@ -68,6 +70,7 @@ class ChartFilter extends PureComponent {
       color,
       startDate,
       endDate,
+      resultType
     } = this.props;
 
     this.props.filterGames({
@@ -77,6 +80,7 @@ class ChartFilter extends PureComponent {
       timeSettings,
       handicap,
       color,
+      resultType,
       endDate,
       startDate,
       ...changes,
@@ -126,6 +130,7 @@ class ChartFilter extends PureComponent {
       timeSettings,
       handicap,
       color,
+      resultType
     } = this.props;
 
     return (
@@ -211,6 +216,7 @@ class ChartFilter extends PureComponent {
               "handicap"
             )}
             {this.renderCheckBoxItems(colorValues.values, color, "color")}
+            {this.renderCheckBoxItems(resultTypeValues.values, resultType, "resultType")}
             {this.renderCheckBoxItems(
               tournamentValues.values,
               tournament,

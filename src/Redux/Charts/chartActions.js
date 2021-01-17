@@ -31,6 +31,13 @@ export const timeSettingsValues = {
   Correspondence: "Correspondence",
   values: ["Blitz", "Live", "Correspondence"],
 };
+export const resultTypeValues = {
+  Scoring: "Scoring",
+  Resignation: "Resignation",
+  Timeout: "Timeout",
+  Others: "Others",
+  values: ["Scoring", "Resignation", "Timeout", "Others"],
+};
 export const colorValues = {
   Black: "Play as Black",
   White: "Play as White",
@@ -54,6 +61,7 @@ export const applyGameFilters = (filters) => (dispatch, getState) => {
     tournament,
     boardSize,
     timeSettings,
+    resultType,
     handicap,
     color,
     limitEndDate,
@@ -82,6 +90,7 @@ export const applyGameFilters = (filters) => (dispatch, getState) => {
     color,
     playerId,
     limitEndDate,
+    resultType,
     ...filters,
     endDate: newEndDate,
   };
@@ -104,6 +113,7 @@ const composeFilterFunction = ({
   boardSize,
   timeSettings,
   handicap,
+  resultType,
   color,
   playerId,
 }) => (game, index) => {
@@ -116,7 +126,8 @@ const composeFilterFunction = ({
     gameSatisfyBoardSizeRule(game, boardSize) &&
     gameSatisfyTimeSettingsRule(game, timeSettings) &&
     gameSatisfyHandicapRule(game, handicap, playerId) &&
-    gameSatisfyColorRule(game, color, playerId)
+    gameSatisfyColorRule(game, color, playerId) &&
+    gameSatisfyResultTypeRule(game, resultType)
   );
 };
 
@@ -156,6 +167,20 @@ const gameSatisfyColorRule = (game, color, playerId) => {
   if (game.players.white.id === playerId && !color.includes(colorValues.White))
     return false;
   return true;
+};
+
+const gameSatisfyResultTypeRule = (game, resultType) => {
+  if (game.outcome === "Resignation") {
+    if (resultType.includes(resultTypeValues.Resignation)) return true;
+  } else if (game.outcome === "Timeout") {
+    if (resultType.includes(resultTypeValues.Timeout)) return true;
+  } else if (!isNaN(game.outcome.split(" ")[0])) {
+    if (resultType.includes(resultTypeValues.Scoring)) return true;
+  } else {
+    if (resultType.includes(resultTypeValues.Others)) return true;
+  }
+
+  return false;
 };
 
 const updateChartDataSource = (newData) => ({
