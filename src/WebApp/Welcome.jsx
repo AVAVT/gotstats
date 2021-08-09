@@ -9,8 +9,8 @@ const Welcome = () => (
     </p>
     <p>
       You can also use userID: my profile page is{" "}
-      <em>https://online-go.com/user/view/197819</em>, meaning my user ID is
-      197819.
+      <em>https://online-go.com/user/view/999999</em>, meaning my user ID is
+      999999.
     </p>
     <hr />
     <p>
