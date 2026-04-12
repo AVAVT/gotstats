@@ -1,7 +1,6 @@
-import Image from "next/image";
-import { OGS_API_ROOT, OGS_ROOT } from "@/ogs-api/api-constants";
+import { OGS_API_ROOT, OGS_ROOT } from "@/api/api-constants";
 import { Player } from "@/type/player";
-import { getPlayerRankDisplay } from "@/utils/utils";
+import { getPlayerRankDisplay } from "@/utils/chart-utils";
 import ExtLink from "./external-link";
 
 export interface PlayerLinkProps {
@@ -15,7 +14,9 @@ export default function PlayerLink({ player }: PlayerLinkProps) {
 
   return (
     <ExtLink href={href} title={username}>
-      <Image className="img-20" src={img} alt={username} /> {username}
+      {/** biome-ignore lint/performance/noImgElement: Next Image require host configuration f that s */}
+      <img width={20} height={20} src={img} alt={`${username}'s avatar`} className="inline-block w-[20px] h-[20px]" />{" "}
+      {username}
     </ExtLink>
   );
 }

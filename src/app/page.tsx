@@ -1,3 +1,5 @@
+import Welcome from "@/components/welcome/welcome";
+
 export default function Home() {
-  return <div className="md:order-0 flex-1">aaa</div>;
+  return <Welcome />;
 }

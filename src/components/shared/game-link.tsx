@@ -1,5 +1,5 @@
 import moment from "moment";
-import { OGS_ROOT } from "@/ogs-api/api-constants";
+import { OGS_ROOT } from "@/api/api-constants";
 import { Game } from "@/type/game";
 import ExtLink from "./external-link";
 

@@ -21,22 +21,24 @@ export default function QuickLinks({ scrollToElem }: QuickLinksProps) {
   };
 
   const renderLink = (linkData: (typeof links)[number], index: number) => (
-    <li key={index}>
-      <a
-        href={`#${linkData[0]}`}
-        onClick={(e) => {
-          e.preventDefault();
-          onLinkClicked(linkData[0]);
-        }}
-      >
-        {linkData[1]}
-      </a>
-    </li>
+    <a
+      key={index}
+      className="block"
+      href={`#${linkData[0]}`}
+      onClick={(e) => {
+        e.preventDefault();
+        onLinkClicked(linkData[0]);
+      }}
+    >
+      {linkData[1]}
+    </a>
   );
 
   return (
     <ScrollSpy activeClass="active">
-      <nav className="">{links.map(renderLink)}</nav>
+      <nav id="navi_list" className="navi_list">
+        {links.map(renderLink)}
+      </nav>
     </ScrollSpy>
   );
 }

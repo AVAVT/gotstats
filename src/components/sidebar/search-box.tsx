@@ -1,23 +1,26 @@
 "use client";
 
 import { ThunkDispatch } from "@reduxjs/toolkit";
+import moment from "moment";
 import { useRouter } from "next/navigation";
-import { ChangeEventHandler, SubmitEventHandler, useState } from "react";
+import { ChangeEventHandler, Fragment, SubmitEventHandler, useState } from "react";
 import { connect } from "react-redux";
+import { Button, Input } from "vat-ui";
 import { GameState } from "@/redux/games/type";
 import { fetchPlayer, importPlayer } from "@/redux/player/player-actions";
 import { PlayerAction, PlayerState } from "@/redux/player/type";
 import { StoreState } from "@/redux/type";
-import { cn } from "@/utils/cn";
-
-const exporterVersion = 0;
 
 export type SearchBoxProps = {
+  player: PlayerState;
+  games: GameState;
+  fetchPlayerData: (player: string) => void;
   importPlayerData: (data: { player: PlayerState; games: GameState }) => void;
-  getPlayerData: (user: string) => void;
 };
 
-function SearchBox({ importPlayerData, getPlayerData }: SearchBoxProps) {
+const deprecationDate = new Date("2026-06-01");
+
+function SearchBox({ player, games, fetchPlayerData, importPlayerData }: SearchBoxProps) {
   const [username, setUsername] = useState("");
   const router = useRouter();
 
@@ -30,94 +33,81 @@ function SearchBox({ importPlayerData, getPlayerData }: SearchBoxProps) {
 
     if (username.trim()) {
       router.push(`/user/${username}`);
-      getPlayerData(username);
+      fetchPlayerData(username);
 
       setUsername("");
     }
   };
 
-  // downloadJSON = () => {
-  //   const { id, username, ratings, rank, registrationDate } = this.props.player;
+  const readFile: ChangeEventHandler<HTMLInputElement, HTMLInputElement> = (event) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
 
-  //   const { start, end, results } = this.props.games;
+    var reader = new FileReader();
+    reader.onload = (evt) => {
+      if (!evt.target?.result) return;
+      readImportedJSON(evt.target.result as string);
+    };
+    reader.readAsText(file);
+  };
 
-  //   const jsonString = JSON.stringify({
-  //     exporterVersion,
-  //     player: {
-  //       id,
-  //       username,
-  //       ratings,
-  //       rank,
-  //       registrationDate,
-  //     },
-  //     games: {
-  //       start,
-  //       end,
-  //       results,
-  //     },
-  //   });
-
-  //   var blob = new Blob([jsonString], { type: "text/json;charset=utf-8" });
-  //   saveAs(blob, `gotstats_${username}.json`);
-  //   window.alert("Player data file exported.\nYou can use it for quick import in the future.");
-  // };
-
-  // readFile = (event) => {
-  //   const file = event.target.files[0];
-  //   var reader = new FileReader();
-  //   reader.onload = (evt) => {
-  //     this.readImportedJSON(evt.target.result);
-  //   };
-  //   reader.readAsText(file);
-  // };
-
-  // readImportedJSON = (jsonString) => {
-  //   const data = JSON.parse(jsonString);
-  //   this.props.history.push(`/user/${data.player.username}`);
-  //   this.props.importPlayerData(data);
-  // };
+  const readImportedJSON = (jsonString: string) => {
+    const data = JSON.parse(jsonString);
+    router.push(`/user/${data.player.username}`);
+    importPlayerData(data);
+  };
 
   return (
     <form onSubmit={submit}>
       <div className="flex">
-        <input
+        <Input
+          color="primary"
           value={username}
           onChange={updateSearchUser}
           name="id"
           type="text"
           placeholder="Username or ID"
-          className="rounded-l-sm border-1 px-2 py-1 bg-white error:border-red-500 border-primary accent-primary text-background-light"
+          className="rounded-r-none border-r-0"
         />
-        <button
+        <Button
+          disabled={!!player.fetching || !!games.fetching}
           type="submit"
-          className={cn(
-            "rounded-r-sm px-4 py-1 border-1 border-solid focus:outline-0 inline-flex items-center gap-2 font-bold bg-primary border-primary text-foreground cursor-pointer",
-            "cursor-pointer duration-200 hover:shadow-sm hover:-translate-y-[1px] active:duration-0 active:translate-y-0 active:shadow-none",
-          )}
+          color="primary"
+          variant="solid"
+          className="rounded-l-none flex-none text-foreground"
         >
           Got Stats?
-        </button>
+        </Button>
       </div>
+      {new Date() < deprecationDate && (
+        <Fragment>
+          <p className="text-center">
+            <small className="tip help-block">
+              <em>-- or --</em>
+            </small>
+          </p>
 
-      {/* <p className="text-center">
-        <small className="tip help-block">
-          <em>-- or --</em>
-        </small>
-      </p>
+          <div>
+            <p className="d-flex justify-content-between">
+              <input type="file" onChange={readFile} id="file_input" style={{ display: "none" }} />
+              <Button
+                color="tertiary"
+                type="button"
+                className="text-foreground"
+                onClick={() => document.getElementById("file_input")?.click()}
+              >
+                Import Data
+              </Button>
+            </p>
+          </div>
 
-      <div className="form-group">
-        <p className="d-flex justify-content-between">
-          <input type="file" onChange={this.readFile} id="file_input" style={{ display: "none" }} />
-          <button type="button" className="btn btn-secondary" onClick={() => document.getElementById("file_input").click()}>
-            Import Data
-          </button>
-          {this.props.games.results.length > 0 && (
-            <button type="button" className="btn btn-secondary" onClick={this.downloadJSON}>
-              Export Data
-            </button>
-          )}
-        </p>
-      </div> */}
+          <div className="text-sm opacity-70 mt-2 italic">
+            <span className="font-bold">NOTICE</span>: JSON import feature will be deprecated on{" "}
+            {moment(deprecationDate).format("MMM D, yyyy")}. You no longer have to manually save & load json file,
+            player data will be automatically saved in your browser.
+          </div>
+        </Fragment>
+      )}
     </form>
   );
 }
@@ -125,7 +115,7 @@ function SearchBox({ importPlayerData, getPlayerData }: SearchBoxProps) {
 const mapReduxStateToProps = ({ player, games }: StoreState) => ({ player, games });
 const mapDispatchToProps = (dispatch: ThunkDispatch<StoreState, void, PlayerAction>) => ({
   importPlayerData: (data: { player: PlayerState; games: GameState }) => dispatch(importPlayer(data)),
-  getPlayerData: (player: string) => dispatch(fetchPlayer(player)),
+  fetchPlayerData: (player: string) => dispatch(fetchPlayer(player)),
 });
 
 export default connect(mapReduxStateToProps, mapDispatchToProps)(SearchBox);

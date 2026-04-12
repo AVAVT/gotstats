@@ -5,7 +5,7 @@ import { OGS_API_ROOT } from "./api-constants";
 const OGSApi = {
   fetchUserId: (user: string) => {
     return new CancelablePromise(async (resolve, reject) => {
-      if (Number.isNaN(user)) {
+      if (Number.isNaN(Number(user))) {
         // Entered username
         try {
           const { data } = await axios.get(`${OGS_API_ROOT}?username=${user}`);

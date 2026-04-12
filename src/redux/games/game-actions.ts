@@ -1,6 +1,7 @@
 import { ThunkDispatch } from "@reduxjs/toolkit";
 import CancelablePromise from "cancelable-promise";
-import OGSApi from "@/ogs-api/ogs-api";
+import Api from "@/api";
+import { savePlayerData } from "@/persistence";
 import { Game } from "@/type/game";
 import { MAX_DATE, MIN_DATE } from "@/utils/constants";
 import { applyGameFilters } from "../charts/chart-actions";
@@ -12,6 +13,8 @@ import {
   FETCH_GAMES_SUCCESS,
   GameAction,
 } from "./type";
+
+const exporterVersion = 0;
 
 export const fetchGames =
   (playerId: number, cachedGames: Game[] = []) =>
@@ -30,7 +33,7 @@ export const fetchGames =
       let fetchingTotalPage = 0;
       let shouldContinueFetching = true;
       do {
-        const promise = OGSApi.fetchGamePage(playerId, data ? data.next : undefined);
+        const promise = Api.fetchGamePage(playerId, data ? data.next : undefined);
         dispatch(
           fetchingPage === 0
             ? fetchGamesStart(promise)
@@ -38,7 +41,7 @@ export const fetchGames =
                 promise,
                 fetchingPage,
                 fetchingTotalPage,
-                results: games,
+                results: [...games],
               }),
         );
         dispatch(applyGameFilters());
@@ -57,7 +60,27 @@ export const fetchGames =
         fetchingTotalPage = Math.ceil(data.count / 50);
       } while (data.next && shouldContinueFetching);
 
-      dispatch(fetchGamesSuccess(dispatchStateFrom(games)));
+      const { id, username, ratings, rank, registrationDate } = getState().player;
+
+      const newState = dispatchStateFrom(games);
+
+      dispatch(fetchGamesSuccess(newState));
+
+      const saveData = {
+        id,
+        exporterVersion,
+        player: {
+          id,
+          username,
+          ratings,
+          rank,
+          registrationDate,
+        },
+        games: newState,
+      };
+
+      await savePlayerData(saveData);
+      console.log(`Player ${id} saved to IndexDB`);
     } catch (error) {
       console.error(error);
       if (typeof error === "string") dispatch(fetchGamesFailure(error));
@@ -111,7 +134,6 @@ const fetchGamesFailure = (error: string) => ({
 export const freezeQuery =
   () => (dispatch: ThunkDispatch<StoreState, void, GameAction>, getState: () => StoreState) => {
     const games = getState().games.results;
-    console.log("aaa");
 
     if (games.length === 0) return;
 

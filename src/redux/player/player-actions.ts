@@ -1,6 +1,7 @@
 import { ThunkDispatch } from "@reduxjs/toolkit";
 import CancelablePromise from "cancelable-promise";
-import OGSApi from "@/ogs-api/ogs-api";
+import Api from "@/api";
+import { getPlayerData } from "@/persistence";
 import { fetchGames } from "../games/game-actions";
 import { GameState } from "../games/type";
 import { StoreState } from "../type";
@@ -23,15 +24,20 @@ export const fetchPlayer =
     if (fetchingPromise) fetchingPromise.cancel();
 
     try {
-      const userIdPromise = OGSApi.fetchUserId(user);
+      const userIdPromise = Api.fetchUserId(user);
       dispatch(fetchPlayerStart(userIdPromise));
       const userId = await userIdPromise;
 
-      const userDataPromise = OGSApi.fetchUserDataById(userId);
+      const userDataPromise = Api.fetchUserDataById(userId);
       dispatch(fetchPlayerStart(userDataPromise));
       const userData = await userDataPromise;
 
-      dispatch(fetchGames(userData.id));
+      const savedData = await getPlayerData(userId);
+      if (savedData) {
+        dispatch(fetchGames(userData.id, savedData.games.results));
+      } else {
+        dispatch(fetchGames(userData.id));
+      }
 
       dispatch(
         fetchPlayerSuccess({

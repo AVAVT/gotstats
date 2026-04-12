@@ -31,11 +31,11 @@ export default function RootLayout({
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col">
         <AppProvider>
-          <main className="App">
+          <main className="App min-h-screen flex flex-col justify-stretch">
             <Header />
-            <div className="container flex flex-col md:flex-row">
+            <div className="container flex flex-col md:flex-row pb-[30vh] gap-4 xl:gap-8">
               <SideBar />
-              {children}
+              <div className="flex-1">{children}</div>
             </div>
             <Footer />
           </main>

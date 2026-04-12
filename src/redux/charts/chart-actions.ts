@@ -1,7 +1,7 @@
 import { ThunkDispatch } from "@reduxjs/toolkit";
 import { Game } from "@/type/game";
+import { getGameBoardSize, getGameHandicapState, getGameTimeSettings } from "@/utils/chart-utils";
 import { MAX_DATE } from "@/utils/constants";
-import { getGameBoardSize, getGameHandicapState, getGameTimeSettings } from "@/utils/utils";
 import { StoreState } from "../type";
 import {
   BoardSizeValues,
@@ -145,7 +145,7 @@ const gameSatisfyResultTypeRule = (game: Game, resultType: ResultTypeValues[]) =
     if (resultType.includes(resultTypeValues.Resignation)) return true;
   } else if (game.outcome === "Timeout") {
     if (resultType.includes(resultTypeValues.Timeout)) return true;
-  } else if (!Number.isNaN(game.outcome?.split(" ")[0])) {
+  } else if (!Number.isNaN(Number(game.outcome?.split(" ")[0]))) {
     if (resultType.includes(resultTypeValues.Scoring)) return true;
   } else {
     if (resultType.includes(resultTypeValues.Others)) return true;

@@ -1,6 +1,6 @@
 export default function Footer() {
   return (
-    <footer className="footer">
+    <footer className="footer flex-0">
       <div className="container flex flex-col md:flex-row justify-between">
         <div>
           <p>

@@ -4,7 +4,7 @@ import Image from "next/image";
 import { connect } from "react-redux";
 import { PlayerState } from "@/redux/player/type";
 import { StoreState } from "@/redux/type";
-import { getPlayerRankDisplay } from "@/utils/utils";
+import { getPlayerRankDisplay } from "@/utils/chart-utils";
 
 export interface HeaderProps {
   player: PlayerState;
@@ -16,11 +16,12 @@ function Header({ player }: HeaderProps) {
   const pageTitle = username ? `statistics for player ${username} (${getPlayerRankDisplay(player)})` : "statistics";
 
   return (
-    <nav className="header flex justify-start items-center p-4">
+    <nav className="header flex justify-start items-center p-4 flex-0">
       <Image
+        loading="eager"
         width={88.4}
         height={30}
-        className="OGS_logo d-inline-block align-top mr-2"
+        className="inline-block mr-2"
         src="https://cdn.online-go.com/assets/ogs_dark.svg"
         alt="OGS logo"
       />
