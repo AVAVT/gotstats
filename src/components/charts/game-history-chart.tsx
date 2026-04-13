@@ -4,6 +4,7 @@ import { OGS_ROOT } from "@/api/api-constants";
 import { PlayerState } from "@/redux/player/type";
 import { Game } from "@/type/game";
 import { extractHistoricalPlayerAndOpponent, getPlayerRating, isPlayerWin, ratingToKyuDan } from "@/utils/chart-utils";
+import getChartSettings, { CHART_THEME, CHART_TYPE, chartColor1, chartColor2, chartColor3 } from "./settings";
 
 export interface GameHistoryChartProps {
   games: Game[];
@@ -12,37 +13,8 @@ export interface GameHistoryChartProps {
 }
 
 const scatterPlotChartOptions = {
-  backgroundColor: "transparent",
-  chartArea: { top: 50, left: 50, right: 5 },
-  colors: ["#6369D1", "#d93344", "#CEEC97", "#D8D2E1"],
-  legend: {
-    position: "bottom",
-    textStyle: {
-      color: "#f8f8ff",
-      fontName: "Roboto",
-      fontSize: 14,
-    },
-  },
-  series: [
-    { type: "line" },
-    { type: "scatter", pointShape: { type: "triangle", rotation: 180 } },
-    { type: "scatter", pointShape: { type: "triangle" } },
-  ],
-  hAxis: {
-    textStyle: { color: "#f8f8ff", fontName: "Roboto", fontSize: 11 },
-    gridlines: {
-      color: "transparent",
-    },
-    format: "MMM ''yy",
-  },
-  vAxis: {
-    textStyle: { color: "#f8f8ff", fontName: "Roboto", fontSize: 11 },
-    gridlines: { count: 0 },
-  },
-  tooltip: {
-    isHtml: true,
-    trigger: "selection",
-  },
+  ...getChartSettings(CHART_TYPE.SCATTERPLOT, CHART_THEME.MONOCHROME),
+  colors: [chartColor3, chartColor1, chartColor2],
 };
 
 interface HistoricalWinLossItem {

@@ -2,6 +2,13 @@ import { Chart } from "react-google-charts";
 import { PlayerState } from "@/redux/player/type";
 import { Game } from "@/type/game";
 import { isPlayerWin } from "@/utils/chart-utils";
+import getChartSettings, { CHART_SIZE, CHART_THEME, CHART_TYPE, chartColor1, chartColor2 } from "./settings";
+
+const pieChartSettings = getChartSettings(CHART_TYPE.PIE, CHART_THEME.COLORED, CHART_SIZE.DEFAULT);
+const columnChartSettings = {
+  ...getChartSettings(CHART_TYPE.COLUMN, CHART_THEME.COLORED, CHART_SIZE.DEFAULT),
+  colors: [chartColor1, chartColor2],
+};
 
 export interface ResultDistributionChartProps {
   title: string;
@@ -9,43 +16,6 @@ export interface ResultDistributionChartProps {
   games: Game[];
   player: PlayerState;
 }
-
-const pieChartOptions = {
-  backgroundColor: "transparent",
-  chartArea: { top: 10, left: 0, right: 0 },
-  colors: ["#d93344", "#CEEC97", "#6369D1", "#D8D2E1"],
-  pieSliceTextStyle: { color: "#ffffff" },
-  legend: {
-    position: "bottom",
-    textStyle: {
-      color: "#f8f8ff",
-      fontName: "Roboto",
-      fontSize: 14,
-    },
-  },
-};
-
-const columnChartOptions = {
-  backgroundColor: "transparent",
-  isStacked: true,
-  chartArea: { top: 10 },
-  colors: ["#d93344", "#CEEC97", "#6369D1", "#D8D2E1"],
-  legend: {
-    maxLines: 2,
-    position: "bottom",
-    textStyle: {
-      color: "#f8f8ff",
-      fontName: "Roboto",
-      fontSize: 14,
-    },
-  },
-  hAxis: {
-    textStyle: { color: "#f8f8ff", fontName: "Roboto", fontSize: 11 },
-  },
-  vAxis: {
-    textStyle: { color: "#f8f8ff", fontName: "Roboto", fontSize: 11 },
-  },
-};
 
 interface Distributions {
   id: number;
@@ -147,13 +117,13 @@ export default function ResultDistributionChart({ title, id, games, player }: Re
         {chartData2 ? (
           <div>
             <h5 className="text-center">Losses</h5>
-            <Chart chartType="PieChart" options={pieChartOptions} data={chartData2} width={"100%"} height={"300px"} />
+            <Chart chartType="PieChart" options={pieChartSettings} data={chartData2} width={"100%"} height={"300px"} />
           </div>
         ) : null}
         {chartData1 ? (
           <div>
             <h5 className="text-center">Wins</h5>
-            <Chart chartType="PieChart" options={pieChartOptions} data={chartData1} width={"100%"} height={"300px"} />
+            <Chart chartType="PieChart" options={pieChartSettings} data={chartData1} width={"100%"} height={"300px"} />
           </div>
         ) : null}
       </div>
@@ -163,7 +133,7 @@ export default function ResultDistributionChart({ title, id, games, player }: Re
             <h3 className="text-center">Final scoring distribution</h3>
             <Chart
               chartType="ColumnChart"
-              options={columnChartOptions}
+              options={columnChartSettings}
               data={chartData3}
               width={"100%"}
               height={"300px"}

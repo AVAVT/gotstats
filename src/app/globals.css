@@ -6,10 +6,14 @@
   --foreground: #f8f8ff;
   --foreground-dark: #909096;
   --primary: #d93344;
-  --secondary: #ceec97;
+  --secondary: #6369D1;
   --tertiary: #30303d;
-
-  --chart-3: #efc225;
+  --success: #7ac986;
+  --chart-1: #d93344;
+  --chart-2: #7ac986;
+  --chart-3: #6369D1;
+  --chart-4: #D8D2E1;
+  --chart-5: #efc225;
 }
 
 @theme inline {
@@ -19,7 +23,6 @@
   --color-primary: var(--primary);
   --color-secondary: var(--secondary);
   --color-tertiary: var(--tertiary);
-  --color-chart-3: var(--chart-3);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
@@ -230,7 +233,7 @@ h3 {
   position: relative;
 
   background: var(--primary);
-  background: linear-gradient(to right, var(--primary) 0%, var(--chart-3) 50%, var(--secondary) 100%);
+  background: linear-gradient(to right, var(--chart-1) 0%, var(--chart-2) 100%);
 }
 
 .bar_chart a {
@@ -322,7 +325,7 @@ h3 {
 
 .bar_legend li span {
   width: 1px;
-  background-color: var(--chart-3);
+  background-color: var(--chart-5);
   display: inline-block;
   vertical-align: bottom;
 }
@@ -405,10 +408,6 @@ h3 {
   outline: 0 none;
 }
 
-.glyphicon.glyphicon-check {
-  color: #05a658;
-}
-
 .instruction {
   margin-top: 23px;
 }
@@ -426,6 +425,12 @@ h3 {
   width: 100%;
   display: grid;
   grid-template-columns: auto auto 1fr auto auto;
+}
+
+svg g path + text,
+svg g ellipse + text {
+  font-weight: bold;
+  text-shadow: 0px 1px black, 0px -1px black, 1px 0px black, -1px 0px black;
 }
 
 @media screen and (min-width: 768px) {

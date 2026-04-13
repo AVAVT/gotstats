@@ -14,7 +14,8 @@ import {
   GameAction,
 } from "./type";
 
-const exporterVersion = 0;
+export const exporterVersion = 0;
+export const LARGE_GAME_PAGES_THRESHOLD = 20;
 
 export const fetchGames =
   (playerId: number, cachedGames: Game[] = []) =>
@@ -44,7 +45,18 @@ export const fetchGames =
                 results: [...games],
               }),
         );
-        dispatch(applyGameFilters());
+
+        if (fetchingPage === 1 && fetchingTotalPage >= LARGE_GAME_PAGES_THRESHOLD) {
+          const startDate = games.length ? new Date(games[games.length - 1].ended) : MIN_DATE;
+          startDate.setHours(0, 0, 0, 0);
+          dispatch(
+            applyGameFilters({
+              startDate,
+            }),
+          );
+        } else {
+          dispatch(applyGameFilters());
+        }
 
         data = await promise;
         for (const game of data.results) {

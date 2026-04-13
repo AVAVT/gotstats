@@ -2,6 +2,10 @@ import { ReactNode } from "react";
 import { Chart } from "react-google-charts";
 import { PlayerState } from "@/redux/player/type";
 import { Game } from "@/type/game";
+import getChartSettings, { CHART_SIZE, CHART_THEME, CHART_TYPE } from "./settings";
+
+const mainChartSettings = getChartSettings(CHART_TYPE.PIE, CHART_THEME.MONOCHROME, CHART_SIZE.HERO);
+const subChartSettings = getChartSettings(CHART_TYPE.PIE, CHART_THEME.COLORED, CHART_SIZE.DEFAULT);
 
 export interface WinLoseChartProps {
   title?: string;
@@ -10,47 +14,6 @@ export interface WinLoseChartProps {
   player: PlayerState;
   footer?: ReactNode;
 }
-
-const mainChartOptions = {
-  backgroundColor: "transparent",
-  chartArea: { top: 60 },
-  colors: ["#000000", "#f8f8ff"],
-  pieSliceTextStyle: { color: "#d93344" },
-  legend: {
-    position: "bottom",
-    textStyle: {
-      color: "#f8f8ff",
-      fontName: "Roboto",
-      fontSize: 14,
-    },
-  },
-  animation: {
-    startup: true,
-    easing: "inout",
-    duration: 500,
-  },
-};
-
-const subChartOptions = {
-  backgroundColor: "transparent",
-  chartArea: { top: 10 },
-  colors: ["#d93344", "#CEEC97", "#6369D1", "#D8D2E1"],
-  pieSliceTextStyle: { color: "#ffffff" },
-  legend: {
-    maxLines: 2,
-    position: "bottom",
-    textStyle: {
-      color: "#f8f8ff",
-      fontName: "Roboto",
-      fontSize: 14,
-    },
-  },
-  animation: {
-    startup: true,
-    easing: "inout",
-    duration: 500,
-  },
-};
 
 function computeWinLoseStatistics(games: Game[], playerId: number) {
   var blackGames = 0,
@@ -117,7 +80,7 @@ export default function WinLoseChart({ title, id, games, player, footer }: WinLo
       <div className="row">
         {chartData1 ? (
           <div className="col-sm-6 mr-auto ml-auto">
-            <Chart chartType="PieChart" options={mainChartOptions} data={chartData1} width={"100%"} height={"400px"} />
+            <Chart chartType="PieChart" options={mainChartSettings} data={chartData1} width={"100%"} height={"400px"} />
           </div>
         ) : null}
       </div>
@@ -126,19 +89,19 @@ export default function WinLoseChart({ title, id, games, player, footer }: WinLo
         {chartData2 ? (
           <div>
             <h5 className="text-center">Total</h5>
-            <Chart chartType="PieChart" options={subChartOptions} data={chartData2} width={"100%"} height={"250px"} />
+            <Chart chartType="PieChart" options={subChartSettings} data={chartData2} width={"100%"} height={"300px"} />
           </div>
         ) : null}
         {chartData3 ? (
           <div>
             <h5 className="text-center">As Black</h5>
-            <Chart chartType="PieChart" options={subChartOptions} data={chartData3} width={"100%"} height={"250px"} />
+            <Chart chartType="PieChart" options={subChartSettings} data={chartData3} width={"100%"} height={"300px"} />
           </div>
         ) : null}
         {chartData4 ? (
           <div>
             <h5 className="text-center">As White</h5>
-            <Chart chartType="PieChart" options={subChartOptions} data={chartData4} width={"100%"} height={"250px"} />
+            <Chart chartType="PieChart" options={subChartSettings} data={chartData4} width={"100%"} height={"300px"} />
           </div>
         ) : null}
       </div>

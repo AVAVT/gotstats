@@ -3,7 +3,7 @@
 import CancelablePromise from "cancelable-promise";
 import { connect } from "react-redux";
 import { Button } from "vat-ui";
-import { freezeQuery } from "@/redux/games/game-actions";
+import { freezeQuery, LARGE_GAME_PAGES_THRESHOLD } from "@/redux/games/game-actions";
 import { StoreState } from "@/redux/type";
 import { MIN_DATE } from "@/utils/constants";
 import LoadingIcon from "../shared/loading-icon/loadingIcon";
@@ -52,18 +52,25 @@ function SideBar({ fetching, currentPage, totalPages, showQuickLinks, freezeQuer
           {totalPages && ` of ${totalPages}`}
         </div>
       </div>
-      {startDate === MIN_DATE && (
-        <div className="mt-3">
-          <Button
-            type="button"
-            color="tertiary"
-            className="text-foreground block w-full"
-            onClick={freezeQuery}
-            title="Set filter to current games (stop charts refreshing)"
-          >
-            Freeze charts
-          </Button>
+      {totalPages >= LARGE_GAME_PAGES_THRESHOLD ? (
+        <div className="mt-3 opacity-70 text-sm">
+          Large number of games detected. Charts are automatically frozen until loading complete to prevent browser
+          freeze.
         </div>
+      ) : (
+        startDate === MIN_DATE && (
+          <div className="mt-3">
+            <Button
+              type="button"
+              color="tertiary"
+              className="text-foreground block w-full"
+              onClick={freezeQuery}
+              title="Set filter to current games (stop charts refreshing)"
+            >
+              Freeze charts
+            </Button>
+          </div>
+        )
       )}
     </>
   );
