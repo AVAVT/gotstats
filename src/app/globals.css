@@ -51,11 +51,12 @@ h2 small {
   color: var(--foreground-dark);
 }
 
-a {
+a, .fake-link {
   color: var(--primary);
 }
 
-a:hover, a:active{
+a:hover, a:active, 
+.fake-link:hover, .fake-link:active{
   text-decoration: underline;
 }
 

@@ -1,12 +1,14 @@
 "use client";
 
 import CancelablePromise from "cancelable-promise";
+import { Fragment } from "react/jsx-runtime";
 import { connect } from "react-redux";
 import { Button } from "vat-ui";
 import { freezeQuery, LARGE_GAME_PAGES_THRESHOLD } from "@/redux/games/game-actions";
 import { StoreState } from "@/redux/type";
 import { MIN_DATE } from "@/utils/constants";
-import LoadingIcon from "../shared/loading-icon/loadingIcon";
+import LoadingIcon from "../shared/loading-icon/loading-icon";
+import AdvancedFeatures from "./advanced-features";
 import QuickLinks from "./quick-links";
 import SearchBox from "./search-box";
 
@@ -35,9 +37,12 @@ function SideBar({ fetching, currentPage, totalPages, showQuickLinks, freezeQuer
   ) : null;
 
   const searchBoxOrLoadProgress = !(fetching && totalPages > 0) ? (
-    <SearchBox />
+    <Fragment>
+      <SearchBox />
+      <AdvancedFeatures />
+    </Fragment>
   ) : (
-    <>
+    <Fragment>
       <div className="flex items-center">
         <LoadingIcon
           style={{
@@ -72,7 +77,7 @@ function SideBar({ fetching, currentPage, totalPages, showQuickLinks, freezeQuer
           </div>
         )
       )}
-    </>
+    </Fragment>
   );
 
   return (

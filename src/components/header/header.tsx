@@ -13,7 +13,7 @@ export interface HeaderProps {
 function Header({ player }: HeaderProps) {
   const { username } = player;
 
-  const pageTitle = username ? `statistics for player ${username} (${getPlayerRankDisplay(player)})` : "statistics";
+  const pageTitle = username ? `player ${username} (${getPlayerRankDisplay(player)})` : "statistics";
 
   return (
     <nav className="header flex justify-start items-center p-4 flex-0">

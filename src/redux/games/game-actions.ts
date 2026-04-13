@@ -14,7 +14,7 @@ import {
   GameAction,
 } from "./type";
 
-export const exporterVersion = 0;
+export const exporterVersion = 2;
 export const LARGE_GAME_PAGES_THRESHOLD = 20;
 
 export const fetchGames =
@@ -72,7 +72,9 @@ export const fetchGames =
         fetchingTotalPage = Math.ceil(data.count / 50);
       } while (data.next && shouldContinueFetching);
 
-      const { id, username, ratings, rank, registrationDate } = getState().player;
+      const player = getState().player;
+
+      const { id, username, ratings, rank, registrationDate } = player;
 
       const newState = dispatchStateFrom(games);
 
@@ -92,7 +94,6 @@ export const fetchGames =
       };
 
       await savePlayerData(saveData);
-      console.log(`Player ${id} saved to IndexDB`);
     } catch (error) {
       console.error(error);
       if (typeof error === "string") dispatch(fetchGamesFailure(error));
