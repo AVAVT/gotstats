@@ -65,7 +65,7 @@ function ChartList({ games, chartsData, player }: ChartListProps) {
             games={filteredGamesData}
             player={player}
           />
-          <MiscChart title={`Miscellaneous`} id={"misc_stats"} games={filteredGamesData} player={player} />
+          <MiscChart title={`Miscellaneous`} id={"misc_stats"} games={games.results} player={player} />
         </div>
       )}
     </div>

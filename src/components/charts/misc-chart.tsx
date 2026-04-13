@@ -5,7 +5,13 @@ import PlayerLink from "@/components/shared/player-link";
 import { PlayerState } from "@/redux/player/type";
 import { Game } from "@/type/game";
 import { Player } from "@/type/player";
-import { daysDifferenceBetween, extractPlayerAndOpponent, isPlayerWin } from "@/utils/chart-utils";
+import {
+  daysDifferenceBetween,
+  extractPlayerAndOpponent,
+  getHighestRankAchieved,
+  getPlayerRankDisplay,
+  isPlayerWin,
+} from "@/utils/chart-utils";
 
 export interface MiscChartProps {
   title: string;
@@ -151,6 +157,13 @@ export default function MiscChart({ title, id, games, player }: MiscChartProps) 
       <GameLink game={biggestWin.game} />.
     </li>
   );
+  const highestRank = getHighestRankAchieved(games, player.id);
+  const highestRatingDisplay = highestRank.game && (
+    <li>
+      Highest rating achieved: {highestRank.ratings.overall.rating.toFixed(2)} (~{getPlayerRankDisplay(highestRank)})
+      after a monumental win on <GameLink game={highestRank.game} />.
+    </li>
+  );
   return (
     <section className="stats_block">
       <h2 id={id} className="text-center">
@@ -168,6 +181,7 @@ export default function MiscChart({ title, id, games, player }: MiscChartProps) 
           {streakDurationDisplay}.
         </li>
         {biggestWinDisplay}
+        {highestRatingDisplay}
         {longestGame && (
           <li>
             Longest game: <GameLink game={longestGame} /> lasting{" "}

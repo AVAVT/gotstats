@@ -24,7 +24,7 @@ export const getPlayerUnroundedRank = (player: Player) => {
   }
 };
 
-export const getPlayerRating = (player: Player) => player.ratings.overall.rating;
+export const getPlayerRating = (player: { ratings: { overall: { rating: number } } }) => player.ratings.overall.rating;
 
 export const getPlayerRankDisplay = (player: { ratings: { overall: { rating: number } }; ranking?: number }) => {
   return rankNumberToKyuDan(getPlayerRank(player));
@@ -44,9 +44,12 @@ export const getGameBoardSize = (game: Game) => {
   else return "Others";
 };
 
+export const BLITZ_TIME_PER_MOVE = 20;
+export const CORR_TIME_PER_MOVE = 10800;
+
 export const getGameTimeSettings = (game: Game) => {
-  if (game.time_per_move < 20) return "Blitz";
-  else if (game.time_per_move > 10800) return "Correspondence";
+  if (game.time_per_move < BLITZ_TIME_PER_MOVE) return "Blitz";
+  else if (game.time_per_move > CORR_TIME_PER_MOVE) return "Correspondence";
   else return "Live";
 };
 
@@ -84,6 +87,36 @@ export const extractHistoricalPlayerAndOpponent = (game: Game, playerId: number)
         historicalPlayer: game.historical_ratings.white,
         historicalOpponent: game.historical_ratings.black,
       };
+};
+
+export const getHighestRankAchieved = (analyzingGames: Game[], playerId: number) => {
+  const games = [...analyzingGames].reverse();
+  const r = games.reduce<{ game: Game | null; previousGame: Game | null; ratings: { overall: { rating: number } } }>(
+    (result, game) => {
+      if (!game) return result;
+      const newRating =
+        game.players.black.id === playerId
+          ? game.historical_ratings.black.ratings
+          : game.historical_ratings.white.ratings;
+
+      const shouldUpdate = newRating.overall.rating > result.ratings.overall.rating;
+
+      result.game = shouldUpdate ? result.previousGame : result.game;
+      result.previousGame = game;
+      result.ratings = shouldUpdate ? newRating : result.ratings;
+
+      return result;
+    },
+    {
+      game: null,
+      previousGame: null,
+      ratings: { overall: { rating: 0 } },
+    },
+  );
+  return {
+    game: r.game,
+    ratings: r.ratings,
+  };
 };
 
 export const daysDifferenceBetween = (day1: Date, day2: Date) => {

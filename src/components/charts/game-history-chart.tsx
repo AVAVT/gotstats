@@ -32,7 +32,7 @@ function computeGameHistory(games: Game[], player: PlayerState, insertCurrentRan
   if (insertCurrentRank || games.length < 2) {
     historicalWinloss.push({
       date: new Date(),
-      playerRating: getPlayerRating(player as never),
+      playerRating: getPlayerRating(player),
     });
   }
 
