@@ -1,3 +1,4 @@
+import { format } from "date-fns";
 import { Game } from "@/type/game";
 import { Player } from "@/type/player";
 
@@ -65,6 +66,44 @@ export const isPlayerWin = (game: Game, playerId: number) => {
   );
 };
 
+export type WinStreak = {
+  streak: number;
+  start: Game;
+  end: Game;
+};
+
+export const getLongestWinStreak = (games: Game[], playerId: number): WinStreak | null => {
+  let longestStreak = { streak: 0, start: null as Game | null, end: null as Game | null };
+  let currentStreak = { streak: 0, start: null as Game | null, end: null as Game | null };
+
+  for (const game of games) {
+    if (isPlayerWin(game, playerId)) {
+      currentStreak = {
+        streak: currentStreak.streak + 1,
+        start: game,
+        end: currentStreak.end ?? game,
+      };
+
+      if (currentStreak.streak > longestStreak.streak) {
+        longestStreak = currentStreak;
+      }
+      continue;
+    }
+
+    currentStreak = { streak: 0, start: null, end: null };
+  }
+
+  if (longestStreak.streak === 0 || !longestStreak.start || !longestStreak.end) {
+    return null;
+  }
+
+  return {
+    streak: longestStreak.streak,
+    start: longestStreak.start,
+    end: longestStreak.end,
+  };
+};
+
 export const extractPlayerAndOpponent = (game: Game, playerId: number) => {
   return game.players.black.id === playerId
     ? {
@@ -75,6 +114,44 @@ export const extractPlayerAndOpponent = (game: Game, playerId: number) => {
         player: game.players.white,
         opponent: game.players.black,
       };
+};
+
+export const getOpponent = (game: Game, playerId: number) => extractPlayerAndOpponent(game, playerId).opponent;
+
+export type OpponentGameStats = {
+  opponent: Player;
+  games: number;
+  win: number;
+  loss: number;
+};
+
+export const getOpponentGameStats = (games: Game[], playerId: number): OpponentGameStats[] => {
+  const opponents = new Map<number, OpponentGameStats>();
+
+  for (const game of games) {
+    const opponent = getOpponent(game, playerId);
+    const isWin = isPlayerWin(game, playerId);
+    const existing = opponents.get(opponent.id);
+
+    if (existing) {
+      existing.games++;
+      if (isWin) {
+        existing.win++;
+      } else {
+        existing.loss++;
+      }
+      continue;
+    }
+
+    opponents.set(opponent.id, {
+      opponent,
+      games: 1,
+      win: isWin ? 1 : 0,
+      loss: isWin ? 0 : 1,
+    });
+  }
+
+  return Array.from(opponents.values()).sort((left, right) => right.games - left.games);
 };
 
 export const extractHistoricalPlayerAndOpponent = (game: Game, playerId: number) => {
@@ -89,48 +166,57 @@ export const extractHistoricalPlayerAndOpponent = (game: Game, playerId: number)
       };
 };
 
+const getHistoricalPlayerRatings = (game: Game, playerId: number) => {
+  return game.players.black.id === playerId
+    ? game.historical_ratings.black.ratings
+    : game.historical_ratings.white.ratings;
+};
+
+const getFirstRankedGameBefore = (games: Game[], targetGame: Game | null) => {
+  if (!targetGame) return null;
+
+  const targetIndex = games.findIndex((game) => game.id === targetGame.id);
+  if (targetIndex < 0 || targetIndex === games.length - 1) return null;
+
+  // Games are sorted descending by date, so higher indexes are earlier chronologically.
+  for (let i = targetIndex + 1; i < games.length; i++) {
+    if (games[i].ranked) {
+      return games[i];
+    }
+  }
+
+  return null;
+};
+
+export const getHighestRatingAchieved = (analyzingGames: Game[], playerId: number) => {
+  let ratingDetectedIn: Game | null = null;
+  let ratings = { overall: { rating: 0 } };
+
+  // Iterate oldest -> newest to keep the first game where the peak rating was reached.
+  for (let i = analyzingGames.length - 1; i >= 0; i--) {
+    const game = analyzingGames[i];
+    const gameRatings = getHistoricalPlayerRatings(game, playerId);
+
+    if (gameRatings.overall.rating > ratings.overall.rating) {
+      ratings = gameRatings;
+      ratingDetectedIn = game;
+    }
+  }
+
+  return {
+    game: getFirstRankedGameBefore(analyzingGames, ratingDetectedIn),
+    ratings,
+    rating: ratings.overall.rating,
+    ratingDetectedIn,
+  };
+};
+
 export const getHighestRankAchieved = (analyzingGames: Game[], playerId: number) => {
-  const games = [...analyzingGames].reverse();
-  const r = games.reduce<{ game: Game | null; previousGame: Game | null; ratings: { overall: { rating: number } } }>(
-    (result, game) => {
-      if (!game) return result;
-      const newRating =
-        game.players.black.id === playerId
-          ? game.historical_ratings.black.ratings
-          : game.historical_ratings.white.ratings;
-
-      const shouldUpdate = newRating.overall.rating > result.ratings.overall.rating;
-
-      result.game = shouldUpdate ? result.previousGame : result.game;
-      result.previousGame = game;
-      result.ratings = shouldUpdate ? newRating : result.ratings;
-
-      return result;
-    },
-    {
-      game: null,
-      previousGame: null,
-      ratings: { overall: { rating: 0 } },
-    },
-  );
+  const r = getHighestRatingAchieved(analyzingGames, playerId);
   return {
     game: r.game,
     ratings: r.ratings,
   };
 };
 
-export const daysDifferenceBetween = (day1: Date, day2: Date) => {
-  /* Copa pasta I don't even know if there's any bug here */
-
-  // Copy date parts of the timestamps, discarding the time parts.
-  var two = new Date(day1.getFullYear(), day1.getMonth(), day1.getDate());
-  var one = new Date(day2.getFullYear(), day2.getMonth(), day2.getDate());
-
-  // Do the math.
-  var millisecondsPerDay = 1000 * 60 * 60 * 24;
-  var millisBetween = two.getTime() - one.getTime();
-  var days = millisBetween / millisecondsPerDay;
-
-  // Round down.
-  return two > one ? Math.floor(days) : Math.ceil(days);
-};
+export const toDateInputValue = (date: Date | number) => format(date, "yyyy-MM-dd");

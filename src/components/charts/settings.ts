@@ -1,3 +1,5 @@
+import { ChartWrapperOptions } from "react-google-charts";
+
 export const chartColor1 =
   typeof document !== "undefined"
     ? getComputedStyle(document.documentElement).getPropertyValue("--chart-1").trim() || "#d93344"
@@ -19,17 +21,22 @@ export const chartColor5 =
     ? getComputedStyle(document.documentElement).getPropertyValue("--chart-5").trim() || "#efc225"
     : "";
 
-const foregroundColor =
+export const backgroundColor =
+  typeof document !== "undefined"
+    ? getComputedStyle(document.documentElement).getPropertyValue("--background").trim() || "#25252f"
+    : "";
+
+export const foregroundColor =
   typeof document !== "undefined"
     ? getComputedStyle(document.documentElement).getPropertyValue("--foreground").trim() || "#f8f8ff"
     : "";
 
-const foregroundDarkColor =
+export const foregroundDarkColor =
   typeof document !== "undefined"
     ? getComputedStyle(document.documentElement).getPropertyValue("--foreground-dark").trim() || "#f8f8ff"
     : "";
 
-const tertiaryColor =
+export const tertiaryColor =
   typeof document !== "undefined"
     ? getComputedStyle(document.documentElement).getPropertyValue("--tertiary").trim() || "#f8f8ff"
     : "";
@@ -89,7 +96,7 @@ const pieChartOptions = {
       },
     },
   },
-};
+} as const;
 
 const columnChartOptions = {
   backgroundColor: "transparent",
@@ -122,7 +129,7 @@ const columnChartOptions = {
       color: tertiaryColor,
     },
   },
-};
+} as const;
 
 const scatterplotChartOptions = {
   backgroundColor: "transparent",
@@ -155,7 +162,7 @@ const scatterplotChartOptions = {
     isHtml: true,
     trigger: "selection",
   },
-};
+} as const;
 
 function getChartTheme(theme: CHART_THEME) {
   switch (theme) {
@@ -166,10 +173,14 @@ function getChartTheme(theme: CHART_THEME) {
   }
 }
 
-export default function getChartSettings(type: CHART_TYPE, theme: CHART_THEME, size: CHART_SIZE = CHART_SIZE.DEFAULT) {
+export default function getChartSettings(
+  type: CHART_TYPE,
+  theme: CHART_THEME,
+  size: CHART_SIZE = CHART_SIZE.DEFAULT,
+): ChartWrapperOptions["options"] {
   switch (type) {
     case CHART_TYPE.COLUMN:
-      return columnChartOptions;
+      return { ...columnChartOptions, colors: getChartTheme(theme) };
     case CHART_TYPE.SCATTERPLOT:
       return {
         ...scatterplotChartOptions,

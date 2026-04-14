@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import Footer from "@/components/footer/footer";
-import Header from "@/components/header/header";
-import SideBar from "@/components/sidebar/side-bar";
+import AppProvider from "@/redux/provider";
 
 import "./globals.css";
-import AppProvider from "@/redux/provider";
+import Footer from "@/components/footer/footer";
+import Header from "@/components/header/header";
+import PageContentLayout from "@/components/page-content-layout/page-content-layout";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -29,14 +29,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}>
-      <body className="min-h-full flex flex-col">
+      <body className="min-h-screen flex flex-col">
         <AppProvider>
-          <main className="App min-h-screen flex flex-col justify-stretch">
+          <main className="App min-h-full flex flex-col justify-stretch">
             <Header />
-            <div className="container flex flex-col md:flex-row pb-[30vh] gap-4 xl:gap-8">
-              <SideBar />
-              <div className="flex-1">{children}</div>
-            </div>
+            <PageContentLayout>{children}</PageContentLayout>
             <Footer />
           </main>
         </AppProvider>

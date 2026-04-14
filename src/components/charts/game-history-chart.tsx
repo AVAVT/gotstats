@@ -1,4 +1,4 @@
-import moment from "moment";
+import { format } from "date-fns";
 import { Chart } from "react-google-charts";
 import { OGS_ROOT } from "@/api/api-constants";
 import { PlayerState } from "@/redux/player/type";
@@ -53,7 +53,7 @@ function computeGameHistory(games: Game[], player: PlayerState, insertCurrentRan
 
 function renderChartTooltip({ isBlack, isWin, date, playerRating, opponentRating, gameId }: HistoricalWinLossItem) {
   return opponentRating
-    ? `<h6><a class="${isWin ? "text-green" : "text-red"}" href="${OGS_ROOT}game/${gameId}" target="blank" rel="noopener noreferrer nofollow">${moment(date).format("MMM D, YYYY HH:mm")} - ${isWin ? "Win" : "Loss"}</a></h6>
+    ? `<h6><a class="${isWin ? "text-green" : "text-red"}" href="${OGS_ROOT}game/${gameId}" target="blank" rel="noopener noreferrer nofollow">${format(date, "MMM d, yyyy HH:mm")} - ${isWin ? "Win" : "Loss"}</a></h6>
       <div><i class="fas fa-circle" style="${isBlack ? "color: #000000;" : "color: #ffffff;"}"></i> Player rating: ${Math.round(playerRating)} (${ratingToKyuDan(playerRating)})</div>
       <div><i class="fas fa-circle" style="${isBlack ? "color: #ffffff;" : "color: #000000;"}"></i> Opponent rating: ${Math.round(opponentRating)} (${ratingToKyuDan(opponentRating)})</div>`
     : `<h6>Currently</h6>

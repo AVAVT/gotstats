@@ -1,27 +1,26 @@
 "use client";
 
 import CancelablePromise from "cancelable-promise";
+import { usePathname } from "next/navigation";
 import { Fragment } from "react/jsx-runtime";
 import { connect } from "react-redux";
-import { Button } from "vat-ui";
-import { freezeQuery, LARGE_GAME_PAGES_THRESHOLD } from "@/redux/games/game-actions";
+import { cn } from "vat-ui";
+import LoadProgress from "@/components/sidebar/load-progress";
 import { StoreState } from "@/redux/type";
-import { MIN_DATE } from "@/utils/constants";
-import LoadingIcon from "../shared/loading-icon/loading-icon";
 import AdvancedFeatures from "./advanced-features";
 import QuickLinks from "./quick-links";
 import SearchBox from "./search-box";
 
 export interface SideBarProps {
   fetching: CancelablePromise | null;
-  currentPage: number;
   totalPages: number;
   showQuickLinks: boolean;
-  freezeQuery: () => void;
-  startDate: Date;
 }
 
-function SideBar({ fetching, currentPage, totalPages, showQuickLinks, freezeQuery, startDate }: SideBarProps) {
+function SideBar({ fetching, totalPages, showQuickLinks }: SideBarProps) {
+  const path = usePathname();
+  const isYearInReview = path.includes("year-in-review");
+
   const scrollToElem = (id: string) => {
     document.getElementById(id)?.scrollIntoView();
   };
@@ -42,46 +41,11 @@ function SideBar({ fetching, currentPage, totalPages, showQuickLinks, freezeQuer
       <AdvancedFeatures />
     </Fragment>
   ) : (
-    <Fragment>
-      <div className="flex items-center">
-        <LoadingIcon
-          style={{
-            width: 32,
-            height: 32,
-            marginRight: 15,
-            flex: "0 0 auto",
-          }}
-        />
-        <div>
-          Fetching games result from OGS - Page {currentPage + 1}
-          {totalPages && ` of ${totalPages}`}
-        </div>
-      </div>
-      {totalPages >= LARGE_GAME_PAGES_THRESHOLD ? (
-        <div className="mt-3 opacity-70 text-sm">
-          Large number of games detected. Charts are automatically frozen until loading complete to prevent browser
-          freeze.
-        </div>
-      ) : (
-        startDate === MIN_DATE && (
-          <div className="mt-3">
-            <Button
-              type="button"
-              color="tertiary"
-              className="text-foreground block w-full"
-              onClick={freezeQuery}
-              title="Set filter to current games (stop charts refreshing)"
-            >
-              Freeze charts
-            </Button>
-          </div>
-        )
-      )}
-    </Fragment>
+    <LoadProgress />
   );
 
   return (
-    <div className="md:order-1 flex-none flex flex-col w-84 items-stretch sidebar">
+    <div className={cn(isYearInReview ? "hidden" : "md:order-1 flex-none flex flex-col w-84 items-stretch sidebar")}>
       <nav className="side_nav sticky top-0">
         {searchBoxOrLoadProgress}
 
@@ -102,11 +66,8 @@ function SideBar({ fetching, currentPage, totalPages, showQuickLinks, freezeQuer
 
 const mapReduxStateToProps = ({ chartsData, games }: StoreState) => ({
   fetching: games.fetching,
-  currentPage: games.fetchingPage,
   totalPages: games.fetchingTotalPage,
   showQuickLinks: chartsData.results.length > 0,
-  startDate: chartsData.startDate,
 });
-const mapDispatchToProps = { freezeQuery };
 
-export default connect(mapReduxStateToProps, mapDispatchToProps)(SideBar);
+export default connect(mapReduxStateToProps)(SideBar);

@@ -28,7 +28,7 @@ function SearchBox({ player, games, fetchPlayerData }: SearchBoxProps) {
     event.preventDefault();
 
     if (username.trim()) {
-      router.push(`/user/${username}`);
+      router.push(`/user?user=${username}`);
       fetchPlayerData(username);
 
       setUsername("");

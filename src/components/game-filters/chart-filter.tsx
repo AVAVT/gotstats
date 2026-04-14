@@ -1,7 +1,6 @@
 "use client";
 
 import { Dispatch } from "@reduxjs/toolkit";
-import moment from "moment";
 import { ChangeEvent, useState } from "react";
 import { connect } from "react-redux";
 import { Button, Input } from "vat-ui";
@@ -24,6 +23,7 @@ import {
   tournamentValues,
 } from "@/redux/charts/type";
 import { StoreState } from "@/redux/type";
+import { toDateInputValue } from "@/utils/chart-utils";
 
 const minDate = new Date("Jan 1 2008").getTime();
 const maxDate = new Date();
@@ -151,13 +151,13 @@ function ChartFilter({
             <div>
               <label htmlFor="startDate">Analyze games starting from</label>
               <Input
-                value={moment(startDate).format("yyyy-MM-DD") || ""}
+                value={toDateInputValue(startDate) || ""}
                 color="tertiary"
                 type="date"
                 name="startDate"
                 onChange={(e) => onDateChanged("startDate", new Date(e.target.value))}
-                min={moment(propMinDate).format("yyyy-MM-DD")}
-                max={moment(propMaxDate).format("yyyy-MM-DD")}
+                min={toDateInputValue(propMinDate)}
+                max={toDateInputValue(propMaxDate)}
               />
             </div>
             <div>
@@ -177,13 +177,13 @@ function ChartFilter({
               </span>
               {limitEndDate && (
                 <Input
-                  value={moment(endDate).format("yyyy-MM-DD") || ""}
+                  value={toDateInputValue(endDate) || ""}
                   color="tertiary"
                   type="date"
                   name="endDate"
                   onChange={(e) => onDateChanged("endDate", new Date(e.target.value))}
-                  min={moment(propMinDate).format("yyyy-MM-DD")}
-                  max={moment(propMaxDate).format("yyyy-MM-DD")}
+                  min={toDateInputValue(propMinDate)}
+                  max={toDateInputValue(propMaxDate)}
                 />
               )}
             </div>

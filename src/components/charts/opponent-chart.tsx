@@ -1,7 +1,6 @@
-/** biome-ignore-all lint/performance/noImgElement: Next Image require host configuration f that s */
-
+import Image from "next/image";
 import { Fragment } from "react";
-import { OGS_API_ROOT, OGS_ROOT } from "@/api/api-constants";
+import { OGS_API_PLAYER_ROOT, OGS_ROOT } from "@/api/api-constants";
 import GameLink from "@/components/shared/game-link";
 import PlayerLink from "@/components/shared/player-link";
 import { PlayerState } from "@/redux/player/type";
@@ -10,6 +9,7 @@ import { Player } from "@/type/player";
 import {
   extractHistoricalPlayerAndOpponent,
   extractPlayerAndOpponent,
+  getOpponentGameStats,
   getPlayerRank,
   getPlayerRankDisplay,
   getPlayerRating,
@@ -34,7 +34,7 @@ interface OpponentRecord {
 const MIN_GAMES_COUNT_FOR_REGULAR = 4;
 
 function computeOpponentsInfo(games: Game[], player: PlayerState) {
-  const opponents: Record<number, OpponentRecord> = {};
+  const opponentStats = getOpponentGameStats(games, player.id);
   var numberOfOpponents = 0;
   var weakestOpp: { rank: number; id?: number; username?: string; ratings?: Player["ratings"]; ranking?: number } = {
     rank: 70,
@@ -75,23 +75,6 @@ function computeOpponentsInfo(games: Game[], player: PlayerState) {
         };
     }
 
-    if (!opponents[opponent.id]) {
-      opponents[opponent.id] = {
-        opponent,
-        rank: opponentRank,
-        games: 1,
-        win: isWin ? 1 : 0,
-        loss: isWin ? 0 : 1,
-      };
-    } else {
-      opponents[opponent.id].games++;
-      if (isWin) {
-        opponents[opponent.id].win++;
-      } else {
-        opponents[opponent.id].loss++;
-      }
-    }
-
     if (opponentRank > strongestOpp.rank)
       strongestOpp = {
         ...opponent,
@@ -105,18 +88,22 @@ function computeOpponentsInfo(games: Game[], player: PlayerState) {
       };
   }
 
-  const opponentsSortedByGames = Object.values(opponents).sort((a, b) => b.games - a.games);
-  if (opponentsSortedByGames.length > 0) {
-    const mostPlayerOpp = opponentsSortedByGames[0];
+  if (opponentStats.length > 0) {
+    const mostPlayerOpp = opponentStats[0];
     mostPlayed = {
       ...mostPlayerOpp.opponent,
       games: mostPlayerOpp.games,
     };
   }
 
-  const recurringOpponents = opponentsSortedByGames.filter((o) => o.games >= MIN_GAMES_COUNT_FOR_REGULAR);
+  const recurringOpponents: OpponentRecord[] = opponentStats
+    .filter((opponent) => opponent.games >= MIN_GAMES_COUNT_FOR_REGULAR)
+    .map((opponent) => ({
+      ...opponent,
+      rank: getPlayerRank(opponent.opponent),
+    }));
 
-  numberOfOpponents = Object.keys(opponents).length;
+  numberOfOpponents = opponentStats.length;
 
   return {
     strongestOpp,
@@ -143,19 +130,19 @@ function generateChartData(games: Game[], player: PlayerState) {
       href: `${OGS_ROOT}user/view/${opponentsInfo.weakestOpp.id}/${opponentsInfo.weakestOpp.username}`,
       title: `${opponentsInfo.weakestOpp.username} (${getPlayerRankDisplay(opponentsInfo.weakestOpp as never)})`,
       style: { left: `${weakestBarRate * 3.03030303}%` },
-      img: `${OGS_API_ROOT}${opponentsInfo.weakestOpp.id}/icon?size=32`,
+      img: `${OGS_API_PLAYER_ROOT}${opponentsInfo.weakestOpp.id}/icon?size=32`,
     },
     userDisp: {
       href: `${OGS_ROOT}user/view/${player.id}/${player.username}`,
       title: `${player.username} (${getPlayerRankDisplay(player as never)})`,
       style: { left: `${userBarRate * 3.03030303}%` },
-      img: `${OGS_API_ROOT}${player.id}/icon?size=32`,
+      img: `${OGS_API_PLAYER_ROOT}${player.id}/icon?size=32`,
     },
     strongestDisp: {
       href: `${OGS_ROOT}user/view/${opponentsInfo.strongestOpp.id}/${opponentsInfo.strongestOpp.username}`,
       title: `${opponentsInfo.strongestOpp.username} (${getPlayerRankDisplay(opponentsInfo.strongestOpp as never)})`,
       style: { left: `${strongestBarRate * 3.03030303}%` },
-      img: `${OGS_API_ROOT}${opponentsInfo.strongestOpp.id}/icon?size=32`,
+      img: `${OGS_API_PLAYER_ROOT}${opponentsInfo.strongestOpp.id}/icon?size=32`,
     },
     mostPlayedDisp: opponentsInfo.mostPlayed as Player & { games: number },
     strongestDefeatedDisp: opponentsInfo.strongestDefeated,
@@ -206,7 +193,7 @@ export default function OpponentChart({ title, id, games, player }: OpponentChar
               title={weakestDisp.title}
               style={weakestDisp.style}
             >
-              <img width={32} height={32} src={weakestDisp.img} alt={weakestDisp.title} />
+              <Image width={32} height={32} src={weakestDisp.img} alt={weakestDisp.title} />
             </a>
             <a
               target="_blank"
@@ -217,7 +204,7 @@ export default function OpponentChart({ title, id, games, player }: OpponentChar
               title={userDisp.title}
               style={userDisp.style}
             >
-              <img width={32} height={32} src={userDisp.img} alt={userDisp.title} />
+              <Image width={32} height={32} src={userDisp.img} alt={userDisp.title} />
             </a>
             <a
               target="_blank"
@@ -228,7 +215,7 @@ export default function OpponentChart({ title, id, games, player }: OpponentChar
               title={strongestDisp.title}
               style={strongestDisp.style}
             >
-              <img width={32} height={32} src={strongestDisp.img} alt={strongestDisp.title} />
+              <Image width={32} height={32} src={strongestDisp.img} alt={strongestDisp.title} />
             </a>
           </div>
           <ul className="ruler">

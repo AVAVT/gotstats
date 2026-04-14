@@ -1,14 +1,19 @@
-import moment from "moment";
-import "moment-precise-range-plugin";
+import {
+  differenceInCalendarDays,
+  differenceInMilliseconds,
+  format,
+  formatDuration,
+  intervalToDuration,
+} from "date-fns";
 import GameLink from "@/components/shared/game-link";
 import PlayerLink from "@/components/shared/player-link";
 import { PlayerState } from "@/redux/player/type";
 import { Game } from "@/type/game";
 import { Player } from "@/type/player";
 import {
-  daysDifferenceBetween,
   extractPlayerAndOpponent,
   getHighestRankAchieved,
+  getLongestWinStreak,
   getPlayerRankDisplay,
   isPlayerWin,
 } from "@/utils/chart-utils";
@@ -27,9 +32,6 @@ function computeMiscInfo(analyzingGames: Game[], player: PlayerState) {
 
   let totalLosses = 0;
 
-  let longestStreak: { streak: number; start?: Game; end?: Game } = { streak: 0 };
-  let currentStreak: { streak: number; start?: Game; end?: Game } = { streak: 0 };
-
   let gamesOnMostActiveDay = 0,
     gamesOnCurrentDay = 0;
 
@@ -39,16 +41,6 @@ function computeMiscInfo(analyzingGames: Game[], player: PlayerState) {
 
   for (const game of analyzingGames) {
     const isWin = isPlayerWin(game, player.id);
-
-    // Longest streak
-    if (isWin) {
-      currentStreak.streak++;
-      currentStreak.start = game;
-
-      if (!currentStreak.end) currentStreak.end = game;
-
-      if (currentStreak.streak > longestStreak.streak) longestStreak = currentStreak;
-    } else currentStreak = { streak: 0 };
 
     // Biggest win
     if (isWin) {
@@ -70,7 +62,7 @@ function computeMiscInfo(analyzingGames: Game[], player: PlayerState) {
     // Most active day
     const gameDay = new Date(game.ended);
     gameDay.setHours(0, 0, 0, 0);
-    if (daysDifferenceBetween(currentDay, gameDay) !== 0) {
+    if (differenceInCalendarDays(currentDay, gameDay) !== 0) {
       currentDay = gameDay;
       gamesOnCurrentDay = 1;
     } else {
@@ -84,7 +76,7 @@ function computeMiscInfo(analyzingGames: Game[], player: PlayerState) {
 
     // Game duration
     if (game.ended && game.started) {
-      const gameDuration = moment.duration(moment(game.ended).diff(moment(game.started))).asMilliseconds();
+      const gameDuration = differenceInMilliseconds(new Date(game.ended), new Date(game.started));
       if (gameDuration > longestGame.duration) {
         longestGame = {
           game,
@@ -104,7 +96,7 @@ function computeMiscInfo(analyzingGames: Game[], player: PlayerState) {
   let gamesPerDay = 0;
   if (analyzingGames.length) {
     const dateOfFirstGame = new Date(analyzingGames[analyzingGames.length - 1].started);
-    const daysSinceStart = daysDifferenceBetween(new Date(), dateOfFirstGame);
+    const daysSinceStart = differenceInCalendarDays(new Date(), dateOfFirstGame);
     gamesPerDay = analyzingGames.length / daysSinceStart;
   }
 
@@ -116,6 +108,11 @@ function computeMiscInfo(analyzingGames: Game[], player: PlayerState) {
       }
       return result;
     }, []).length;
+
+  const longestStreak: { streak: number; start?: Game; end?: Game } = getLongestWinStreak(
+    analyzingGames,
+    player.id,
+  ) ?? { streak: 0 };
 
   return {
     memberSince,
@@ -164,16 +161,23 @@ export default function MiscChart({ title, id, games, player }: MiscChartProps) 
       after a monumental win on <GameLink game={highestRank.game} />.
     </li>
   );
+  const mostActiveDayLabel = mostActiveDay ? format(mostActiveDay, "dd MMM, yyyy") : "N/A";
+  const longestGameDurationLabel = longestGame
+    ? formatDuration(intervalToDuration({ start: new Date(longestGame.started), end: new Date(longestGame.ended) }), {
+        format: ["years", "months", "days", "hours", "minutes", "seconds"],
+      }) || "0 seconds"
+    : "";
+
   return (
     <section className="stats_block">
       <h2 id={id} className="text-center">
         {title}
       </h2>
       <ul className="info_list list-disc pl-4">
-        <li>Member since: {moment(memberSince).format("DD MMM, YYYY")}.</li>
+        <li>Member since: {format(memberSince, "dd MMM, yyyy")}.</li>
         <li>Plays {gamesPerDay.toFixed(3)} games per day on average.</li>
         <li>
-          Most active day: {moment(mostActiveDay).format("DD MMM, YYYY")} with {gamesOnMostActiveDay} finished games.
+          Most active day: {mostActiveDayLabel} with {gamesOnMostActiveDay} finished games.
         </li>
         <li>Played in {uniqueTournaments} tournaments.</li>
         <li>
@@ -184,8 +188,7 @@ export default function MiscChart({ title, id, games, player }: MiscChartProps) 
         {highestRatingDisplay}
         {longestGame && (
           <li>
-            Longest game: <GameLink game={longestGame} /> lasting{" "}
-            {moment.preciseDiff(moment(longestGame.ended), moment(longestGame.started))}
+            Longest game: <GameLink game={longestGame} /> lasting {longestGameDurationLabel}
           </li>
         )}
         {totalLosses >= 50 && (

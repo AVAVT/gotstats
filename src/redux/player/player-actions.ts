@@ -26,7 +26,7 @@ export const fetchPlayer =
     try {
       const userIdPromise = Api.fetchUserId(user);
       dispatch(fetchPlayerStart(userIdPromise));
-      const userId = await userIdPromise;
+      const userId = Number(await userIdPromise);
 
       const userDataPromise = Api.fetchUserDataById(userId);
       dispatch(fetchPlayerStart(userDataPromise));

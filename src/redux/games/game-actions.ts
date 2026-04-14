@@ -94,6 +94,7 @@ export const fetchGames =
       };
 
       await savePlayerData(saveData);
+      console.log("Player data saved");
     } catch (error) {
       console.error(error);
       if (typeof error === "string") dispatch(fetchGamesFailure(error));

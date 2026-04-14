@@ -13,17 +13,27 @@ import Welcome from "../welcome/welcome";
 export interface StatisticsProps {
   getPlayerData: (user: string) => void;
   player: PlayerState;
-  user?: string;
   showLoading: boolean;
   showStatistics: boolean;
+  user?: string;
 }
 
-function Statistics({ getPlayerData, user, showLoading, showStatistics }: StatisticsProps) {
+function StatisticsPage({ getPlayerData, user, player, showLoading, showStatistics }: StatisticsProps) {
   useEffect(() => {
-    if (user) {
+    if (user && user !== player.id.toString() && user !== player.username) {
       getPlayerData(user);
     }
-  }, [user, getPlayerData]);
+  }, [user, getPlayerData, player.id, player.username]);
+
+  useEffect(() => {
+    // TODO is this the only way? Seems stupid
+    if (player.username) {
+      document.title = `${player.username} statistics | Got Stats?`;
+    }
+    return () => {
+      document.title = "Got Stats?";
+    };
+  }, [player.username]);
 
   return <div className="pt-4">{showStatistics ? <ChartList /> : showLoading ? <LoadingUser /> : <Welcome />}</div>;
 }
@@ -38,4 +48,4 @@ const mapReduxDispatchToProps = (dispatch: ThunkDispatch<StoreState, void, Playe
   getPlayerData: (user: string) => dispatch(fetchPlayer(user)),
 });
 
-export default connect(mapReduxStateToProps, mapReduxDispatchToProps)(Statistics);
+export default connect(mapReduxStateToProps, mapReduxDispatchToProps)(StatisticsPage);

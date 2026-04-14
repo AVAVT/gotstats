@@ -36,7 +36,7 @@ function AdvancedFeatures({ player, games, importPlayerData }: AdvancedFeaturesP
 
   const readImportedJSON = (jsonString: string) => {
     const data = JSON.parse(jsonString);
-    router.push(`/user/${data.player.username}`);
+    router.push(`/user?user=${data.player.username}`);
     importPlayerData(data);
   };
 
