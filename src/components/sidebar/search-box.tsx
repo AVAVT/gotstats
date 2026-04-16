@@ -9,7 +9,6 @@ import { GameState } from "@/redux/games/type";
 import { fetchPlayer } from "@/redux/player/player-actions";
 import { PlayerAction, PlayerState } from "@/redux/player/type";
 import { StoreState } from "@/redux/type";
-import { toQueryUrl } from "@/utils/path-utils";
 
 export type SearchBoxProps = {
   player: PlayerState;
@@ -29,7 +28,7 @@ function SearchBox({ player, games, fetchPlayerData }: SearchBoxProps) {
     event.preventDefault();
 
     if (username.trim()) {
-      router.push(toQueryUrl("/user", { user: username }));
+      router.push(`/user?user=${username}`);
       fetchPlayerData(username);
 
       setUsername("");

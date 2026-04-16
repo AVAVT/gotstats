@@ -11,7 +11,6 @@ import { GameState } from "@/redux/games/type";
 import { importPlayer } from "@/redux/player/player-actions";
 import { PlayerAction, PlayerState } from "@/redux/player/type";
 import { StoreState } from "@/redux/type";
-import { toQueryUrl } from "@/utils/path-utils";
 
 export type AdvancedFeaturesProps = {
   player: PlayerState;
@@ -37,7 +36,7 @@ function AdvancedFeatures({ player, games, importPlayerData }: AdvancedFeaturesP
 
   const readImportedJSON = (jsonString: string) => {
     const data = JSON.parse(jsonString);
-    router.push(toQueryUrl("/user", { user: data.player.username }));
+    router.push(`/user?user=${data.player.username}`);
     importPlayerData(data);
   };
 
