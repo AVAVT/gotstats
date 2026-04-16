@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { connect } from "react-redux";
 import { cn } from "vat-ui";
+import PathLink from "@/components/shared/path-link";
 import { GameState } from "@/redux/games/type";
 import { PlayerState } from "@/redux/player/type";
 import { StoreState } from "@/redux/type";
@@ -43,19 +44,21 @@ function Header({ player, games }: HeaderProps) {
 
       {username && results.length > 0 && (
         <div className="p:0 md:pl-8 mt-4 md:mt-0 flex gap-8 justify-center md:justify-start items-baseline text-3xl font-light">
-          <Link
-            href={`/user?user=${id}`}
+          <PathLink
+            route="/user"
+            params={{ user: id }}
             className={cn("hover:underline", isYearInReview ? "text-foreground-dark!" : "text-foreground!")}
           >
             Statistics
-          </Link>
+          </PathLink>
           {fetching ? (
             <span className={cn("cursor-progress", isYearInReview ? "text-foreground!" : "text-foreground-dark!")}>
               Year in Review
             </span>
           ) : (
-            <Link
-              href={`/year-in-review?user=${id}&year=${currentYear - 1}`}
+            <PathLink
+              route="/year-in-review"
+              params={{ user: id, year: currentYear - 1 }}
               className={cn(
                 "hover:underline",
                 isYearInReview ? "text-foreground!" : "text-foreground-dark!",
@@ -63,7 +66,7 @@ function Header({ player, games }: HeaderProps) {
               )}
             >
               Year in Review
-            </Link>
+            </PathLink>
           )}
         </div>
       )}

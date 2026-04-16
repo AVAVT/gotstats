@@ -41,7 +41,7 @@ export default function YearInReview({ player, review, year, isShared = false }:
     const end = new Date(start.getTime() + 30 * 60 * 1000);
     const eventTitle = "Your OGS Year in Review is ready!";
     const eventDescription = `Your ${currentYear} Year in Review is ready, check it out at GotStats!`;
-    const eventUrl = `${getAppRootUrl()}/year-in-review?user=${player.id}&year=${currentYear}`;
+    const eventUrl = `${getAppRootUrl()}/year-in-review/${player.id}/${currentYear}`;
 
     const appleDevice =
       /Mac|iPhone|iPad|iPod/i.test(navigator.platform) || /Mac|iPhone|iPad|iPod/i.test(navigator.userAgent);
