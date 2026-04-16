@@ -1,0 +1,5 @@
+1:"$Sreact.fragment"
+2:I[96481,["/gotstats/_next/static/chunks/110n1pedgt11g.js","/gotstats/_next/static/chunks/0xq5xgtjnyqqw.js","/gotstats/_next/static/chunks/006-x76wsyl0o.js","/gotstats/_next/static/chunks/0ff8.1.v_yh7w.js","/gotstats/_next/static/chunks/07o5b8zw4axhe.js"],"OutletBoundary"]
+3:"$Sreact.suspense"
+0:{"rsc":["$","$1","c",{"children":[["$","div",null,{"children":[["$","h2",null,{"children":"Welcome!"}],["$","p",null,{"className":"instruction","children":"Start by entering username into the search field to the right (case-sensitive)."}],["$","p",null,{"children":["You can also use userID: my profile page is ",["$","em",null,{"children":"https://online-go.com/user/view/999999"}],", meaning my user ID is 999999."]}]]}],null,["$","$L2",null,{"children":["$","$3",null,{"name":"Next.MetadataOutlet","children":"$@4"}]}]]}],"isPartial":false,"staleTime":300,"varyParams":null,"buildId":"DwMt80vaApxOsv7cTJk4J"}
+4:null
