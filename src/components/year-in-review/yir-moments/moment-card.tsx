@@ -26,7 +26,7 @@ export default function MomentCard({
     <div className={cn("flex flex-col lg:flex-row gap-10 items-center", isRight ? "justify-end" : "justify-start")}>
       <div
         className={cn(
-          "w-[400px] h-[400px] overflow-hidden rounded-lg shadow-lg relative px-12 py-8 flex flex-col justify-end flex-none",
+          "w-[300px] h-[300px] sm:w-[400px] sm:h-[400px] overflow-hidden rounded-lg shadow-lg relative px-12 py-8 flex flex-col justify-end flex-none",
           "bg-linear-9 from-background to-tertiary",
           isRight ? "order-2" : "",
         )}

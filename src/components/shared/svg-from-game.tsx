@@ -32,7 +32,7 @@ function parseFinalBoardFromSgf(sgf: string, width: number, height: number): Map
     let hasLiberty = false;
 
     while (queue.length > 0) {
-      // biome-ignore lint/style/noNonNullAssertion: queue is non-empty
+      // biome-ignore lint/style/noNonNullAssertion: wth biome learn to read
       const [x, y] = queue.shift()!;
       const key = `${x},${y}`;
       if (visited.has(key)) continue;
@@ -114,6 +114,7 @@ function parseFinalBoardFromSgf(sgf: string, width: number, height: number): Map
 
 const requestMap = new Map<number, Promise<string>>();
 
+// Mimick OGS
 function getStarPoints(width: number, height: number): [number, number][] {
   if (width === 19 && height === 19) {
     return [
@@ -175,7 +176,6 @@ export default function SvgFromGame({
   useEffect(() => {
     let cancelled = false;
 
-    // While loading SGF for a new game, render background-only placeholder.
     setBoardState(null);
 
     const fetchSgf = async () => {
@@ -203,16 +203,19 @@ export default function SvgFromGame({
 
         const sgf = await request;
 
-        // Best-effort persistence; rendering should still succeed if IndexedDB write fails.
-        void saveGameSgf(game.id, sgf).catch(() => {});
+        try {
+          void saveGameSgf(game.id, sgf);
+        } catch (err) {
+          console.error(err);
+        }
 
         if (cancelled) {
           return;
         }
 
         setBoardState(parseFinalBoardFromSgf(sgf, game.width, game.height));
-      } catch {
-        // Keep placeholder board if fetch fails.
+      } catch (err) {
+        console.error(err);
       }
     };
 
@@ -235,7 +238,6 @@ export default function SvgFromGame({
   );
   const stoneRadius = useMemo(() => Math.max(2, Math.min(cellX, cellY) * 0.42), [cellX, cellY]);
 
-  // Before SGF is fetched, render background only.
   if (boardState === null) {
     return (
       <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} role="img" aria-label="Loading game board">

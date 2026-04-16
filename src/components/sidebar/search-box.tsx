@@ -9,6 +9,7 @@ import { GameState } from "@/redux/games/type";
 import { fetchPlayer } from "@/redux/player/player-actions";
 import { PlayerAction, PlayerState } from "@/redux/player/type";
 import { StoreState } from "@/redux/type";
+import { getAppRootUrl } from "../year-in-review/utils";
 
 export type SearchBoxProps = {
   player: PlayerState;
@@ -28,21 +29,21 @@ function SearchBox({ player, games, fetchPlayerData }: SearchBoxProps) {
     event.preventDefault();
 
     if (username.trim()) {
-      router.push(`/user?user=${username}`);
-      fetchPlayerData(username);
+      router.push(`/user?user=${encodeURIComponent(username.trim())}`);
+      fetchPlayerData(username.trim());
 
       setUsername("");
     }
   };
 
   return (
-    <form onSubmit={submit}>
+    <form action={`${getAppRootUrl()}/user`} onSubmit={submit}>
       <div className="flex">
         <Input
           color="primary"
           value={username}
           onChange={updateSearchUser}
-          name="id"
+          name="user"
           type="text"
           placeholder="Username or ID"
           className="rounded-r-none border-r-0"

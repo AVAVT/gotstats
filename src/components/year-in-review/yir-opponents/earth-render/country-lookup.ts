@@ -1,9 +1,5 @@
 /**
- * Utility for resolving OGS country codes (as used in country-selectbox.html)
- * to SOVEREIGNT names found in countries.json (Natural Earth ne_110m dataset).
- *
- * Returns null when the code has no matching feature in the GeoJSON (e.g. regional
- * codes, organisations, fictional entries, or small countries omitted from the map).
+ * Resolves OGS country codes -> SOVEREIGNT names found in countries.json
  */
 
 import countries from "./countries.json";
@@ -23,9 +19,6 @@ type CountriesCollection = {
 
 const countriesCollection = countries as CountriesCollection;
 
-// ---------------------------------------------------------------------------
-// Static map: selectbox option value → display name (innerHTML)
-// ---------------------------------------------------------------------------
 export const CODE_TO_NAME: Record<string, string> = {
   af: "Afghanistan",
   "002": "Africa",
@@ -369,10 +362,6 @@ export const CODE_TO_NAME: Record<string, string> = {
   _United_Federation_of_Planets: "United Federation of Planets",
 } as const;
 
-// ---------------------------------------------------------------------------
-// Normalisation: selectbox display name → SOVEREIGNT in countries.json
-// Entries are only needed where the two strings differ.
-// ---------------------------------------------------------------------------
 export const NAME_TO_SOVEREIGNT: Record<string, string> = {
   Bahamas: "The Bahamas",
   "Bosnia & Herzegovina": "Bosnia and Herzegovina",
@@ -390,10 +379,8 @@ export const NAME_TO_SOVEREIGNT: Record<string, string> = {
   "United States": "United States of America",
 } as const;
 
-// Pre-build a Set of all SOVEREIGNT values present in the GeoJSON for O(1) lookups.
 const availableSovereignties = new Set(countriesCollection.features.map((f) => f.properties.SOVEREIGNT));
 
-// Generated from capital-lat-long.csv
 const SOVEREIGNTY_LAT_LON: Record<string, [number, number]> = {
   Afghanistan: [34.5289, 69.1725],
   Albania: [41.3275, 19.8189],
@@ -591,13 +578,6 @@ const SOVEREIGNTY_LAT_LON: Record<string, [number, number]> = {
   Zimbabwe: [-17.8294, 31.0539],
 };
 
-/**
- * Given an OGS country `code` (the `value` attribute from country-selectbox.html),
- * returns the corresponding SOVEREIGNT string used in countries.json, or `null` if:
- * - the code is unknown,
- * - the code refers to a region / organisation / fictional entry, or
- * - the country is not present in the GeoJSON (e.g. very small states).
- */
 export function resolveCountrySovereignty(code: string): string | null {
   const displayName = CODE_TO_NAME[code];
   if (!displayName) return null;
@@ -610,47 +590,5 @@ export function getCountryLatLon(sovereignt: string): [number, number] | null {
   const fromCapitalCsv = SOVEREIGNTY_LAT_LON[sovereignt];
   if (fromCapitalCsv) return fromCapitalCsv;
 
-  const feature = countriesCollection.features.find((f) => f.properties.SOVEREIGNT === sovereignt);
-  if (!feature) return null;
-
-  return getFeatureCenterLatLon(feature);
-}
-
-/**
- * Calculates the bounding box center of a GeoJSON feature.
- * Returns [latitude, longitude] in degrees.
- */
-export function getFeatureCenterLatLon(feature: {
-  geometry: {
-    coordinates: unknown;
-  };
-}): [number, number] {
-  let minLat = Infinity;
-  let maxLat = -Infinity;
-  let minLon = Infinity;
-  let maxLon = -Infinity;
-
-  function extractCoords(coords: unknown): void {
-    if (Array.isArray(coords)) {
-      if (coords.length > 0 && typeof coords[0] === "number") {
-        // This is a [lon, lat] coordinate pair
-        const lon = coords[0] as number;
-        const lat = coords[1] as number;
-        minLat = Math.min(minLat, lat);
-        maxLat = Math.max(maxLat, lat);
-        minLon = Math.min(minLon, lon);
-        maxLon = Math.max(maxLon, lon);
-      } else {
-        // This is a higher-dimensional array, recurse
-        for (const coord of coords) {
-          extractCoords(coord);
-        }
-      }
-    }
-  }
-
-  extractCoords(feature.geometry.coordinates);
-  const centerLat = (minLat + maxLat) / 2;
-  const centerLon = (minLon + maxLon) / 2;
-  return [centerLat, centerLon];
+  return null;
 }

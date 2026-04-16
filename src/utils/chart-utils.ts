@@ -72,6 +72,8 @@ export type WinStreak = {
   end: Game;
 };
 
+const MIN_WIN_STREAK_LENGTH = 4;
+
 export const getLongestWinStreak = (games: Game[], playerId: number): WinStreak | null => {
   let longestStreak = { streak: 0, start: null as Game | null, end: null as Game | null };
   let currentStreak = { streak: 0, start: null as Game | null, end: null as Game | null };
@@ -93,7 +95,7 @@ export const getLongestWinStreak = (games: Game[], playerId: number): WinStreak 
     currentStreak = { streak: 0, start: null, end: null };
   }
 
-  if (longestStreak.streak === 0 || !longestStreak.start || !longestStreak.end) {
+  if (longestStreak.streak < MIN_WIN_STREAK_LENGTH || !longestStreak.start || !longestStreak.end) {
     return null;
   }
 
@@ -178,7 +180,6 @@ const getFirstRankedGameBefore = (games: Game[], targetGame: Game | null) => {
   const targetIndex = games.findIndex((game) => game.id === targetGame.id);
   if (targetIndex < 0 || targetIndex === games.length - 1) return null;
 
-  // Games are sorted descending by date, so higher indexes are earlier chronologically.
   for (let i = targetIndex + 1; i < games.length; i++) {
     if (games[i].ranked) {
       return games[i];
@@ -192,7 +193,6 @@ export const getHighestRatingAchieved = (analyzingGames: Game[], playerId: numbe
   let ratingDetectedIn: Game | null = null;
   let ratings = { overall: { rating: 0 } };
 
-  // Iterate oldest -> newest to keep the first game where the peak rating was reached.
   for (let i = analyzingGames.length - 1; i >= 0; i--) {
     const game = analyzingGames[i];
     const gameRatings = getHistoricalPlayerRatings(game, playerId);

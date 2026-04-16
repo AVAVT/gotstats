@@ -7,7 +7,7 @@ export default function YirMoments({ review, player }: { review: YearInReviewDat
   return (
     <section id="yir-moments" className="container">
       <div className="text-3xl lg:text-4xl font-bold text-shadow-lg text-center mb-24">Moments to Remember</div>
-      <div className="flex flex-col gap-20 justify-center">
+      <div className="flex flex-col gap-40 lg:gap-20 justify-center">
         {review.momentsToRemember.firstWinOfTheYear && (
           <MomentCard title="FIRST WIN OF THE YEAR" game={review.momentsToRemember.firstWinOfTheYear.game} />
         )}

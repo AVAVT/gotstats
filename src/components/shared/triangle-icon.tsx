@@ -21,13 +21,13 @@ export default function TriangleIcon({
         borderLeftColor: "transparent",
         borderRightColor: "transparent",
         borderBottomColor: `var(--${color})`,
-        transform: `rotate(${rotateFromDirection(direction)}deg)`,
+        transform: `rotate(${degreeFromDirection(direction)}deg)`,
       }}
     />
   );
 }
 
-function rotateFromDirection(direction: "up" | "down" | "left" | "right") {
+function degreeFromDirection(direction: "up" | "down" | "left" | "right") {
   switch (direction) {
     case "down":
       return "180";

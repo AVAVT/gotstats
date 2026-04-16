@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { Fragment } from "react/jsx-runtime";
 import { Button } from "vat-ui";
 import { OGS_API_PLAYER_ROOT, OGS_ROOT } from "@/api/api-constants";
 import { PlayerState } from "@/redux/player/type";
@@ -44,35 +45,46 @@ export default function YirIntroduction({
         />{" "}
         {username}'s
       </ExtLink>
-      <div className="text-6xl lg:text-8xl">{year} in review</div>
+      <div className="text-6xl lg:text-8xl text-center">{year} in review</div>
 
-      {isShared ? null : (
-        <div className="mt-8 flex gap-10">
-          <Button
-            type="button"
-            color="primary"
-            variant="outline"
-            className="hover:bg-primary hover:text-background"
-            onClick={onShare}
-          >
-            {copied ? "COPIED!" : "SHARE THIS PAGE"}
-          </Button>
-          <Button
-            type="button"
-            color="primary"
-            variant="outline"
-            className="hover:bg-primary hover:text-background"
-            onClick={onRemindNextYear}
-          >
-            REMIND ME NEXT YEAR
-          </Button>
-        </div>
+      {review.gamesPlayed.total > 0 ? (
+        <Fragment>
+          {isShared ? null : (
+            <div className="mt-8 flex gap-10">
+              <Button
+                type="button"
+                color="primary"
+                variant="outline"
+                className="hover:bg-primary hover:text-background"
+                onClick={onShare}
+              >
+                {copied ? "COPIED!" : "SHARE THIS PAGE"}
+              </Button>
+              <Button
+                type="button"
+                color="primary"
+                variant="outline"
+                className="hover:bg-primary hover:text-background"
+                onClick={onRemindNextYear}
+              >
+                REMIND ME NEXT YEAR
+              </Button>
+            </div>
+          )}
+          <div className="mt-16 text-2xl lg:text-3xl text-center">
+            This year, {username} played {review.gamesPlayed.total} games and finished on a{" "}
+            {formatPercent(review.winRate.value)} win rate!
+          </div>
+          <div className="mt-4 text-xl font-normal text-foreground-dark">Let's look back at some highlights...</div>
+        </Fragment>
+      ) : (
+        <Fragment>
+          <div className="mt-16 text-2xl lg:text-3xl text-center">
+            Unfortunately, {username} didn't play any game this year, so there is no summary
+          </div>
+          <div className="mt-4 text-xl font-normal text-foreground-dark">I hope next year's better!</div>
+        </Fragment>
       )}
-      <div className="mt-16 text-2xl lg:text-3xl text-center">
-        This year, {username} played {review.gamesPlayed.total} games and finished on a{" "}
-        {formatPercent(review.winRate.value)} win rate!
-      </div>
-      <div className="mt-4 text-xl font-normal text-foreground-dark">Let's look back at some highlights...</div>
     </section>
   );
 }

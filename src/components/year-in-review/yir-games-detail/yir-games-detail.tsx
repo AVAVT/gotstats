@@ -30,15 +30,7 @@ function StreakGameCard({ game, className = "" }: { game: Game; className?: stri
   );
 }
 
-export default function YirGamesDetail({
-  review,
-  username,
-  year,
-}: {
-  review: YearInReviewData;
-  username: string;
-  year: number;
-}) {
+export default function YirGamesDetail({ review, username }: { review: YearInReviewData; username: string }) {
   const playMonthChartData = [
     ["Time Settings", "Correspondence", "Live", "Blitz"],
     ...review.gamesPlayedByMonth.map((item) => [
@@ -96,7 +88,7 @@ export default function YirGamesDetail({
               ))}
             </div>
           </div>
-          <div className="overflow-x-hidden flex justify-start items-center gap-4 mt-8">
+          <div className="overflow-x-hidden pb-4 flex justify-start items-center gap-4 mt-8">
             <div className="flex flex-col gap-4 flex-none">
               <YearInCard className="flex justify-stretch items-center gap-4 md:gap-6 lg:gap-12 whitespace-nowrap">
                 <div>
@@ -127,7 +119,7 @@ export default function YirGamesDetail({
           options={monthlyChartSettings}
           data={playMonthChartData}
           width={"100%"}
-          height={"60vh"}
+          height={"800px"}
         />
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-60">

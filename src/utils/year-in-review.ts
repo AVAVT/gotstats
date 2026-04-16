@@ -406,18 +406,19 @@ export function getYearInReview(player: PlayerState, games: Game[], year: number
 
     if (game.ranked) {
       const opponentRating = getHistoricalOpponentRating(game, player.id);
-      if (isWin && opponentRating > upsettingWinRating) {
+      const playerRating = getHistoricalPlayerRating(game, player.id);
+
+      if (isWin && opponentRating > playerRating && opponentRating > upsettingWinRating) {
         upsettingWin = game;
         upsettingWinRating = opponentRating;
       }
 
-      if (!isWin && opponentRating < hardDefeatRating) {
+      if (!isWin && opponentRating < playerRating && opponentRating < hardDefeatRating) {
         hardDefeat = game;
         hardDefeatRating = opponentRating;
       }
     }
 
-    // gamesInYear is sorted descending (latest first), so the last seen win is the first win chronologically.
     if (isWin) {
       firstWinOfTheYear = game;
     }

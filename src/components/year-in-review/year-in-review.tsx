@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { Fragment, useCallback, useState } from "react";
 import { PlayerState } from "@/redux/player/type";
 import { buildGoogleCalendarUrl, buildIcsContent, getNextYearJanFirstAt11Local } from "@/utils/calendar-utils";
 import { encodeShareData } from "@/utils/share-utils";
@@ -41,7 +41,7 @@ export default function YearInReview({ player, review, year, isShared = false }:
     const end = new Date(start.getTime() + 30 * 60 * 1000);
     const eventTitle = "Your OGS Year in Review is ready!";
     const eventDescription = `Your ${currentYear} Year in Review is ready, check it out at GotStats!`;
-    const eventUrl = `${getAppRootUrl()}/year-in-review?user=${player.id}&year=${currentYear}`;
+    const eventUrl = `${getAppRootUrl()}/year-in-review?user=${player.id}`;
 
     const appleDevice =
       /Mac|iPhone|iPad|iPod/i.test(navigator.platform) || /Mac|iPhone|iPad|iPod/i.test(navigator.userAgent);
@@ -88,22 +88,26 @@ export default function YearInReview({ player, review, year, isShared = false }:
         onShare={handleShare}
         onRemindNextYear={handleRemindNextYear}
       />
-      <YirQuicklook review={review} year={year} />
-      <YirTimeSettings review={review} username={username} />
-      <YirOpponents review={review} username={username} year={year} />
-      <div className="text-5xl bg-linear-to-br from-tertiary to-chart-3 font-bold text-shadow-lg text-center mt-80 mb-40 py-30">
-        Let's look at the games in detail...
-      </div>
-      <YirGamesDetail review={review} username={username} year={year} />
-      <YirMoments review={review} player={player} />
-      <YirClosure
-        player={player}
-        year={year}
-        isShared={isShared}
-        copied={copied}
-        onShare={handleShare}
-        onRemindNextYear={handleRemindNextYear}
-      />
+      {review.gamesPlayed.total > 0 && (
+        <Fragment>
+          <YirQuicklook review={review} year={year} />
+          <YirTimeSettings review={review} username={username} />
+          <YirOpponents review={review} username={username} year={year} />
+          <div className="text-5xl bg-linear-to-br from-tertiary to-chart-3 font-bold text-shadow-lg text-center mt-80 mb-40 py-30 px-6">
+            Let's look at the games in detail...
+          </div>
+          <YirGamesDetail review={review} username={username} />
+          <YirMoments review={review} player={player} />
+          <YirClosure
+            player={player}
+            year={year}
+            isShared={isShared}
+            copied={copied}
+            onShare={handleShare}
+            onRemindNextYear={handleRemindNextYear}
+          />
+        </Fragment>
+      )}
     </div>
   );
 }

@@ -44,7 +44,7 @@ export const monthlyChartSettings: ChartWrapperOptions["options"] = {
     },
   },
   chartArea: {
-    top: 100,
+    top: 90,
     left: 1,
     right: 1,
     bottom: 100,

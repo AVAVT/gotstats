@@ -51,7 +51,7 @@ export default function YirOpponents({
       <div className="text-3xl lg:text-4xl font-bold text-shadow-lg text-center mb-24">
         Who did {username} play with?
       </div>
-      <div className="container grid grid-cols-1 xl:grid-cols-2 gap-32 xl:gap-0 items-stretch mb-24">
+      <div className="container grid grid-cols-1 xl:grid-cols-2 gap-6 xl:gap-0 items-stretch mb-24 overflow-x-hidden">
         <YearInCard className="flex gap-8 justify-center items-center">
           <Chart
             className="flex-0 drop-shadow-lg"
@@ -74,7 +74,7 @@ export default function YirOpponents({
             </div>
           </div>
         </YearInCard>
-        <div className="text-center text-5xl flex justify-center items-center">
+        <div className="text-center text-5xl flex justify-center items-center py-[2em] relative scale-60 sm:scale-100">
           <span className="inline-block relative text-shadow-lg">
             {review.opponents.mostPlayedOpponents.map((opp, index) => {
               const translateX = ["0", "-90%", "130%", "100%", "-120%"][index];
@@ -92,7 +92,7 @@ export default function YirOpponents({
                     transform: `scale(${index === 0 ? 1 : 0.5}) translate(${translateX}, ${translateY})`,
                   }}
                 >
-                  <span className="">
+                  <span className={index === 0 ? "font-bold" : ""}>
                     <PlayerLink iconSize={40} player={opp.opponent} />
                     {opp.isNewPlayerMet && <span className="text-base align-top">New</span>}
                   </span>

@@ -7,7 +7,7 @@ import * as THREE from "three";
 import { chartColor1, foregroundDarkColor, tertiaryColor } from "../../../charts/settings";
 import countries from "./countries.json";
 import { getCountryLatLon, resolveCountrySovereignty } from "./country-lookup";
-import { drawThreeGeo } from "./threeGeoJSON";
+import { drawThreeGeo } from "./three-geo-json";
 
 type CountryFeature = {
   properties: {
