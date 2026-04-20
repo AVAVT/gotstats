@@ -92,7 +92,7 @@ export default function YearInReview({ player, review, year, isShared = false }:
         <Fragment>
           <YirQuicklook review={review} year={year} />
           <YirTimeSettings review={review} username={username} />
-          <YirOpponents review={review} username={username} year={year} />
+          <YirOpponents review={review} username={username} />
           <div className="text-5xl bg-linear-to-br from-tertiary to-chart-3 font-bold text-shadow-lg text-center mt-80 mb-40 py-30 px-6">
             Let's look at the games in detail...
           </div>

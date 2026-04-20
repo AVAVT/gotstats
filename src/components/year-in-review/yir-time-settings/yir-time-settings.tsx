@@ -13,11 +13,11 @@ export default function YirTimeSettings({ review, username }: { review: YearInRe
       </div>
       <div className="flex flex-col items-stretch gap-2">
         <div className="flex justify-between text-xl items-baseline">
-          <div className="flex flex-col sm:flex-row items-start sm:items-baseline">
+          <div className="flex flex-col sm:flex-row items-start sm:items-baseline gap-2">
             <span className="text-2xl md:text-5xl font-bold">{review.timeSettings.realTime}</span>{" "}
             <span className="text-sm md:text-base text-foreground-dark">REAL-TIME GAMES</span>
           </div>
-          <div className="flex flex-col sm:flex-row items-end sm:items-baseline">
+          <div className="flex flex-col sm:flex-row items-end sm:items-baseline gap-2">
             <span className="text-2xl md:text-5xl font-bold sm:order-2">{review.timeSettings.correspondence}</span>
             <span className="text-sm md:text-base text-foreground-dark sm:order-1">CORRESPONDENCE GAMES</span>{" "}
           </div>

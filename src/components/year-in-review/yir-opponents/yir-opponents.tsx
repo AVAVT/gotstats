@@ -3,25 +3,17 @@
 import { Fragment, useState } from "react";
 import Chart from "react-google-charts";
 import { YearInReview as YearInReviewData } from "@/utils/year-in-review";
-import { chartColor2, chartColor3 } from "../../charts/settings";
+import { chartColor4, chartColor5 } from "../../charts/settings";
 import PlayerLink from "../../shared/player-link";
 import { noTooltipChartSettings } from "../chart-config";
 import { getOgsFlagClass } from "../utils";
 import YearInCard from "../year-in-card";
-import { CODE_TO_NAME, getCountryLatLon, resolveCountrySovereignty } from "./earth-render/country-lookup";
+import { getCountryDisplayName, getCountryLatLon, resolveCountrySovereignty } from "./earth-render/country-lookup";
 import EarthRender from "./earth-render/earth-render";
 
 import "./flags32.css";
 
-export default function YirOpponents({
-  review,
-  username,
-  year,
-}: {
-  review: YearInReviewData;
-  username: string;
-  year: number;
-}) {
+export default function YirOpponents({ review, username }: { review: YearInReviewData; username: string }) {
   const newOpponentChartData = [
     ["Type", "Count"],
     ["Known Opponent", review.opponents.total - review.opponents.newPlayerMet],
@@ -42,9 +34,9 @@ export default function YirOpponents({
     })
     .reduce((total, item) => total + item.opponents, 0);
 
-  const [focusedCountry, setFocusedCountry] = useState<string | undefined>(opponentsOnVisibleCountries[0]?.country);
-
-  const formatPercent = (value: number) => `${(value * 100).toFixed(1)}%`;
+  const [focusedCountry, setFocusedCountry] = useState<{ country: string; opponents: number } | undefined>(
+    opponentsOnVisibleCountries[0],
+  );
 
   return (
     <section id="yir-opponents" className="mb-100">
@@ -56,21 +48,17 @@ export default function YirOpponents({
           <Chart
             className="flex-0 drop-shadow-lg"
             chartType="PieChart"
-            options={{ ...noTooltipChartSettings, colors: [chartColor3, chartColor2] }}
+            options={{ ...noTooltipChartSettings, colors: [chartColor4, chartColor5] }}
             data={newOpponentChartData}
             width={"150px"}
             height={"150px"}
           />
-          <div className="text-xl flex flex-col gap-4">
+          <div className="text-xl lg:text-2xl flex flex-col gap-4">
             <div>
-              In {year}, {username} met <span className="font-bold text-5xl">{review.opponents.newPlayerMet}</span> new
-              players
+              <span className="font-bold text-chart-5">{review.opponents.total}</span> opponents faced
             </div>
             <div>
-              <span className="font-bold text-5xl">
-                {formatPercent(review.opponents.total > 0 ? review.opponents.newPlayerMet / review.opponents.total : 1)}
-              </span>{" "}
-              of opponents were new faces
+              <span className="font-bold text-chart-5">{review.opponents.newPlayerMet}</span> were first-time matchups!
             </div>
           </div>
         </YearInCard>
@@ -104,9 +92,12 @@ export default function YirOpponents({
         </div>
       </div>
 
-      <div className="container h-[50vh] grid grid-cols-1 lg:grid-cols-3 items-start">
-        <div className="hidden lg:block col-span-2 h-full">
-          <EarthRender focusedCountry={focusedCountry} />
+      <div className="container h-[50vh] grid grid-cols-1 lg:grid-cols-3 items-start gap-4">
+        <div className="hidden lg:block col-span-2 h-full overflow-hidden relative">
+          <div className="w-full h-[200%]">
+            <EarthRender focusedCountry={focusedCountry?.country} numberOfPlayers={focusedCountry?.opponents} />
+          </div>
+          <div className="absolute bottom-0 right-0 left-0 h-[60%] bg-linear-to-b from-transparent to-background z-1 pointer-events-none" />
         </div>
         <YearInCard className="flex flex-col gap-4 max-h-full justify-stretch overflow-hidden">
           <div className="text-2xl text-shadow-lg text-center">Where were they from?</div>
@@ -119,15 +110,15 @@ export default function YirOpponents({
                     type="button"
                     aria-label={`Focus ${item.country} on map`}
                     className="absolute top-0 bottom-0 right-0 rounded-sm bg-chart-3 flex items-center justify-end hover:-translate-y-[2px] duration-200 transition-transform cursor-pointer select-none active:translate-y-0 active:transition-none"
-                    onClick={() => setFocusedCountry(item.country)}
-                    onMouseEnter={() => setFocusedCountry(item.country)}
+                    onClick={() => setFocusedCountry(item)}
+                    onMouseEnter={() => setFocusedCountry(item)}
                     style={{
                       width: `${
                         (100 * item.opponents) /
                         (opponentsOnVisibleCountries[0] ? opponentsOnVisibleCountries[0].opponents : item.opponents)
                       }%`,
                     }}
-                    title={CODE_TO_NAME[item.country]}
+                    title={getCountryDisplayName(item.country)}
                   >
                     {" "}
                     <span className="relative right-[100%] mr-2 text-right">{item.opponents}</span>{" "}
@@ -135,7 +126,10 @@ export default function YirOpponents({
                 </div>
                 <div className="max-w-[6em] overflow-hidden flex items-center">
                   <span className="f32 scale-90">
-                    <span className={`flag ${getOgsFlagClass(item.country)}`} title={CODE_TO_NAME[item.country]} />
+                    <span
+                      className={`flag ${getOgsFlagClass(item.country)}`}
+                      title={getCountryDisplayName(item.country)}
+                    />
                   </span>
                 </div>
               </Fragment>

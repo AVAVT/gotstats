@@ -586,6 +586,10 @@ export function resolveCountrySovereignty(code: string): string | null {
   return availableSovereignties.has(sovereignt) ? sovereignt : null;
 }
 
+export function getCountryDisplayName(code: string): string {
+  return CODE_TO_NAME[code] ?? code;
+}
+
 export function getCountryLatLon(sovereignt: string): [number, number] | null {
   const fromCapitalCsv = SOVEREIGNTY_LAT_LON[sovereignt];
   if (fromCapitalCsv) return fromCapitalCsv;
