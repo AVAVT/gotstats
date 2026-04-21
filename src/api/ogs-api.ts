@@ -52,7 +52,7 @@ const OGSApi = {
 
   fetchGamePage: (playerId: string | number, url: string) => {
     if (url === undefined)
-      url = `${OGS_API_PLAYER_ROOT}${playerId}/games/?ended__isnull=false&annulled=false&ordering=-ended&page_size=50`;
+      url = `${OGS_API_PLAYER_ROOT}${playerId}/games/?ended__isnull=false&annulled=false&ordering=-ended&page_size=50&rengo=false`;
 
     return new CancelablePromise(async (resolve, reject) => {
       try {

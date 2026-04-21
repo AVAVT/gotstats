@@ -1,11 +1,13 @@
-import { Chart } from "react-google-charts";
+import { useMemo } from "react";
 import { PlayerState } from "@/redux/player/type";
 import { Game } from "@/type/game";
 import { isPlayerWin } from "@/utils/chart-utils";
-import getChartSettings, { CHART_SIZE, CHART_THEME, CHART_TYPE } from "./settings";
+import DonutChart from "../shared/charts/donut-chart";
+import { getDonutCharProps } from "./chart-settings";
+import { CHART_SIZE, CHART_THEME } from "./settings";
 
-const mainChartSettings = getChartSettings(CHART_TYPE.PIE, CHART_THEME.COLORED, CHART_SIZE.HERO);
-const subChartSettings = getChartSettings(CHART_TYPE.PIE, CHART_THEME.COLORED, CHART_SIZE.DEFAULT);
+const mainChartSettings = getDonutCharProps(CHART_THEME.COLORED, CHART_SIZE.HERO);
+const subChartSettings = getDonutCharProps(CHART_THEME.WINLOSE, CHART_SIZE.DEFAULT);
 
 export interface BoardSizesChartProps {
   title: string;
@@ -52,63 +54,62 @@ function computeBoardSizes(games: Game[], playerId: number) {
   };
 }
 
-function generateChartData(games: Game[], playerId: number) {
-  const {
-    nineteenGames,
-    thirteenGames,
-    nineGames,
-    otherGames,
-    nineteenLosses,
-    thirteenLosses,
-    nineLosses,
-    otherLosses,
-  } = computeBoardSizes(games, playerId);
-
-  return {
-    chartData1: [
-      ["Size", "Games"],
-      ["19x19", nineteenGames],
-      ["13x13", thirteenGames],
-      ["9x9", nineGames],
-      ["Other", otherGames],
-    ],
-    chartData2:
-      nineteenGames > 0
-        ? [
-            ["Result", "Games"],
-            ["Losses", nineteenLosses],
-            ["Wins", nineteenGames - nineteenLosses],
-          ]
-        : null,
-    chartData3:
-      thirteenGames > 0
-        ? [
-            ["Result", "Games"],
-            ["Losses", thirteenLosses],
-            ["Wins", thirteenGames - thirteenLosses],
-          ]
-        : null,
-    chartData4:
-      nineGames > 0
-        ? [
-            ["Result", "Games"],
-            ["Losses", nineLosses],
-            ["Wins", nineGames - nineLosses],
-          ]
-        : null,
-    chartData5:
-      otherGames > 0
-        ? [
-            ["Result", "Games"],
-            ["Losses", otherLosses],
-            ["Wins", otherGames - otherLosses],
-          ]
-        : null,
-  };
-}
-
 export default function BoardSizesChart({ title, id, games, player }: BoardSizesChartProps) {
-  const { chartData1, chartData2, chartData3, chartData4, chartData5 } = generateChartData(games, player.id);
+  const statistics = computeBoardSizes(games, player.id);
+
+  const chartData1 = useMemo(
+    () => [
+      { label: "19x19", value: statistics.nineteenGames },
+      { label: "13x13", value: statistics.thirteenGames },
+      { label: "9x9", value: statistics.nineGames },
+      { label: "Other", value: statistics.otherGames },
+    ],
+    [statistics.nineteenGames, statistics.thirteenGames, statistics.nineGames, statistics.otherGames],
+  );
+
+  const chartData2 = useMemo(
+    () =>
+      statistics.nineteenGames > 0
+        ? [
+            { label: "Wins", value: statistics.nineteenGames - statistics.nineteenLosses },
+            { label: "Losses", value: statistics.nineteenLosses },
+          ]
+        : null,
+    [statistics.nineteenGames, statistics.nineteenLosses],
+  );
+
+  const chartData3 = useMemo(
+    () =>
+      statistics.thirteenGames > 0
+        ? [
+            { label: "Wins", value: statistics.thirteenGames - statistics.thirteenLosses },
+            { label: "Losses", value: statistics.thirteenLosses },
+          ]
+        : null,
+    [statistics.thirteenGames, statistics.thirteenLosses],
+  );
+
+  const chartData4 = useMemo(
+    () =>
+      statistics.nineGames > 0
+        ? [
+            { label: "Wins", value: statistics.nineGames - statistics.nineLosses },
+            { label: "Losses", value: statistics.nineLosses },
+          ]
+        : null,
+    [statistics.nineGames, statistics.nineLosses],
+  );
+
+  const chartData5 = useMemo(
+    () =>
+      statistics.otherGames > 0
+        ? [
+            { label: "Wins", value: statistics.otherGames - statistics.otherLosses },
+            { label: "Losses", value: statistics.otherLosses },
+          ]
+        : null,
+    [statistics.otherGames, statistics.otherLosses],
+  );
 
   return (
     <section className="stats_block">
@@ -118,7 +119,7 @@ export default function BoardSizesChart({ title, id, games, player }: BoardSizes
       <div>
         {chartData1 ? (
           <div className="mx-auto">
-            <Chart chartType="PieChart" options={mainChartSettings} data={chartData1} width={"100%"} height={"400px"} />
+            <DonutChart data={chartData1} {...mainChartSettings} />
           </div>
         ) : null}
       </div>
@@ -127,25 +128,25 @@ export default function BoardSizesChart({ title, id, games, player }: BoardSizes
         {chartData2 ? (
           <div>
             <h5 className="text-center">19x19</h5>
-            <Chart chartType="PieChart" options={subChartSettings} data={chartData2} width={"100%"} height={"300px"} />
+            <DonutChart data={chartData2} {...subChartSettings} />
           </div>
         ) : null}
         {chartData3 ? (
           <div>
             <h5 className="text-center">13x13</h5>
-            <Chart chartType="PieChart" options={subChartSettings} data={chartData3} width={"100%"} height={"300px"} />
+            <DonutChart data={chartData3} {...subChartSettings} />
           </div>
         ) : null}
         {chartData4 ? (
           <div>
             <h5 className="text-center">9x9</h5>
-            <Chart chartType="PieChart" options={subChartSettings} data={chartData4} width={"100%"} height={"300px"} />
+            <DonutChart data={chartData4} {...subChartSettings} />
           </div>
         ) : null}
         {chartData5 ? (
           <div>
             <h5 className="text-center">Other Sizes</h5>
-            <Chart chartType="PieChart" options={subChartSettings} data={chartData5} width={"100%"} height={"300px"} />
+            <DonutChart data={chartData5} {...subChartSettings} />
           </div>
         ) : null}
       </div>

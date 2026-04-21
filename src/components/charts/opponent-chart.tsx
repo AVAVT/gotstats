@@ -172,7 +172,7 @@ export default function OpponentChart({ title, id, games, player }: OpponentChar
       </h2>
 
       <div className="row">
-        <div id="opponents_polars_chart" className="opponent_chart w-[70%] mx-auto">
+        <div id="opponents_polars_chart" className="mt-10 w-[70%] mx-auto">
           <ul className="bar_legend">
             <li style={weakestDisp.style}>
               <div>Weakest Opponent</div>

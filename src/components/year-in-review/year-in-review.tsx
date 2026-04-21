@@ -1,6 +1,7 @@
 "use client";
 
 import { Fragment, useCallback, useState } from "react";
+import StylingChangeOnVisible from "@/components/shared/styling-change-on-visible";
 import { PlayerState } from "@/redux/player/type";
 import { buildGoogleCalendarUrl, buildIcsContent, getNextYearJanFirstAt11Local } from "@/utils/calendar-utils";
 import { encodeShareData } from "@/utils/share-utils";
@@ -93,9 +94,16 @@ export default function YearInReview({ player, review, year, isShared = false }:
           <YirQuicklook review={review} year={year} />
           <YirTimeSettings review={review} username={username} />
           <YirOpponents review={review} username={username} />
+
           <div className="text-5xl bg-linear-to-br from-tertiary to-chart-3 font-bold text-shadow-lg text-center mt-80 mb-40 py-30 px-6">
-            Let's look at the games in detail...
+            <StylingChangeOnVisible
+              className="relative translate-y-[20px] opacity-0"
+              inViewClassName="duration-500 transition-all delay-150 translate-y-0 opacity-100"
+            >
+              <div>Let's look at the games in detail...</div>
+            </StylingChangeOnVisible>
           </div>
+
           <YirGamesDetail review={review} username={username} />
           <YirMoments review={review} player={player} />
           <YirClosure

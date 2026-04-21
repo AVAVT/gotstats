@@ -4,7 +4,8 @@ import { OGS_ROOT } from "@/api/api-constants";
 import { PlayerState } from "@/redux/player/type";
 import { Game } from "@/type/game";
 import { extractHistoricalPlayerAndOpponent, getPlayerRating, isPlayerWin, ratingToKyuDan } from "@/utils/chart-utils";
-import getChartSettings, { CHART_THEME, CHART_TYPE, chartColor1, chartColor2, chartColor3 } from "./settings";
+import { chartColor1, chartColor2, chartColor3 } from "@/utils/color-utils";
+import getChartSettings, { CHART_THEME, CHART_TYPE } from "./settings";
 
 export interface GameHistoryChartProps {
   games: Game[];

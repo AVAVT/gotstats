@@ -1,11 +1,12 @@
-import { ReactNode } from "react";
-import { Chart } from "react-google-charts";
+import { ReactNode, useMemo } from "react";
 import { PlayerState } from "@/redux/player/type";
 import { Game } from "@/type/game";
-import getChartSettings, { CHART_SIZE, CHART_THEME, CHART_TYPE } from "./settings";
+import DonutChart from "../shared/charts/donut-chart";
+import { getDonutCharProps } from "./chart-settings";
+import { CHART_SIZE, CHART_THEME } from "./settings";
 
-const mainChartSettings = getChartSettings(CHART_TYPE.PIE, CHART_THEME.MONOCHROME, CHART_SIZE.HERO);
-const subChartSettings = getChartSettings(CHART_TYPE.PIE, CHART_THEME.COLORED, CHART_SIZE.DEFAULT);
+const mainChartSettings = getDonutCharProps(CHART_THEME.MONOCHROME, CHART_SIZE.HERO);
+const subChartSettings = getDonutCharProps(CHART_THEME.WINLOSE, CHART_SIZE.DEFAULT);
 
 export interface WinLoseChartProps {
   title?: string;
@@ -45,32 +46,40 @@ function computeWinLoseStatistics(games: Game[], playerId: number) {
 export default function WinLoseChart({ title, id, games, player, footer }: WinLoseChartProps) {
   const statistics = computeWinLoseStatistics(games, player.id);
 
-  const chartData1 = [
-    ["Color", "Games"],
-    ["Black", statistics.blackGames],
-    ["White", statistics.whiteGames],
-  ];
-  const chartData2 = [
-    ["Result", "Games"],
-    ["Losses", statistics.blackLosses + statistics.whiteLosses],
-    ["Wins", statistics.blackGames + statistics.whiteGames - (statistics.blackLosses + statistics.whiteLosses)],
-  ];
-  const chartData3 =
-    statistics.blackGames > 0
-      ? [
-          ["Result", "Games"],
-          ["Losses", statistics.blackLosses],
-          ["Wins", statistics.blackGames - statistics.blackLosses],
-        ]
-      : null;
-  const chartData4 =
-    statistics.whiteGames > 0
-      ? [
-          ["Result", "Games"],
-          ["Losses", statistics.whiteLosses],
-          ["Wins", statistics.whiteGames - statistics.whiteLosses],
-        ]
-      : null;
+  const chartData1 = useMemo(
+    () => [
+      { label: "Black", value: statistics.blackGames },
+      { label: "White", value: statistics.whiteGames },
+    ],
+    [statistics.blackGames, statistics.whiteGames],
+  );
+
+  const chartData2 = useMemo(
+    () => [
+      {
+        label: "Wins",
+        value: statistics.blackGames + statistics.whiteGames - (statistics.blackLosses + statistics.whiteLosses),
+      },
+      { label: "Losses", value: statistics.blackLosses + statistics.whiteLosses },
+    ],
+    [statistics.blackGames, statistics.whiteGames, statistics.blackLosses, statistics.whiteLosses],
+  );
+
+  const chartData3 = useMemo(
+    () => [
+      { label: "Wins", value: statistics.blackGames - statistics.blackLosses },
+      { label: "Losses", value: statistics.blackLosses },
+    ],
+    [statistics.blackGames, statistics.blackLosses],
+  );
+
+  const chartData4 = useMemo(
+    () => [
+      { label: "Wins", value: statistics.whiteGames - statistics.whiteLosses },
+      { label: "Losses", value: statistics.whiteLosses },
+    ],
+    [statistics.whiteGames, statistics.whiteLosses],
+  );
 
   return (
     <section className="stats_block">
@@ -79,8 +88,8 @@ export default function WinLoseChart({ title, id, games, player, footer }: WinLo
       </h2>
       <div className="row">
         {chartData1 ? (
-          <div className="col-sm-6 mr-auto ml-auto">
-            <Chart chartType="PieChart" options={mainChartSettings} data={chartData1} width={"100%"} height={"400px"} />
+          <div className="mx-auto">
+            <DonutChart data={chartData1} {...mainChartSettings} />
           </div>
         ) : null}
       </div>
@@ -88,20 +97,20 @@ export default function WinLoseChart({ title, id, games, player, footer }: WinLo
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {chartData2 ? (
           <div>
-            <h5 className="text-center">Total</h5>
-            <Chart chartType="PieChart" options={subChartSettings} data={chartData2} width={"100%"} height={"300px"} />
+            <h5 className="text-center mb-2">Total</h5>
+            <DonutChart data={chartData2} {...subChartSettings} />
           </div>
         ) : null}
         {chartData3 ? (
           <div>
-            <h5 className="text-center">As Black</h5>
-            <Chart chartType="PieChart" options={subChartSettings} data={chartData3} width={"100%"} height={"300px"} />
+            <h5 className="text-center mb-2">As Black</h5>
+            <DonutChart data={chartData3} {...subChartSettings} />
           </div>
         ) : null}
         {chartData4 ? (
           <div>
-            <h5 className="text-center">As White</h5>
-            <Chart chartType="PieChart" options={subChartSettings} data={chartData4} width={"100%"} height={"300px"} />
+            <h5 className="text-center mb-2">As White</h5>
+            <DonutChart data={chartData4} {...subChartSettings} />
           </div>
         ) : null}
       </div>

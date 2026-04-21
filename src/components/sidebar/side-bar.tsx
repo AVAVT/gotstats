@@ -46,7 +46,7 @@ function SideBar({ fetching, totalPages, showQuickLinks }: SideBarProps) {
 
   return (
     <div className={cn(isYearInReview ? "hidden" : "md:order-1 flex-none flex flex-col w-84 items-stretch sidebar")}>
-      <nav className="side_nav sticky top-0">
+      <nav className="sticky top-0">
         {searchBoxOrLoadProgress}
 
         {quickLinks}

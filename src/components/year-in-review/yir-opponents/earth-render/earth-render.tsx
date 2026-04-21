@@ -4,7 +4,7 @@ import { OrbitControls } from "@react-three/drei";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { useEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
-import { chartColor5, foregroundColor, foregroundDarkColor, tertiaryColor } from "../../../charts/settings";
+import { chartColor4, chartColor5, foregroundColor, tertiaryColor } from "@/utils/color-utils";
 import countries from "./countries.json";
 import { getCountryDisplayName, getCountryLatLon, resolveCountrySovereignty } from "./country-lookup";
 
@@ -24,7 +24,7 @@ type CountriesCollection = {
 
 const countriesCollection = countries as CountriesCollection;
 
-const CAMERA_DISTANCE = 4.2;
+const CAMERA_DISTANCE = 4.3;
 const CAMERA_OFFSET_DEGREE = 25;
 const CAMERA_ANIMATION_DURATION = 1.2;
 const TEXTURE_WIDTH = 4096;
@@ -128,8 +128,7 @@ function createEarthTexture(canvas: HTMLCanvasElement, focusedSovereignty: strin
   ctx.fillRect(0, 0, TEXTURE_WIDTH, TEXTURE_HEIGHT);
 
   // Default countries
-  const fillColor = foregroundDarkColor;
-  ctx.fillStyle = fillColor;
+  ctx.fillStyle = chartColor4;
   ctx.strokeStyle = tertiaryColor;
   ctx.lineWidth = 1;
   for (const feature of countriesCollection.features) {

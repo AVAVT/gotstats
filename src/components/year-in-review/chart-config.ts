@@ -1,15 +1,8 @@
 import { ChartWrapperOptions } from "react-google-charts";
-import getChartSettings, {
-  CHART_THEME,
-  CHART_TYPE,
-  chartColor2,
-  chartColor3,
-  chartColor5,
-  foregroundColor,
-  tertiaryColor,
-} from "../charts/settings";
+import { chartColor2, chartColor3, chartColor5, foregroundColor, tertiaryColor } from "@/utils/color-utils";
+import getChartSettings, { CHART_THEME, CHART_TYPE } from "../charts/settings";
 
-export const noTooltipChartSettings = {
+export const noTooltipChartSettings: ChartWrapperOptions["options"] = {
   ...getChartSettings(CHART_TYPE.PIE, CHART_THEME.COLORED),
   legend: "none",
   pieSliceText: "none",
@@ -22,6 +15,10 @@ export const noTooltipChartSettings = {
   pieHole: 0.55,
   enableInteractivity: false,
   pieSliceBorderColor: tertiaryColor,
+  animation: {
+    duration: 1000,
+    easing: "out",
+  },
 };
 
 const columnChartSettings = getChartSettings(CHART_TYPE.COLUMN, CHART_THEME.COLORED);

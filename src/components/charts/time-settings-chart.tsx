@@ -1,11 +1,13 @@
-import { Chart } from "react-google-charts";
+import { useMemo } from "react";
 import { PlayerState } from "@/redux/player/type";
 import { Game } from "@/type/game";
 import { isPlayerWin } from "@/utils/chart-utils";
-import getChartSettings, { CHART_SIZE, CHART_THEME, CHART_TYPE } from "./settings";
+import DonutChart from "../shared/charts/donut-chart";
+import { getDonutCharProps } from "./chart-settings";
+import { CHART_SIZE, CHART_THEME } from "./settings";
 
-const mainChartSettings = getChartSettings(CHART_TYPE.PIE, CHART_THEME.COLORED, CHART_SIZE.HERO);
-const subChartSettings = getChartSettings(CHART_TYPE.PIE, CHART_THEME.COLORED, CHART_SIZE.DEFAULT);
+const mainChartSettings = getDonutCharProps(CHART_THEME.COLORED, CHART_SIZE.HERO);
+const subChartSettings = getDonutCharProps(CHART_THEME.WINLOSE, CHART_SIZE.DEFAULT);
 
 export interface TimeSettingsChartProps {
   title: string;
@@ -50,45 +52,50 @@ function computeTimeSettings(games: Game[], playerId: number) {
   };
 }
 
-function generateChartData(games: Game[], playerId: number) {
-  const times = computeTimeSettings(games, playerId);
-
-  return {
-    chartData1: [
-      ["Size", "Games"],
-      ["Blitz", times.blitzGames],
-      ["Live", times.liveGames],
-      ["Correspondence", times.correspondenceGames],
-    ],
-    chartData2:
-      times.blitzGames > 0
-        ? [
-            ["Result", "Games"],
-            ["Losses", times.blitzLosses],
-            ["Wins", times.blitzGames - times.blitzLosses],
-          ]
-        : null,
-    chartData3:
-      times.liveGames > 0
-        ? [
-            ["Result", "Games"],
-            ["Losses", times.liveLosses],
-            ["Wins", times.liveGames - times.liveLosses],
-          ]
-        : null,
-    chartData4:
-      times.correspondenceGames > 0
-        ? [
-            ["Result", "Games"],
-            ["Losses", times.correspondenceLosses],
-            ["Wins", times.correspondenceGames - times.correspondenceLosses],
-          ]
-        : null,
-  };
-}
-
 export default function TimeSettingsChart({ title, id, games, player }: TimeSettingsChartProps) {
-  const { chartData1, chartData2, chartData3, chartData4 } = generateChartData(games, player.id);
+  const statistics = computeTimeSettings(games, player.id);
+
+  const chartData1 = useMemo(
+    () => [
+      { label: "Blitz", value: statistics.blitzGames },
+      { label: "Live", value: statistics.liveGames },
+      { label: "Correspondence", value: statistics.correspondenceGames },
+    ],
+    [statistics.blitzGames, statistics.liveGames, statistics.correspondenceGames],
+  );
+
+  const chartData2 = useMemo(
+    () =>
+      statistics.blitzGames > 0
+        ? [
+            { label: "Wins", value: statistics.blitzGames - statistics.blitzLosses },
+            { label: "Losses", value: statistics.blitzLosses },
+          ]
+        : null,
+    [statistics.blitzGames, statistics.blitzLosses],
+  );
+
+  const chartData3 = useMemo(
+    () =>
+      statistics.liveGames > 0
+        ? [
+            { label: "Wins", value: statistics.liveGames - statistics.liveLosses },
+            { label: "Losses", value: statistics.liveLosses },
+          ]
+        : null,
+    [statistics.liveGames, statistics.liveLosses],
+  );
+
+  const chartData4 = useMemo(
+    () =>
+      statistics.correspondenceGames > 0
+        ? [
+            { label: "Wins", value: statistics.correspondenceGames - statistics.correspondenceLosses },
+            { label: "Losses", value: statistics.correspondenceLosses },
+          ]
+        : null,
+    [statistics.correspondenceGames, statistics.correspondenceLosses],
+  );
 
   return (
     <section className="stats_block">
@@ -98,7 +105,7 @@ export default function TimeSettingsChart({ title, id, games, player }: TimeSett
       <div>
         {chartData1 ? (
           <div className="mx-auto">
-            <Chart chartType="PieChart" options={mainChartSettings} data={chartData1} width={"100%"} height={"400px"} />
+            <DonutChart data={chartData1} {...mainChartSettings} />
           </div>
         ) : null}
       </div>
@@ -107,19 +114,19 @@ export default function TimeSettingsChart({ title, id, games, player }: TimeSett
         {chartData2 ? (
           <div>
             <h5 className="text-center">Blitz</h5>
-            <Chart chartType="PieChart" options={subChartSettings} data={chartData2} width={"100%"} height={"300px"} />
+            <DonutChart data={chartData2} {...subChartSettings} />
           </div>
         ) : null}
         {chartData3 ? (
           <div>
             <h5 className="text-center">Live</h5>
-            <Chart chartType="PieChart" options={subChartSettings} data={chartData3} width={"100%"} height={"300px"} />
+            <DonutChart data={chartData3} {...subChartSettings} />
           </div>
         ) : null}
         {chartData4 ? (
           <div>
             <h5 className="text-center">Correspondence</h5>
-            <Chart chartType="PieChart" options={subChartSettings} data={chartData4} width={"100%"} height={"300px"} />
+            <DonutChart data={chartData4} {...subChartSettings} />
           </div>
         ) : null}
       </div>

@@ -2,33 +2,15 @@
 
 import Chart from "react-google-charts";
 import { cn } from "vat-ui";
-import { OGS_ROOT } from "@/api/api-constants";
-import { backgroundColor, chartColor5 } from "@/components/charts/settings";
-import ExtLink from "@/components/shared/external-link";
-import SvgFromGame from "@/components/shared/svg-from-game";
-import { Game } from "@/type/game";
+import { CHART_THEME, getChartTheme } from "@/components/charts/settings";
+import PieChart from "@/components/shared/charts/pie-chart";
+import GameLink from "@/components/shared/game-link";
+import StylingChangeOnVisible from "@/components/shared/styling-change-on-visible";
 import { YearInReview as YearInReviewData } from "@/utils/year-in-review";
-import GameLink from "../../shared/game-link";
-import { monthlyChartSettings, noTooltipChartSettings } from "../chart-config";
+import { monthlyChartSettings } from "../chart-config";
 import { formatPercent, getMonthLabel } from "../utils";
 import YearInCard from "../year-in-card";
-
-function StreakGameCard({ game, className = "" }: { game: Game; className?: string }) {
-  return (
-    <YearInCard className={`p-0 ${className}`}>
-      <ExtLink href={`${OGS_ROOT}game/${game.related.detail.split("games/")[1]}`} title={game.name}>
-        <SvgFromGame
-          size={309}
-          game={game}
-          blackStone={backgroundColor}
-          whiteStone={chartColor5}
-          background="transparent"
-          boardLines={backgroundColor}
-        />
-      </ExtLink>
-    </YearInCard>
-  );
-}
+import StreakGameCard from "./streak-game-card";
 
 export default function YirGamesDetail({ review, username }: { review: YearInReviewData; username: string }) {
   const playMonthChartData = [
@@ -42,15 +24,13 @@ export default function YirGamesDetail({ review, username }: { review: YearInRev
   ];
 
   const halfPointChartData = [
-    ["Result", "Games"],
-    ["Losses", review.halfPointGames.total - review.halfPointGames.wins],
-    ["Wins", review.halfPointGames.wins],
+    { label: "Wins", value: review.halfPointGames.wins },
+    { label: "Losses", value: review.halfPointGames.total - review.halfPointGames.wins },
   ];
 
   const tournamentChartData = [
-    ["Result", "Games"],
-    ["Losses", Math.round(review.tournament.tournamentGames * (1 - review.tournament.winRate))],
-    ["Wins", Math.round(review.tournament.tournamentGames * review.tournament.winRate)],
+    { label: "Wins", value: Math.round(review.tournament.tournamentGames * review.tournament.winRate) },
+    { label: "Losses", value: Math.round(review.tournament.tournamentGames * (1 - review.tournament.winRate)) },
   ];
 
   const dayStreak =
@@ -90,24 +70,59 @@ export default function YirGamesDetail({ review, username }: { review: YearInRev
           </div>
           <div className="overflow-x-hidden pb-4 flex justify-start items-center gap-4 mt-8">
             <div className="flex flex-col gap-4 flex-none">
-              <YearInCard className="flex justify-stretch items-center gap-4 md:gap-6 lg:gap-12 whitespace-nowrap">
-                <div>
-                  <div className="text-5xl font-bold">{review.longestDailyStreak.gamesPlayed}</div>
-                  <div className="text-foreground-dark">GAMES PLAYED</div>
-                </div>
-              </YearInCard>
-              <YearInCard>
-                <div>
-                  <div className="text-5xl font-bold">{formatPercent(review.longestDailyStreak.winRate)}</div>
-                  <div className="text-foreground-dark">WIN RATE</div>
-                </div>
-              </YearInCard>
+              <StylingChangeOnVisible
+                className="relative translate-y-[20px] opacity-0"
+                inViewClassName="duration-500 transition-all translate-y-0 opacity-100"
+              >
+                <YearInCard className="flex justify-stretch items-center gap-4 md:gap-6 lg:gap-12 whitespace-nowrap">
+                  <div>
+                    <div className="text-5xl font-bold">{review.longestDailyStreak.gamesPlayed}</div>
+                    <div className="text-foreground-dark">GAMES PLAYED</div>
+                  </div>
+                </YearInCard>
+              </StylingChangeOnVisible>
+              <StylingChangeOnVisible
+                className="relative translate-y-[20px] opacity-0"
+                inViewClassName="duration-500 transition-all translate-y-0 opacity-100 delay-100"
+              >
+                <YearInCard>
+                  <div>
+                    <div className="text-5xl font-bold">{formatPercent(review.longestDailyStreak.winRate)}</div>
+                    <div className="text-foreground-dark">WIN RATE</div>
+                  </div>
+                </YearInCard>
+              </StylingChangeOnVisible>
             </div>
-            <StreakGameCard className="flex-none" game={review.longestDailyStreak.from} />
-            {review.longestDailyStreak.inbetweens.map((game) => (
-              <StreakGameCard key={game.id} game={game} className="flex-none hidden lg:block" />
+            <StylingChangeOnVisible
+              heightInViewRatio={0.01}
+              className="relative translate-x-[20px] opacity-0"
+              inViewClassName="duration-500 transition-all translate-x-0 opacity-100"
+            >
+              <StreakGameCard className="flex-none" game={review.longestDailyStreak.from} />
+            </StylingChangeOnVisible>
+            {review.longestDailyStreak.inbetweens.map((game, index) => (
+              <StylingChangeOnVisible
+                heightInViewRatio={0.01}
+                key={game.id}
+                className="relative translate-x-[20px] opacity-0"
+                inViewClassName="duration-500 transition-all translate-x-0 opacity-100"
+                style={{
+                  transitionDelay: `${(index + 1) * 100}ms`,
+                }}
+              >
+                <StreakGameCard game={game} className="flex-none hidden lg:block" />
+              </StylingChangeOnVisible>
             ))}
-            <StreakGameCard className="flex-none" game={review.longestDailyStreak.to} />
+            <StylingChangeOnVisible
+              heightInViewRatio={0.01}
+              className="relative translate-x-[20px] opacity-0"
+              inViewClassName="duration-500 transition-all translate-x-0 opacity-100"
+              style={{
+                transitionDelay: `${((review.longestDailyStreak.inbetweens?.length ?? 0) + 2) * 100}ms`,
+              }}
+            >
+              <StreakGameCard className="flex-none" game={review.longestDailyStreak.to} />
+            </StylingChangeOnVisible>
           </div>
         </div>
       )}
@@ -123,50 +138,62 @@ export default function YirGamesDetail({ review, username }: { review: YearInRev
         />
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-60">
-        <YearInCard>
-          <div className="flex gap-3 items-stretch relative min-h-full">
-            <div className="absolute right-0 top-0 bottom-0 w-[150px]">
-              <Chart
-                className="flex-0"
-                chartType="PieChart"
-                options={noTooltipChartSettings}
-                data={halfPointChartData}
-                width={"150px"}
-                height={"100%"}
-              />
-            </div>
-            <div className="flex-1 relative z-1">
-              <div className="text-foreground-dark">HALF-POINT GAMES</div>
-              <div className="text-5xl mb-4 font-bold">{review.halfPointGames.total}</div>
-              <div className="text-foreground-dark">Finished with just 0.5 point difference,</div>
-              <div className="text-foreground-dark">
-                and {username} won {review.halfPointGames.wins} of them.
+        <StylingChangeOnVisible
+          className="relative translate-y-[20px] opacity-0"
+          inViewClassName="duration-500 transition-all translate-y-0 opacity-100"
+        >
+          <YearInCard>
+            <div className="flex gap-3 items-stretch relative min-h-full">
+              <div className="absolute right-0 top-0 bottom-0 w-[150px]">
+                <PieChart
+                  data={halfPointChartData}
+                  pieText={{ enabled: false }}
+                  colors={getChartTheme(CHART_THEME.WINLOSE)}
+                  stroke={{ width: 2, color: "var(--tertiary)" }}
+                  chartArea={{ top: 1, left: 1, right: 1, bottom: 1, donutHole: 55 }}
+                  animation={{ duration: 1500, easing: "ease-out" }}
+                  tooltip={{ enabled: false }}
+                />
+              </div>
+              <div className="flex-1 relative z-1">
+                <div className="text-foreground-dark">HALF-POINT GAMES</div>
+                <div className="text-5xl mb-4 font-bold">{review.halfPointGames.total}</div>
+                <div className="text-foreground-dark">
+                  Finished with just <span className="text-chart-5">0.5</span> point difference,
+                </div>
+                <div className="text-foreground-dark">{review.halfPointGames.wins} were victories.</div>
               </div>
             </div>
-          </div>
-        </YearInCard>
-        <YearInCard>
-          <div className="flex gap-3 items-stretch relative min-h-full">
-            <div className="absolute right-0 top-0 bottom-0 w-[150px]">
-              <Chart
-                className="flex-0"
-                chartType="PieChart"
-                options={noTooltipChartSettings}
-                data={tournamentChartData}
-                width={"150px"}
-                height={"100%"}
-              />
-            </div>
-            <div className="flex-1 relative z-1">
-              <div className="text-foreground-dark">TOURNAMENT JOINED</div>
-              <div className="text-5xl mb-4 font-bold">{review.tournament.total}</div>
-              <div className="text-foreground-dark">
-                Tournaments made up {formatPercent(review.tournament.ratio)} of {username}'s games,
+          </YearInCard>
+        </StylingChangeOnVisible>
+        <StylingChangeOnVisible
+          className="relative translate-y-[20px] opacity-0"
+          inViewClassName="duration-500 transition-all translate-y-0 opacity-100"
+        >
+          <YearInCard>
+            <div className="flex gap-3 items-stretch relative min-h-full">
+              <div className="absolute right-0 top-0 bottom-0 w-[150px]">
+                <PieChart
+                  data={tournamentChartData}
+                  pieText={{ enabled: false }}
+                  colors={getChartTheme(CHART_THEME.WINLOSE)}
+                  stroke={{ width: 2, color: "var(--tertiary)" }}
+                  chartArea={{ top: 1, left: 1, right: 1, bottom: 1, donutHole: 55 }}
+                  animation={{ duration: 1500, easing: "ease-out" }}
+                  tooltip={{ enabled: false }}
+                />
               </div>
-              <div className="text-foreground-dark">with a {formatPercent(review.tournament.winRate)} win rate!</div>
+              <div className="flex-1 relative z-1">
+                <div className="text-foreground-dark">TOURNAMENT JOINED</div>
+                <div className="text-5xl mb-4 font-bold">{review.tournament.total}</div>
+                <div className="text-foreground-dark">
+                  Tournaments made up {formatPercent(review.tournament.ratio)} of {username}'s games,
+                </div>
+                <div className="text-foreground-dark">with a {formatPercent(review.tournament.winRate)} win rate!</div>
+              </div>
             </div>
-          </div>
-        </YearInCard>
+          </YearInCard>
+        </StylingChangeOnVisible>
       </div>
     </section>
   );

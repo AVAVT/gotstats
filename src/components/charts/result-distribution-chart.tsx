@@ -1,10 +1,14 @@
+import { useMemo } from "react";
 import { Chart } from "react-google-charts";
 import { PlayerState } from "@/redux/player/type";
 import { Game } from "@/type/game";
 import { isPlayerWin } from "@/utils/chart-utils";
-import getChartSettings, { CHART_SIZE, CHART_THEME, CHART_TYPE, chartColor1, chartColor2 } from "./settings";
+import { chartColor1, chartColor2 } from "@/utils/color-utils";
+import DonutChart from "../shared/charts/donut-chart";
+import { getDonutCharProps } from "./chart-settings";
+import getChartSettings, { CHART_SIZE, CHART_THEME, CHART_TYPE } from "./settings";
 
-const pieChartSettings = getChartSettings(CHART_TYPE.PIE, CHART_THEME.COLORED, CHART_SIZE.DEFAULT);
+const pieChartSettings = getDonutCharProps(CHART_THEME.COLORED, CHART_SIZE.DEFAULT);
 const columnChartSettings = {
   ...getChartSettings(CHART_TYPE.COLUMN, CHART_THEME.COLORED, CHART_SIZE.DEFAULT),
   colors: [chartColor1, chartColor2],
@@ -71,42 +75,42 @@ function computeWinLoseDistributions(games: Game[], playerId: number) {
   return games.reduce(assignGameResultToDistributions, distributions);
 }
 
-function generateChartData(games: Game[], playerId: number) {
-  const distributions = computeWinLoseDistributions(games, playerId);
-
-  return {
-    chartData1: [
-      ["Result", "Games"],
-      ["Timeout", distributions["Plr+Time"]],
-      ["Resign", distributions["Plr+Res"]],
-      ["Scoring", distributions["Plr+Count"]],
-      ["Other", distributions["Plr+Other"]],
-    ],
-    chartData2: [
-      ["Result", "Games"],
-      ["Timeout", distributions["Opp+Time"]],
-      ["Resign", distributions["Opp+Res"]],
-      ["Scoring", distributions["Opp+Count"]],
-      ["Other", distributions["Opp+Other"]],
-    ],
-    chartData3: [
-      ["Outcome", "Losses", `Wins`],
-      ["40+", distributions["Opp+40+"], null],
-      ["30+", distributions["Opp+30+"], null],
-      ["20+", distributions["Opp+20+"], null],
-      ["10+", distributions["Opp+10+"], null],
-      ["0+", distributions["Opp+0+"], null],
-      ["0+", null, distributions["Plr+0+"]],
-      ["10+", null, distributions["Plr+10+"]],
-      ["20+", null, distributions["Plr+20+"]],
-      ["30+", null, distributions["Plr+30+"]],
-      ["40+", null, distributions["Plr+40+"]],
-    ],
-  };
-}
-
 export default function ResultDistributionChart({ title, id, games, player }: ResultDistributionChartProps) {
-  const { chartData1, chartData2, chartData3 } = generateChartData(games, player.id);
+  const distributions = useMemo(() => computeWinLoseDistributions(games, player.id), [games, player.id]);
+
+  const chartData1 = useMemo(
+    () => [
+      { label: "Timeout", value: distributions["Plr+Time"] },
+      { label: "Resign", value: distributions["Plr+Res"] },
+      { label: "Scoring", value: distributions["Plr+Count"] },
+      { label: "Other", value: distributions["Plr+Other"] },
+    ],
+    [distributions],
+  );
+
+  const chartData2 = useMemo(
+    () => [
+      { label: "Timeout", value: distributions["Opp+Time"] },
+      { label: "Resign", value: distributions["Opp+Res"] },
+      { label: "Scoring", value: distributions["Opp+Count"] },
+      { label: "Other", value: distributions["Opp+Other"] },
+    ],
+    [distributions],
+  );
+
+  const chartData3 = [
+    ["Outcome", "Losses", `Wins`],
+    ["40+", distributions["Opp+40+"], null],
+    ["30+", distributions["Opp+30+"], null],
+    ["20+", distributions["Opp+20+"], null],
+    ["10+", distributions["Opp+10+"], null],
+    ["0+", distributions["Opp+0+"], null],
+    ["0+", null, distributions["Plr+0+"]],
+    ["10+", null, distributions["Plr+10+"]],
+    ["20+", null, distributions["Plr+20+"]],
+    ["30+", null, distributions["Plr+30+"]],
+    ["40+", null, distributions["Plr+40+"]],
+  ];
 
   return (
     <section className="stats_block">
@@ -117,13 +121,13 @@ export default function ResultDistributionChart({ title, id, games, player }: Re
         {chartData2 ? (
           <div>
             <h5 className="text-center">Losses</h5>
-            <Chart chartType="PieChart" options={pieChartSettings} data={chartData2} width={"100%"} height={"300px"} />
+            <DonutChart data={chartData2} {...pieChartSettings} />
           </div>
         ) : null}
         {chartData1 ? (
           <div>
             <h5 className="text-center">Wins</h5>
-            <Chart chartType="PieChart" options={pieChartSettings} data={chartData1} width={"100%"} height={"300px"} />
+            <DonutChart data={chartData1} {...pieChartSettings} />
           </div>
         ) : null}
       </div>

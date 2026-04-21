@@ -14,6 +14,8 @@
   --chart-3: #6369D1;
   --chart-4: #D8D2E1;
   --chart-5: #efc225;
+  --chart-6: #2ec4b6;
+  --chart-7: #e879a0;
 }
 
 @theme inline {
@@ -30,6 +32,8 @@
   --color-chart-3: var(--chart-3);
   --color-chart-4: var(--chart-4);
   --color-chart-5: var(--chart-5);
+  --color-chart-6: var(--chart-6);
+  --color-chart-7: var(--chart-7);
 }
 
 body {
@@ -232,39 +236,6 @@ h3 {
 .stats_block:last-child {
   border-bottom: 0 none;
 }
-.pie-legend {
-  list-style: none;
-  padding: 0;
-  margin: 10px 0;
-  text-align: center;
-}
-.pie-legend li {
-  display: inline-block;
-  padding: 0 10px;
-}
-.pie-legend span {
-  width: 10px;
-  height: 10px;
-  display: inline-block;
-  vertical-align: baseline;
-  margin-right: 3px;
-}
-
-.col-md-6 .pie-legend {
-  font-size: 16px;
-}
-
-.col-md-6 .pie-legend span {
-  width: 12px;
-  height: 12px;
-}
-.gratz {
-  margin-top: 20px;
-}
-
-.opponent_chart {
-  margin-top: 30px;
-}
 
 .bar_chart {
   height: 3px;
@@ -388,10 +359,6 @@ h3 {
   padding-top: 23px;
 }
 
-.side_nav {
-  top: 23px;
-}
-
 .affix-top,
 .affix {
   position: relative;
@@ -399,22 +366,6 @@ h3 {
 
 .tip {
   margin-top: 10px;
-}
-
-.btn_addon_container {
-  display: table;
-}
-.btn_addon_container > * {
-  display: table-cell;
-}
-
-.btn_addon {
-  display: table-cell;
-  width: 1%;
-}
-
-.btn_addon *:first-child {
-  margin-left: -1px;
 }
 
 .navi_list {
@@ -447,14 +398,9 @@ h3 {
   outline: 0 none;
 }
 
-.instruction {
-  margin-top: 23px;
-}
-
 .footer {
   padding-top: 30px;
   padding-bottom: 20px;
-  margin-top: 40px;
   border-top: 1px solid rgba(0, 0, 0, 0.1);
 }
 

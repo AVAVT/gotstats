@@ -1,48 +1,15 @@
 import { ChartWrapperOptions } from "react-google-charts";
-
-export const chartColor1 =
-  typeof document !== "undefined"
-    ? getComputedStyle(document.documentElement).getPropertyValue("--chart-1").trim() || "#d93344"
-    : "";
-export const chartColor2 =
-  typeof document !== "undefined"
-    ? getComputedStyle(document.documentElement).getPropertyValue("--chart-2").trim() || "#7ac986"
-    : "";
-export const chartColor3 =
-  typeof document !== "undefined"
-    ? getComputedStyle(document.documentElement).getPropertyValue("--chart-3").trim() || "#6369D1"
-    : "";
-export const chartColor4 =
-  typeof document !== "undefined"
-    ? getComputedStyle(document.documentElement).getPropertyValue("--chart-4").trim() || "#D8D2E1"
-    : "";
-export const chartColor5 =
-  typeof document !== "undefined"
-    ? getComputedStyle(document.documentElement).getPropertyValue("--chart-5").trim() || "#efc225"
-    : "";
-
-export const backgroundColor =
-  typeof document !== "undefined"
-    ? getComputedStyle(document.documentElement).getPropertyValue("--background").trim() || "#25252f"
-    : "";
-
-export const foregroundColor =
-  typeof document !== "undefined"
-    ? getComputedStyle(document.documentElement).getPropertyValue("--foreground").trim() || "#f8f8ff"
-    : "";
-
-export const foregroundDarkColor =
-  typeof document !== "undefined"
-    ? getComputedStyle(document.documentElement).getPropertyValue("--foreground-dark").trim() || "#f8f8ff"
-    : "";
-
-export const tertiaryColor =
-  typeof document !== "undefined"
-    ? getComputedStyle(document.documentElement).getPropertyValue("--tertiary").trim() || "#f8f8ff"
-    : "";
-
-export const chartColors = [chartColor1, chartColor2, chartColor3, chartColor4, chartColor5];
-export const chartMonochromeColors = ["#000000", foregroundColor];
+import {
+  chartColor1,
+  chartColor2,
+  chartColor3,
+  chartColor5,
+  chartColor6,
+  chartColor7,
+  foregroundColor,
+  foregroundDarkColor,
+  tertiaryColor,
+} from "@/utils/color-utils";
 
 export enum CHART_SIZE {
   HERO = "hero",
@@ -51,6 +18,7 @@ export enum CHART_SIZE {
 
 export enum CHART_THEME {
   MONOCHROME = "monochrome",
+  WINLOSE = "win-lose",
   COLORED = "colored",
 }
 
@@ -59,6 +27,12 @@ export enum CHART_TYPE {
   COLUMN = "ColumnChart",
   SCATTERPLOT = "ScatterChart",
 }
+
+const chartTheme = {
+  [CHART_THEME.COLORED]: [chartColor5, chartColor6, chartColor7, chartColor3],
+  [CHART_THEME.WINLOSE]: [chartColor2, chartColor1],
+  [CHART_THEME.MONOCHROME]: ["#000000", foregroundColor],
+};
 
 const pieChartOptions = {
   [CHART_SIZE.HERO]: {
@@ -164,13 +138,9 @@ const scatterplotChartOptions = {
   },
 } as const;
 
-function getChartTheme(theme: CHART_THEME) {
-  switch (theme) {
-    case CHART_THEME.MONOCHROME:
-      return chartMonochromeColors;
-    default:
-      return chartColors;
-  }
+export function getChartTheme(theme: CHART_THEME) {
+  if (Object.hasOwn(chartTheme, theme)) return chartTheme[theme];
+  return chartTheme[CHART_THEME.COLORED];
 }
 
 export default function getChartSettings(
