@@ -6,7 +6,7 @@ import YearInReview from "./year-in-review";
 export function YearSharedReviewPage({ data }: { data?: string }) {
   if (!data) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center gap-4 text-center px-8">
+      <div className="min-h-lvh flex flex-col items-center justify-center gap-4 text-center px-8">
         <div className="text-4xl font-bold">Invalid share link</div>
         <div className="text-foreground-dark text-xl">
           This link is missing its data. Please ask the sender for a new link.
@@ -19,7 +19,7 @@ export function YearSharedReviewPage({ data }: { data?: string }) {
 
   if (!decoded) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center gap-4 text-center px-8">
+      <div className="min-h-lvh flex flex-col items-center justify-center gap-4 text-center px-8">
         <div className="text-4xl font-bold">Couldn't load this review</div>
         <div className="text-foreground-dark text-xl">The share link appears to be corrupted or outdated.</div>
       </div>

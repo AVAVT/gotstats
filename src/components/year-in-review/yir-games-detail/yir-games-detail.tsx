@@ -43,7 +43,7 @@ export default function YirGamesDetail({ review, username }: { review: YearInRev
       : 0;
 
   return (
-    <section id="yir-games-detail" className="container mb-[20vh]">
+    <section id="yir-games-detail" className="container mb-[20lvh]">
       {review.longestDailyStreak.from && review.longestDailyStreak.to && (
         <div className="mt-20">
           <div className="text-3xl lg:text-4xl font-bold text-shadow-lg text-center mb-8">

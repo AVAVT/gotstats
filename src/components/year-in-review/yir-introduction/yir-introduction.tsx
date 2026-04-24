@@ -33,7 +33,7 @@ export default function YirIntroduction({
   return (
     <section
       id="yir-introduction"
-      className="px-8 pt-[15vh] pb-[20vh] flex flex-col items-center font-bold drop-shadow-lg"
+      className="px-8 pt-[15lvh] pb-[20lvh] flex flex-col items-center font-bold drop-shadow-lg"
     >
       <ExtLink href={href} className="flex gap-4 items-center text-4xl lg:text-6xl mb-4">
         <Image

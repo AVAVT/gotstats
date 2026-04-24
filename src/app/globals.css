@@ -405,7 +405,7 @@ h3 {
 }
 
 .recurring-opponent-list {
-  max-height: 25vh;
+  max-height: 25lvh;
   overflow-y: auto;
   width: 100%;
   display: grid;

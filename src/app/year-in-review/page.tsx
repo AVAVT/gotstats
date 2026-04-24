@@ -15,7 +15,7 @@ function YearInReviewContent() {
 
   if (year >= new Date().getFullYear()) {
     return (
-      <div className="container text-center mt-[10vh]">
+      <div className="container text-center mt-[10lvh]">
         <div className="text-5xl font-bold mb-8">This year has not ended yet!</div>
         <div className="text-foreground-dark">
           Year in Review for {year} will be availble at the start of {year + 1}. Please wait patiently.

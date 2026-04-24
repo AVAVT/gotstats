@@ -79,7 +79,7 @@ export default function YearInReview({ player, review, year, isShared = false }:
   }, [player.id]);
 
   return (
-    <div className="min-h-screen w-full flex-1">
+    <div className="min-h-lvh w-full flex-1">
       <YirIntroduction
         player={player}
         review={review}

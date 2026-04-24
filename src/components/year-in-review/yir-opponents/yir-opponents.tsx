@@ -108,7 +108,7 @@ export default function YirOpponents({ review, username }: { review: YearInRevie
       </div>
 
       <div className="container flex flex-col lg:grid lg:grid-cols-3 lg:items-start gap-4">
-        <div ref={earthRenderRef} className="col-span-2 h-[calc(50svh-(var(--spacing)*2))] overflow-hidden relative">
+        <div ref={earthRenderRef} className="col-span-2 h-[calc(50lvh-(var(--spacing)*2))] overflow-hidden relative">
           <div className="w-full h-[230%]">
             <EarthRender
               focusedCountry={isEarthRenderInView ? focusedCountry?.country : undefined}
@@ -118,7 +118,7 @@ export default function YirOpponents({ review, username }: { review: YearInRevie
           <div className="absolute bottom-0 right-0 left-0 h-[60%] bg-linear-to-b from-transparent to-background z-1 pointer-events-none" />
         </div>
         <OpponentCountryList
-          className="h-[50svh]"
+          className="h-[50lvh]"
           ref={countryListRef}
           isInView={isCountryListInView}
           opponents={opponentsOnVisibleCountries}

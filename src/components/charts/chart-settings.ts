@@ -10,6 +10,10 @@ const donutPropsBySize: Record<CHART_SIZE, Partial<DonutChartProps>> = {
       valueFontSize: "1.2em",
       showPercentage: false,
     },
+    stroke: {
+      width: 2,
+      color: "var(--tertiary)",
+    },
     pieText: {
       enabled: true,
       fontSize: "0.8em",
@@ -21,6 +25,10 @@ const donutPropsBySize: Record<CHART_SIZE, Partial<DonutChartProps>> = {
       labelFontSize: "1em",
       valueFontSize: "1.5em",
       showPercentage: false,
+    },
+    stroke: {
+      width: 1,
+      color: "var(--tertiary)",
     },
     pieText: {
       enabled: true,

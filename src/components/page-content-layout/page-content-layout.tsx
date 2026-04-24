@@ -10,7 +10,7 @@ export default function PageContentLayout({ children }: PropsWithChildren) {
   return path.includes("year-in-review") || path.includes("year-shared-review") ? (
     <div className={cn("flex flex-col md:flex-row")}>{children}</div>
   ) : (
-    <div className={cn("container flex flex-col md:flex-row pb-[30vh] gap-4 xl:gap-8")}>
+    <div className={cn("container flex flex-col md:flex-row pb-[30lvh] gap-4 xl:gap-8")}>
       <SideBar />
       <div className="flex-1">{children}</div>
     </div>
