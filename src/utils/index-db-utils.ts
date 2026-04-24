@@ -104,3 +104,21 @@ export async function getGameSgfFromDB(id: number, storeName: string) {
     };
   });
 }
+
+export async function deletePlayerDataFromDB(id: number, storeName: string) {
+  const db = await openDB();
+
+  return new Promise<void>((resolve, reject) => {
+    const tx = db.transaction(storeName, "readwrite");
+    const store = tx.objectStore(storeName);
+    store.delete(id);
+    tx.oncomplete = () => {
+      db.close();
+      resolve();
+    };
+    tx.onerror = () => {
+      db.close();
+      reject(tx.error);
+    };
+  });
+}

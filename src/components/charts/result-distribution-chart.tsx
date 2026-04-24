@@ -85,7 +85,7 @@ export default function ResultDistributionChart({ title, id, games, player }: Re
       { label: "Scoring", value: distributions["Plr+Count"] },
       { label: "Other", value: distributions["Plr+Other"] },
     ],
-    [distributions],
+    [distributions["Plr+Time"], distributions["Plr+Res"], distributions["Plr+Count"], distributions["Plr+Other"]],
   );
 
   const chartData2 = useMemo(
@@ -95,7 +95,7 @@ export default function ResultDistributionChart({ title, id, games, player }: Re
       { label: "Scoring", value: distributions["Opp+Count"] },
       { label: "Other", value: distributions["Opp+Other"] },
     ],
-    [distributions],
+    [distributions["Opp+Time"], distributions["Opp+Res"], distributions["Opp+Count"], distributions["Opp+Other"]],
   );
 
   const chartData3 = [

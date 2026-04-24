@@ -6,11 +6,13 @@ import { useRouter } from "next/navigation";
 import { ChangeEventHandler, useState } from "react";
 import { connect } from "react-redux";
 import { Button } from "vat-ui";
+import { removePlayerData } from "@/persistence";
 import { exporterVersion } from "@/redux/games/game-actions";
 import { GameState } from "@/redux/games/type";
 import { importPlayer } from "@/redux/player/player-actions";
 import { PlayerAction, PlayerState } from "@/redux/player/type";
 import { StoreState } from "@/redux/type";
+import { getAppRootUrl } from "../year-in-review/utils";
 
 export type AdvancedFeaturesProps = {
   player: PlayerState;
@@ -65,6 +67,20 @@ function AdvancedFeatures({ player, games, importPlayerData }: AdvancedFeaturesP
     window.alert("Player data file exported.\nYou can use it for quick import to another machine.");
   };
 
+  const removeData = () => {
+    if (confirm("REMOVE this player's data? You will need to query again")) {
+      (async () => {
+        try {
+          await removePlayerData(player.id);
+          window.location.replace(getAppRootUrl());
+        } catch (err) {
+          alert("An error occured, could not remove player data");
+          console.error(err);
+        }
+      })();
+    }
+  };
+
   return (
     <div>
       <button
@@ -99,6 +115,14 @@ function AdvancedFeatures({ player, games, importPlayerData }: AdvancedFeaturesP
           <span className="font-bold">NOTICE</span>: Auto save in-browser implemented. JSON import should only be used
           to export to another device
         </div>
+
+        {player.id > -1 && games.results.length > 0 && (
+          <div>
+            <Button color="primary" variant="outline" className="mt-4 w-full justify-center" onClick={removeData}>
+              Remove this player's data
+            </Button>
+          </div>
+        )}
       </div>
     </div>
   );

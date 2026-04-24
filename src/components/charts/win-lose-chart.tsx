@@ -86,7 +86,7 @@ export default function WinLoseChart({ title, id, games, player, footer }: WinLo
       <h2 id={id} className="text-center">
         {title}
       </h2>
-      <div className="row">
+      <div>
         {chartData1 ? (
           <div className="mx-auto">
             <DonutChart data={chartData1} {...mainChartSettings} />

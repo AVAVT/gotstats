@@ -171,173 +171,167 @@ export default function OpponentChart({ title, id, games, player }: OpponentChar
         {title}: {numberOfOpponents}
       </h2>
 
-      <div className="row">
-        <div id="opponents_polars_chart" className="mt-10 w-[70%] mx-auto">
-          <ul className="bar_legend">
-            <li style={weakestDisp.style}>
-              <div>Weakest Opponent</div>
-              <span></span>
-            </li>
-            <li style={strongestDisp.style}>
-              <div>Strongest Opponent</div>
-              <span></span>
-            </li>
-          </ul>
-          <div className="bar_chart">
-            <a
-              target="_blank"
-              rel="noopener noreferrer"
-              href={weakestDisp.href}
-              data-toggle="tooltip"
-              data-placement="top"
-              title={weakestDisp.title}
-              style={weakestDisp.style}
-            >
-              <Image width={32} height={32} src={weakestDisp.img} alt={weakestDisp.title} />
-            </a>
-            <a
-              target="_blank"
-              rel="noopener noreferrer"
-              href={userDisp.href}
-              data-toggle="tooltip"
-              data-placement="top"
-              title={userDisp.title}
-              style={userDisp.style}
-            >
-              <Image width={32} height={32} src={userDisp.img} alt={userDisp.title} />
-            </a>
-            <a
-              target="_blank"
-              rel="noopener noreferrer"
-              href={strongestDisp.href}
-              data-toggle="tooltip"
-              data-placement="top"
-              title={strongestDisp.title}
-              style={strongestDisp.style}
-            >
-              <Image width={32} height={32} src={strongestDisp.img} alt={strongestDisp.title} />
-            </a>
-          </div>
-          <ul className="ruler">
-            <li>
-              <span></span>
-              <div>
-                <small>
-                  <em>25k</em>
-                </small>
-              </div>
-            </li>
-            <li>
-              <span></span>
-              <div>
-                <small>
-                  <em>10k</em>
-                </small>
-              </div>
-            </li>
-            <li>
-              <span></span>
-              <div>
-                <small>
-                  <em>1d</em>
-                </small>
-              </div>
-            </li>
-            <li>
-              <span></span>
-              <div>
-                <small>
-                  <em>9d</em>
-                </small>
-              </div>
-            </li>
-          </ul>
+      <div id="opponents_polars_chart" className="mt-10 w-[70%] mx-auto">
+        <ul className="bar_legend">
+          <li style={weakestDisp.style}>
+            <div>Weakest Opponent</div>
+            <span></span>
+          </li>
+          <li style={strongestDisp.style}>
+            <div>Strongest Opponent</div>
+            <span></span>
+          </li>
+        </ul>
+        <div className="bar_chart">
+          <a
+            target="_blank"
+            rel="noopener noreferrer"
+            href={weakestDisp.href}
+            data-toggle="tooltip"
+            data-placement="top"
+            title={weakestDisp.title}
+            style={weakestDisp.style}
+          >
+            <Image width={32} height={32} src={weakestDisp.img} alt={weakestDisp.title} />
+          </a>
+          <a
+            target="_blank"
+            rel="noopener noreferrer"
+            href={userDisp.href}
+            data-toggle="tooltip"
+            data-placement="top"
+            title={userDisp.title}
+            style={userDisp.style}
+          >
+            <Image width={32} height={32} src={userDisp.img} alt={userDisp.title} />
+          </a>
+          <a
+            target="_blank"
+            rel="noopener noreferrer"
+            href={strongestDisp.href}
+            data-toggle="tooltip"
+            data-placement="top"
+            title={strongestDisp.title}
+            style={strongestDisp.style}
+          >
+            <Image width={32} height={32} src={strongestDisp.img} alt={strongestDisp.title} />
+          </a>
         </div>
+        <ul className="ruler">
+          <li>
+            <span></span>
+            <div>
+              <small>
+                <em>25k</em>
+              </small>
+            </div>
+          </li>
+          <li>
+            <span></span>
+            <div>
+              <small>
+                <em>10k</em>
+              </small>
+            </div>
+          </li>
+          <li>
+            <span></span>
+            <div>
+              <small>
+                <em>1d</em>
+              </small>
+            </div>
+          </li>
+          <li>
+            <span></span>
+            <div>
+              <small>
+                <em>9d</em>
+              </small>
+            </div>
+          </li>
+        </ul>
       </div>
 
-      <div className="row">
-        <div className="col-12">
-          <ul className="info_list pl-4">
-            <li>
-              Most played with: <PlayerLink player={mostPlayedDisp as Player} /> in{" "}
-              {(mostPlayedDisp as Player & { games: number }).games} games.
-            </li>
-            {!!strongestDefeatedDisp.username && strongestDefeatedDisp.game && (
-              <li>
-                Strongest defeated opponent: <PlayerLink player={strongestDefeatedDisp as unknown as Player} /> on{" "}
-                <GameLink game={strongestDefeatedDisp.game} />.
-              </li>
-            )}
-            <li>Average game per opponent: {averageGamePerOpponent} games.</li>
-            {recurringOpponents.length > 0 && (
-              <li>
-                Regulars ({MIN_GAMES_COUNT_FOR_REGULAR}+ games played):
-                <div className="recurring-opponent-list mt-2 -ml-4">
-                  <div className="px-3 py-2">
-                    <strong>Games</strong>
+      <ul className="info_list pl-4">
+        <li>
+          Most played with: <PlayerLink player={mostPlayedDisp as Player} /> in{" "}
+          {(mostPlayedDisp as Player & { games: number }).games} games.
+        </li>
+        {!!strongestDefeatedDisp.username && strongestDefeatedDisp.game && (
+          <li>
+            Strongest defeated opponent: <PlayerLink player={strongestDefeatedDisp as unknown as Player} /> on{" "}
+            <GameLink game={strongestDefeatedDisp.game} />.
+          </li>
+        )}
+        <li>Average game per opponent: {averageGamePerOpponent} games.</li>
+        {recurringOpponents.length > 0 && (
+          <li>
+            Regulars ({MIN_GAMES_COUNT_FOR_REGULAR}+ games played):
+            <div className="recurring-opponent-list mt-2 -ml-4">
+              <div className="px-3 py-2">
+                <strong>Games</strong>
+              </div>
+              <div className="px-3 py-2">
+                <strong>Win Rate</strong>
+              </div>
+              <div className="px-3 py-2">
+                <strong>Opponent</strong>
+              </div>
+              <div className="px-3 py-2">
+                <strong>Wins</strong>
+              </div>
+              <div className="px-3 py-2">
+                <strong>Losses</strong>
+              </div>
+              {recurringOpponents.map((opp, index) => (
+                <Fragment key={opp.opponent.id}>
+                  <div
+                    className="px-3 py-2"
+                    style={{
+                      background: index % 2 === 0 ? "rgba(0,0,0,0.3)" : "transparent",
+                    }}
+                  >
+                    {opp.games}
                   </div>
-                  <div className="px-3 py-2">
-                    <strong>Win Rate</strong>
+                  <div
+                    className="px-3 py-2 text-right"
+                    style={{
+                      background: index % 2 === 0 ? "rgba(0,0,0,0.3)" : "transparent",
+                    }}
+                  >
+                    {((100 * opp.win) / (opp.win + opp.loss)).toFixed(2)}%
                   </div>
-                  <div className="px-3 py-2">
-                    <strong>Opponent</strong>
+                  <div
+                    className="px-3 py-2"
+                    style={{
+                      background: index % 2 === 0 ? "rgba(0,0,0,0.3)" : "transparent",
+                    }}
+                  >
+                    <PlayerLink player={opp.opponent} />
                   </div>
-                  <div className="px-3 py-2">
-                    <strong>Wins</strong>
+                  <div
+                    className="px-3 py-2"
+                    style={{
+                      background: index % 2 === 0 ? "rgba(0,0,0,0.3)" : "transparent",
+                    }}
+                  >
+                    {opp.win}
                   </div>
-                  <div className="px-3 py-2">
-                    <strong>Losses</strong>
+                  <div
+                    className="px-3 py-2"
+                    style={{
+                      background: index % 2 === 0 ? "rgba(0,0,0,0.3)" : "transparent",
+                    }}
+                  >
+                    {opp.loss}
                   </div>
-                  {recurringOpponents.map((opp, index) => (
-                    <Fragment key={opp.opponent.id}>
-                      <div
-                        className="px-3 py-2"
-                        style={{
-                          background: index % 2 === 0 ? "rgba(0,0,0,0.3)" : "transparent",
-                        }}
-                      >
-                        {opp.games}
-                      </div>
-                      <div
-                        className="px-3 py-2 text-right"
-                        style={{
-                          background: index % 2 === 0 ? "rgba(0,0,0,0.3)" : "transparent",
-                        }}
-                      >
-                        {((100 * opp.win) / (opp.win + opp.loss)).toFixed(2)}%
-                      </div>
-                      <div
-                        className="px-3 py-2"
-                        style={{
-                          background: index % 2 === 0 ? "rgba(0,0,0,0.3)" : "transparent",
-                        }}
-                      >
-                        <PlayerLink player={opp.opponent} />
-                      </div>
-                      <div
-                        className="px-3 py-2"
-                        style={{
-                          background: index % 2 === 0 ? "rgba(0,0,0,0.3)" : "transparent",
-                        }}
-                      >
-                        {opp.win}
-                      </div>
-                      <div
-                        className="px-3 py-2"
-                        style={{
-                          background: index % 2 === 0 ? "rgba(0,0,0,0.3)" : "transparent",
-                        }}
-                      >
-                        {opp.loss}
-                      </div>
-                    </Fragment>
-                  ))}
-                </div>
-              </li>
-            )}
-          </ul>
-        </div>
-      </div>
+                </Fragment>
+              ))}
+            </div>
+          </li>
+        )}
+      </ul>
     </section>
   );
 }

@@ -25,7 +25,7 @@ function Header({ player, games }: HeaderProps) {
   const isYearInReview = path.includes("year-in-review");
 
   return (
-    <nav className="header flex flex-col md:flex-row items-stretch md:items-baseline p-4 flex-0">
+    <nav className="header p-4 flex-0">
       <div className="flex items-baseline">
         <Link href="/" className="flex items-baseline">
           {/** biome-ignore lint/performance/noImgElement: it's an svg */}
@@ -42,7 +42,7 @@ function Header({ player, games }: HeaderProps) {
       </div>
 
       {username && results.length > 0 && (
-        <div className="p:0 md:pl-8 mt-4 md:mt-0 flex gap-8 justify-center md:justify-start items-baseline text-3xl font-light">
+        <div className="p:0 md:pl-8 mt-4 md:mt-0 flex gap-8 justify-center md:justify-center items-baseline text-3xl font-light">
           <Link
             href={`/user?user=${id}`}
             className={cn("hover:underline", isYearInReview ? "text-foreground-dark!" : "text-foreground!")}

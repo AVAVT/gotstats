@@ -1,5 +1,6 @@
 import { PlayerRecord } from "@/type/persistence";
 import {
+  deletePlayerDataFromDB,
   GAME_SGF_STORE_NAME,
   getGameSgfFromDB,
   getPlayerDataFromDB,
@@ -49,6 +50,15 @@ export async function getGameSgf(gameId: number) {
   try {
     const record = await getGameSgfFromDB(gameId, SGF_STORE_NAME);
     return record?.sgf;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+}
+
+export async function removePlayerData(playerId: number) {
+  try {
+    return await deletePlayerDataFromDB(playerId, STORE_NAME);
   } catch (err) {
     console.error(err);
     throw err;
