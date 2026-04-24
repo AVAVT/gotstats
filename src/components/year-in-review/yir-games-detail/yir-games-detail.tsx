@@ -3,7 +3,7 @@
 import Chart from "react-google-charts";
 import { cn } from "vat-ui";
 import { CHART_THEME, getChartTheme } from "@/components/charts/settings";
-import PieChart from "@/components/shared/charts/pie-chart";
+import DonutChart from "@/components/shared/charts/donut-chart";
 import GameLink from "@/components/shared/game-link";
 import StylingChangeOnVisible from "@/components/shared/styling-change-on-visible";
 import { YearInReview as YearInReviewData } from "@/utils/year-in-review";
@@ -145,7 +145,7 @@ export default function YirGamesDetail({ review, username }: { review: YearInRev
           <YearInCard>
             <div className="flex gap-3 items-stretch relative min-h-full">
               <div className="absolute right-0 top-0 bottom-0 w-[150px]">
-                <PieChart
+                <DonutChart
                   data={halfPointChartData}
                   pieText={{ enabled: false }}
                   colors={getChartTheme(CHART_THEME.WINLOSE)}
@@ -173,7 +173,7 @@ export default function YirGamesDetail({ review, username }: { review: YearInRev
           <YearInCard>
             <div className="flex gap-3 items-stretch relative min-h-full">
               <div className="absolute right-0 top-0 bottom-0 w-[150px]">
-                <PieChart
+                <DonutChart
                   data={tournamentChartData}
                   pieText={{ enabled: false }}
                   colors={getChartTheme(CHART_THEME.WINLOSE)}

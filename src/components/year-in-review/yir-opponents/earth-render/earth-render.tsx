@@ -24,7 +24,7 @@ type CountriesCollection = {
 
 const countriesCollection = countries as CountriesCollection;
 
-const CAMERA_DISTANCE = 4.3;
+const CAMERA_DISTANCE = 4.5;
 const CAMERA_OFFSET_DEGREE = 25;
 const CAMERA_ANIMATION_DURATION = 1.2;
 const TEXTURE_WIDTH = 4096;

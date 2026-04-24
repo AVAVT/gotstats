@@ -2,7 +2,7 @@
 
 import { forwardRef, type MouseEvent, useCallback, useEffect, useRef, useState } from "react";
 import { cn } from "vat-ui";
-import { backgroundColor, foregroundColor } from "@/utils/color-utils";
+import { foregroundColor } from "@/utils/color-utils";
 import type {
   ChartAnimationOptions,
   ChartAreaOptions,
@@ -137,7 +137,7 @@ function buildSegments(data: { label: string; value: number }[], colors: string[
 
 function normalizeDonutHole(value: number) {
   const scaledValue = value <= 1 ? value * 100 : value;
-  return Math.min(Math.max(scaledValue, 0), 70);
+  return Math.min(Math.max(scaledValue, 0), 50);
 }
 
 function getSegmentIndexFromEvent(
@@ -452,8 +452,6 @@ const DonutChart = forwardRef<HTMLDivElement, DonutChartProps>(function DonutCha
               </text>
             );
           })}
-
-        {radius > 0 ? <circle cx={cx} cy={cy} r={baseInnerR} fill={backgroundColor} pointerEvents="none" /> : null}
       </svg>
 
       {effTooltip.enabled && activeSegment ? (

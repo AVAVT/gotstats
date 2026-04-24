@@ -118,7 +118,7 @@ export default function YirOpponents({ review, username }: { review: YearInRevie
           <div className="absolute bottom-0 right-0 left-0 h-[60%] bg-linear-to-b from-transparent to-background z-1 pointer-events-none" />
         </div>
         <OpponentCountryList
-          className="h-[50lvh]"
+          className="max-h-[50lvh] lg:h-[50lvh]"
           ref={countryListRef}
           isInView={isCountryListInView}
           opponents={opponentsOnVisibleCountries}

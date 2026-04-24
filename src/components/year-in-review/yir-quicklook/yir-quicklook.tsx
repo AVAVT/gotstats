@@ -2,7 +2,7 @@
 
 import { useMemo } from "react";
 import { CHART_THEME, getChartTheme } from "@/components/charts/settings";
-import PieChart from "@/components/shared/charts/pie-chart";
+import DonutChart from "@/components/shared/charts/donut-chart";
 import StylingChangeOnVisible from "@/components/shared/styling-change-on-visible";
 import { useInView } from "@/hooks/use-in-view";
 import { ratingToKyuDan } from "@/utils/chart-utils";
@@ -21,8 +21,8 @@ export default function YirQuicklook({ review, year }: { review: YearInReviewDat
 
   const winRateChartData = useMemo(
     () => [
-      { label: "Losses", value: review.winRate.losses },
       { label: "Wins", value: review.winRate.wins },
+      { label: "Losses", value: review.winRate.losses },
     ],
     [review.winRate.losses, review.winRate.wins],
   );
@@ -71,13 +71,14 @@ export default function YirQuicklook({ review, year }: { review: YearInReviewDat
         <YearInCard>
           <div className="flex gap-3 items-stretch relative min-h-full">
             <div className="absolute right-0 top-0 bottom-0 w-[150px]">
-              <PieChart
+              <DonutChart
+                className="pointer-events-none"
                 ref={winRateChartRef}
                 data={isWinRateChartInView ? winRateChartData : initialWinRateChartData}
                 pieText={{ enabled: false }}
                 colors={getChartTheme(CHART_THEME.WINLOSE)}
                 stroke={{ width: 2, color: "var(--tertiary)" }}
-                chartArea={{ top: 1, left: 1, right: 1, bottom: 1, donutHole: 55 }}
+                chartArea={{ donutHole: 55 }}
                 animation={{ duration: 1500, easing: "ease-out" }}
                 tooltip={{ enabled: false }}
               />
